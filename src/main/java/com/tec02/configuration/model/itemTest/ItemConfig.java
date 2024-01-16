@@ -1,0 +1,40 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.tec02.configuration.model.itemTest;
+
+import com.alibaba.fastjson.JSONObject;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Administrator
+ */
+@Getter
+@Setter
+public class ItemConfig implements IItemConfig{
+
+    private int time_out = Integer.MAX_VALUE;
+    private int retry = 0;
+    private boolean multi = false;
+    private boolean check_spec = true;
+    private boolean wait_multi_done = false;
+    private boolean fail_continue = false;
+    private boolean debugCancellCheckSpec = false;
+    private boolean debugCancellRun = false;
+    private boolean alwaysRun = false;
+    private String function = "";
+    private String test_name = "";
+    private String limit_type = "BOOL";
+    private String lower_limit = "";
+    private String upper_limit = "";
+    private JSONObject bonus = new JSONObject();
+
+    @Override
+    public String toString() {
+        return test_name;
+    }
+
+}

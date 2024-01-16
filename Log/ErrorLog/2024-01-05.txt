@@ -1,0 +1,2 @@
+2024-01-05 08:42:51.332:   error in com.tec02.function.impl.common.CheckDutCompare : Cannot invoke "String.equalsIgnoreCase(String)" because "mode" is null
+2024-01-05 08:42:51.332:   //////////////////////////////////////

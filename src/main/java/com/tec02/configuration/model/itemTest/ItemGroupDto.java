@@ -1,0 +1,67 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.tec02.configuration.model.itemTest;
+
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Administrator
+ */
+@Getter
+@Setter
+public class ItemGroupDto {
+
+    private boolean debug = false;
+    private List<Integer> failColor = List.of(255, 0, 0);
+    private List<Integer> testColor = List.of(255, 255, 0);
+    private String passTo;
+    private String failedTo;
+    private List<String> items = new ArrayList<>();
+    private Integer begin;
+    private int loop = 1;
+
+    public List<Integer> getFailColor() {
+        if (failColor == null) {
+            return List.of(255, 0, 0);
+        }
+        int r = 255;
+        int g = 0;
+        int b = 0;
+        if (failColor.size() > 1) {
+            r = failColor.get(0);
+            if (failColor.size() > 2) {
+                g = failColor.get(1);
+                if (failColor.size() > 3) {
+                    b = failColor.get(2);
+                }
+            }
+        }
+        return List.of(r, g, b);
+    }
+
+    public List<Integer> getTestColor() {
+        if (testColor == null) {
+            return List.of(255, 255, 0);
+        }
+        int r = 255;
+        int g = 255;
+        int b = 0;
+        if (testColor.size() > 1) {
+            r = testColor.get(0);
+            if (testColor.size() > 2) {
+                g = testColor.get(1);
+                if (testColor.size() > 3) {
+                    b = testColor.get(2);
+                }
+            }
+        }
+        return List.of(r, g, b);
+    }
+
+}

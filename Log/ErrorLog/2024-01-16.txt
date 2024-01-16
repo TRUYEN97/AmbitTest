@@ -1,0 +1,4 @@
+2024-01-16 03:20:37.487:   error in com.tec02.function.impl.runin.EmmcWriteRead : java.lang.NullPointerException: Cannot invoke "com.tec02.function.baseFunction.FunctionConfig.setTest_name(String)" because "cf" is null
+2024-01-16 03:20:37.496:   //////////////////////////////////////
+2024-01-16 03:37:54.246:   error in com.tec02.function.impl.runin.EmmcWriteRead : java.lang.NullPointerException: Cannot invoke "com.tec02.function.impl.runin.EmmcSpeed.setData(String, String, String)" because "mmc_speed" is null
+2024-01-16 03:37:54.246:   //////////////////////////////////////

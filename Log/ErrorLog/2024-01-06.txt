@@ -1,0 +1,6 @@
+2024-01-06 09:00:28.705:   error in com.tec02.function.impl.common.CheckProduct : null
+2024-01-06 09:00:28.705:   //////////////////////////////////////
+2024-01-06 09:10:25.480:   error in com.tec02.function.impl.common.Dutping : null
+2024-01-06 09:10:25.480:   //////////////////////////////////////
+2024-01-06 09:10:38.607:   error in com.tec02.function.impl.common.Dutping : null
+2024-01-06 09:10:38.607:   //////////////////////////////////////

@@ -1,0 +1,47 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.tec02.common;
+
+/**
+ *
+ * @author Administrator
+ */
+public final class Constanct {
+
+    public final class CONFIG {
+
+        public static final String MATCH = "MATCH";
+        public static final String LIMIT = "LIMIT";
+        public static final String BOOL = "BOOL";
+    }
+
+    public class SFIS {
+
+        public static final String RESULT = "result";
+        public static final String MESSAGE = "message";
+        public static final String MLBSN = "mlbsn";
+        public static final String SN = "sn";
+        public static final String DATA = "data";
+        public static final String MAC = "ethernetmac";
+        public static final String MODE = "mode";
+        public static final String PCNAME = "pcname";
+        public static final String STATUS = "status";
+        public static final String ERRORCODE = "errorcode";
+    }
+
+    public final class MODEL extends SFIS {
+
+        public static final String PASS = "passed";
+        public static final String FAIL = "failed";
+        public static final String POSITION = "position";
+        public static final String SOFTWARE_VERSION = "test_software_version";
+        public static final String ERROR_CODE = "error_code";
+        public static final String START_TIME = "start_time";
+        public static final String ERROR_DES = "finish_time";
+        public static final String ERRORDES = "error_details";
+        public static final String FINISH_TIME = "finish_time";
+        public static final String STATION_NAME = "station_name";
+    }
+}

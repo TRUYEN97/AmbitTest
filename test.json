@@ -1,0 +1,578 @@
+{
+  "Dhcp" : {
+    "leaseTime" : 600,
+    "macLength" : 17,
+    "netIP" : "172.168.0.251",
+    "on" : false
+  },
+  "Setting" : {
+    "column" : 8,
+    "line" : "MP",
+    "local_log" : "Log\\TestLog",
+    "product" : "Trieste",
+    "row" : 10,
+    "showMissingErrorocode" : true,
+    "station" : "RUNIN",
+    "view" : "SmallUI"
+  },
+  "ErrorCode" : {
+    "dir" : "D:\\Maven-Project\\AmbitTest\\trieste_errorCode.txt"
+  },
+  "ItemTest" : {
+    "apply" : [ "Production", "Debug" ],
+    "config" : {
+      "limit" : "cd python && eero_api_limits_Trieste.py runin",
+      "modes" : {
+        "Production" : {
+          "group" : "init",
+          "loop" : 1,
+          "mode" : "production",
+          "password" : "123"
+        },
+        "Debug" : {
+          "group" : "init",
+          "loop" : 1,
+          "mode" : "debug",
+          "password" : "1"
+        }
+      }
+    },
+    "groups" : {
+      "init" : {
+        "begin" : -1,
+        "debug" : true,
+        "failColor" : [ 255, 0, 0 ],
+        "failedTo" : "final",
+        "items" : [ "CheckTime", "gen_node", "CheckProduct" ],
+        "loop" : 1,
+        "passTo" : "test",
+        "testColor" : [ 255, 255, 0 ]
+      },
+      "test" : {
+        "begin" : -1,
+        "debug" : true,
+        "failColor" : [ 255, 0, 0 ],
+        "failedTo" : "final",
+        "items" : [ "dut_ping", "dut_telnet", "test_image_version", "temp_cpu", "reboot_soft", "MMC_READ_WRITE_SPEED_TEST", "emmc_badblocks", "ram_stress", "cpu_stress" ],
+        "loop" : 1,
+        "passTo" : "final",
+        "testColor" : [ 255, 255, 0 ]
+      },
+      "test_debug" : {
+        "begin" : -1,
+        "debug" : true,
+        "failColor" : [ 255, 0, 0 ],
+        "failedTo" : "final",
+        "items" : [ "dut_ping", "dut_telnet", "sn_ok", "mac_ok", "test_image_version" ],
+        "loop" : 1,
+        "passTo" : "final",
+        "testColor" : [ 255, 255, 0 ]
+      },
+      "final" : {
+        "begin" : -1,
+        "debug" : true,
+        "failColor" : [ 255, 0, 0 ],
+        "failedTo" : "",
+        "items" : [ "CheckTime" ],
+        "loop" : 1,
+        "passTo" : "",
+        "testColor" : [ 255, 255, 0 ]
+      }
+    },
+    "items" : {
+      "gen_node" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "data_format" : [ "mlbsn", "ethernetmac", "pnname" ],
+          "send_format_fail" : [ "sn", "pcname", "status", "errorcode" ],
+          "MaxLength" : -1,
+          "send_format" : [ "sn", "pcname", "mode" ],
+          "url" : "http://10.90.100.20/sfcapi/api/connect",
+          "sfis_type" : ""
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "SfisFunction",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "gen_node",
+        "time_out" : 100,
+        "upper_limit" : "",
+        "wait_multi_done" : true
+      },
+      "CheckTime" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "timezone" : "UTC",
+          "wedUrl" : "http://10.90.100.15:8000/auth/login//"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "CheckTime",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "CheckTime",
+        "time_out" : 100,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "dut_ping" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "IP" : "192.168.1.1",
+          "time_ping" : 120,
+          "type" : "check"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "Dutping",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 1,
+        "test_name" : "dut_ping",
+        "time_out" : 140,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "sn_ok" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "compare" : "mlbsn",
+          "IP" : "192.168.1.1",
+          "Startkey" : "serial=",
+          "Time" : 40,
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : "fw_printenv  serial"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : true,
+        "debugCancellRun" : true,
+        "fail_continue" : false,
+        "function" : "CheckDutCompare",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 2,
+        "test_name" : "sn_ok",
+        "time_out" : 60,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "CheckTestConditions" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "pw" : "Foxconn168!!",
+          "id" : "TE",
+          "hold" : 3
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "CheckTestConditions",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 1,
+        "test_name" : "CheckTestConditions",
+        "time_out" : 2147483647,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "mac_ok" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "compare" : "ethernetmac",
+          "IP" : "192.168.1.1",
+          "Startkey" : "mac=",
+          "Time" : 40,
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : "fw_printenv  mac"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : true,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "CheckDutCompare",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 2,
+        "test_name" : "mac_ok",
+        "time_out" : 60,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "temp_cpu" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "compare" : "",
+          "Regex" : "^[0-9]+$",
+          "IP" : "192.168.1.1",
+          "Startkey" : "",
+          "Time" : 40,
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : "cat /sys/devices/virtual/thermal/thermal_zone1/temp",
+          "Endkey" : ""
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "CheckDutCompare",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 2,
+        "test_name" : "temp_cpu",
+        "time_out" : 60,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "cpu_stress" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "baudrate" : 115200,
+          "comport" : 1,
+          "IP" : "192.168.1.1",
+          "Time" : 2200,
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : [ "stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 1800s" ],
+          "keyWord" : "successful run completed in"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "TelnetReadUntilKey",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "cpu_stress",
+        "time_out" : 2500,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "MMC_READ_WRITE_SPEED_TEST" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "baudrate" : 115200,
+          "comport" : 1,
+          "KeyWord" : [ "Reading", "Writing" ],
+          "IP" : "192.168.1.1",
+          "Block" : [ "0x00", "0x00" ],
+          "Time" : 50,
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : "test-emmc",
+          "ItemNames" : [ "emmc_speed_read", "emmc_speed_write" ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "EmmcWriteRead",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 1,
+        "test_name" : "MMC_READ_WRITE_SPEED_TEST",
+        "time_out" : 60,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "wps_ok" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "password" : "1234",
+          "Command" : [ "off", "on" ],
+          "Times" : 1,
+          "host" : "192.168.1.10",
+          "user" : "admin",
+          "Delay" : [ 5, 5 ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "PowerSwitchFunc",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "wps_ok",
+        "time_out" : 30,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "ram_stress" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "baudrate" : 115200,
+          "comport" : 1,
+          "IP" : "192.168.1.1",
+          "Time" : 1000,
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : [ "stressapptest -s 600 -M 300 -m 5 -C 5 -W -l test_ddr_01.log", "stressapptest -s 600 --cc_test -M 300 -v 20 --cc_line_size 8192 --stop_on_errors -l test_ddr_02.log", "stressapptest -s 600 -f /tmp/file1 -f /tmp/file2 -M 100 -l test_ddr_03.log" ],
+          "keyWord" : "Status: PASS - please verify no corrected errors"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "TelnetReadUntilKey",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "ram_stress",
+        "time_out" : 2000,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "mydas" : {
+        "alwaysRun" : true,
+        "bonus" : {
+          "titleVer" : "3.0",
+          "sendDetail" : false,
+          "IP" : "10.90.100.168",
+          "flowVer" : "3.0"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : true,
+        "fail_continue" : false,
+        "function" : "Mydas",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "mydas",
+        "time_out" : 60,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "power_cycle" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "password" : "1234",
+          "Command" : [ "off", "on" ],
+          "Times" : 100,
+          "host" : "192.168.1.10",
+          "user" : "admin",
+          "Delay" : [ 5, 5 ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "PowerSwitchFunc",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "power_cycle",
+        "time_out" : 2147483647,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "reboot_soft" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "times" : 3,
+          "IP" : "192.168.1.1",
+          "pingTimes" : 300,
+          "ReadUntil" : "root@eero-test:/#",
+          "waitTime" : 40
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "RebootSoft",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 1,
+        "test_name" : "reboot_soft",
+        "time_out" : 350,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "upAPI" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "LocalTxtName" : [ "mlbsn", "station_name", "mode", "serial" ],
+          "followLimit" : true,
+          "Command" : "cd python && eero_API_client.py log/",
+          "LocaljsonName" : [ "mlbsn", "station_name", "mode" ],
+          "Spec" : "200",
+          "TestKeys" : [ "upper_limit", "lower_limit", "status", "finish_time", "test_name", "error_code", "start_time", "test_value", "units" ],
+          "LocalPrefix" : [ "python/log" ],
+          "limitErrorCode" : true,
+          "BaseKeys" : [ "error_details", "status", "finish_time", "test_software_version", "start_time", "station_type", "error_code", "serial", "mode", "station_name", "position" ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "UpAPI",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 3,
+        "test_name" : "upAPI",
+        "time_out" : 60,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "CheckProduct" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "elems" : [ {
+            "type" : "equal",
+            "message" : "Sản phẩm không phải là: 810-01100!",
+            "key" : "pnname",
+            "target" : "810-01100"
+          }, {
+            "type" : "equal",
+            "message" : "Sản phẩm không phải là hàng Production!",
+            "key" : "smode",
+            "target" : "Production"
+          }, {
+            "type" : "equal",
+            "message" : "Sản phẩm không phải là hàng simple!",
+            "key" : "typemodel",
+            "target" : "simple|DEV743"
+          }, {
+            "type" : "end_with",
+            "message" : "MAC từ SFIS cần phải kết thúc bằng số 0!",
+            "key" : "ethernetmac",
+            "target" : "0"
+          } ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "CheckProduct",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "CheckProduct",
+        "time_out" : 10,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "dut_telnet" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "IP" : "192.168.1.1"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "DutTelnet",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 1,
+        "test_name" : "dut_telnet",
+        "time_out" : 60,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "test_image_version" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "compare" : "",
+          "IP" : "192.168.1.1",
+          "Startkey" : "Ambit test image version:V",
+          "Time" : 40,
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : "fwversion",
+          "Endkey" : ""
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "CheckDutCompare",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 2,
+        "test_name" : "test_image_version",
+        "time_out" : 60,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "emmc_badblocks" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "baudrate" : 115200,
+          "comport" : 1,
+          "IP" : "192.168.1.1",
+          "Time" : 700,
+          "Startkey" : "Pass completed,",
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : [ "badblocks -svw /dev/mmcblk0p17", "badblocks -svw /dev/mmcblk0p20" ],
+          "Endkey" : "bad blocks found"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "EmmcBadBlock",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "emmc_badblocks",
+        "time_out" : 800,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      }
+    },
+    "limits" : { }
+  },
+  "Socket" : {
+    "clients" : {
+      "store" : {
+        "flag" : true,
+        "host" : "127.0.0.1",
+        "port" : 6868
+      },
+      "camera" : {
+        "flag" : true,
+        "host" : "127.0.0.1",
+        "port" : 6026
+      }
+    },
+    "server" : {
+      "flag" : true,
+      "port" : 8686
+    }
+  }
+}

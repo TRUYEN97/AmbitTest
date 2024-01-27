@@ -95,10 +95,10 @@ public class TabPanel<V extends AbsTabElement> extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tabPanelKeyPressed
 
-    public void showTab(String tabName){
+    public void showTab(String tabName) {
         this.tabPanel.setSelectedIndex(this.tabPanel.indexOfTab(tabName));
     }
-    
+
     private void tabPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPanelStateChanged
         tabSelectedUpdate();
     }//GEN-LAST:event_tabPanelStateChanged
@@ -110,8 +110,8 @@ public class TabPanel<V extends AbsTabElement> extends javax.swing.JPanel {
             tabSelected.tabSelected();
         }
     }
-    
-    public void clearAllTab(){
+
+    public void clearAllTab() {
         this.tabPanel.removeAll();
         this.tabElements.clear();
     }
@@ -120,4 +120,16 @@ public class TabPanel<V extends AbsTabElement> extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane tabPanel;
     // End of variables declaration//GEN-END:variables
+
+    public void setSelectedTab(int index) {
+        tabPanel.setSelectedIndex(index);
+    }
+
+    public void setSelectedTab(String tabName) {
+        for (int i = 0; i < tabPanel.getTabCount(); i++) {
+            if (tabPanel.getTitleAt(i).equals(tabName)) {
+                tabPanel.setSelectedIndex(i);
+            }
+        }
+    }
 }

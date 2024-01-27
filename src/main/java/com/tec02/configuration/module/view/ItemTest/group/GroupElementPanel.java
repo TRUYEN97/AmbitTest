@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JColorChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -88,6 +89,8 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         slModerun = new javax.swing.JSlider();
         jLabel7 = new javax.swing.JLabel();
         cbCoreGroup = new javax.swing.JCheckBox();
+        btPassTo = new javax.swing.JButton();
+        btFailTo = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 204, 204));
 
@@ -140,8 +143,8 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -159,6 +162,11 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         spnTb.setModel(new javax.swing.SpinnerNumberModel(0, 0, 255, 1));
 
         pnTcolor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnTcolor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pnTcolorMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnTcolorLayout = new javax.swing.GroupLayout(pnTcolor);
         pnTcolor.setLayout(pnTcolorLayout);
@@ -180,6 +188,11 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         spnFb.setModel(new javax.swing.SpinnerNumberModel(0, 0, 255, 1));
 
         pnFColor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnFColor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pnFColorMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnFColorLayout = new javax.swing.GroupLayout(pnFColor);
         pnFColor.setLayout(pnFColorLayout);
@@ -205,6 +218,20 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         cbCoreGroup.setSelected(true);
         cbCoreGroup.setText("Is Core group");
 
+        btPassTo.setText(">>");
+        btPassTo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btPassToActionPerformed(evt);
+            }
+        });
+
+        btFailTo.setText(">>");
+        btFailTo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFailToActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -225,29 +252,32 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(spLooptest)
-                            .addComponent(cbbPassTo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbbFailTo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(spBegin)
+                            .addComponent(slModerun, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(spnTr, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spnTg, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spnTb, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(pnTcolor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(spnFr, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spnFg, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spnFb, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(pnFColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 65, Short.MAX_VALUE))
-                            .addComponent(slModerun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(spnTr, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spnTg, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spnTb, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pnTcolor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(spnFr, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spnFg, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spnFb, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pnFColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cbbPassTo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btPassTo, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cbbFailTo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btFailTo, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cbCoreGroup)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -273,11 +303,13 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(cbbPassTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbbPassTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btPassTo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(cbbFailTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbbFailTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btFailTo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -312,9 +344,41 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         this.applyListTabel.removeItemSelecteds();
     }//GEN-LAST:event_btRemoveActionPerformed
 
+    private void pnTcolorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnTcolorMouseClicked
+        // TODO add your handling code here:
+        Color selectedColor = JColorChooser.showDialog(this, "Choose a Test-Color", this.pnTcolor.getBackground());
+        if (selectedColor != null) {
+            showTestColor(List.of(selectedColor.getRed(), 
+                    selectedColor.getGreen(), 
+                    selectedColor.getBlue()));
+        }
+    }//GEN-LAST:event_pnTcolorMouseClicked
+
+    private void pnFColorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnFColorMouseClicked
+        // TODO add your handling code here:
+        Color selectedColor = JColorChooser.showDialog(this, "Choose a Failed-Color", this.pnFColor.getBackground());
+        if (selectedColor != null) {
+            showFailColor(List.of(selectedColor.getRed(), 
+                    selectedColor.getGreen(), 
+                    selectedColor.getBlue()));
+        }
+    }//GEN-LAST:event_pnFColorMouseClicked
+
+    private void btPassToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPassToActionPerformed
+        // TODO add your handling code here:
+        tabPanelCurrent.setSelectedTab(String.valueOf(this.cbbPassTo.getSelectedItem()));
+    }//GEN-LAST:event_btPassToActionPerformed
+
+    private void btFailToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFailToActionPerformed
+        // TODO add your handling code here:
+        tabPanelCurrent.setSelectedTab(String.valueOf(this.cbbFailTo.getSelectedItem()));
+    }//GEN-LAST:event_btFailToActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
+    private javax.swing.JButton btFailTo;
+    private javax.swing.JButton btPassTo;
     private javax.swing.JButton btRemove;
     private javax.swing.JCheckBox cbCoreGroup;
     private javax.swing.JComboBox<String> cbbFailTo;
@@ -379,17 +443,23 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         this.slModerun.setValue(model.getModeRun());
         this.spLooptest.setValue(model.getLoop());
         this.spBegin.setValue(begin == null ? -1 : begin);
-        var testColor = model.getTestColor();
+        showTestColor(model.getTestColor());
+        showFailColor(model.getFailColor());
+        refeshListModel();
+    }
+
+    private void showTestColor(List<Integer> testColor) {
         this.spnTr.setValue(testColor.get(0));
         this.spnTg.setValue(testColor.get(1));
         this.spnTb.setValue(testColor.get(2));
         this.pnTcolor.setBackground(new Color(testColor.get(0), testColor.get(1), testColor.get(2)));
-        var failColor = model.getFailColor();
+    }
+
+    private void showFailColor(List<Integer> failColor) {
         this.spnFr.setValue(failColor.get(0));
         this.spnFg.setValue(failColor.get(1));
         this.spnFb.setValue(failColor.get(2));
         this.pnFColor.setBackground(new Color(failColor.get(0), failColor.get(1), failColor.get(2)));
-        refeshListModel();
     }
 
     private synchronized void refeshListModel() {

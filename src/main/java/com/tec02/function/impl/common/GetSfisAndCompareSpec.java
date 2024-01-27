@@ -23,7 +23,7 @@ public class GetSfisAndCompareSpec extends AbsFunction {
         String value = this.dataCell.get(key);
         addLog(PC, "Value: %s", value);
         String spec = this.config.get("compare");
-        if (spec != null && spec.isBlank()) {
+        if (spec != null && !spec.isBlank()) {
             setFunctionSpec(spec);
         }
         setResult(value);

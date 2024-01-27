@@ -43,11 +43,11 @@ public class ItemGroupDto {
         int r = 255;
         int g = 0;
         int b = 0;
-        if (failColor.size() > 1) {
+        if (!failColor.isEmpty()) {
             r = failColor.get(0);
-            if (failColor.size() > 2) {
+            if (failColor.size() > 1) {
                 g = failColor.get(1);
-                if (failColor.size() > 3) {
+                if (failColor.size() > 2) {
                     b = failColor.get(2);
                 }
             }
@@ -62,11 +62,11 @@ public class ItemGroupDto {
         int r = 255;
         int g = 255;
         int b = 0;
-        if (testColor.size() > 1) {
+        if (!testColor.isEmpty()) {
             r = testColor.get(0);
-            if (testColor.size() > 2) {
+            if (testColor.size() > 1) {
                 g = testColor.get(1);
-                if (testColor.size() > 3) {
+                if (testColor.size() > 2) {
                     b = testColor.get(2);
                 }
             }

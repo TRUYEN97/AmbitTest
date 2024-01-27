@@ -7,6 +7,7 @@ package com.tec02.view.subUI.FormDetail.showGroup;
 import com.tec02.Jmodel.Component.MyListTabel;
 import com.tec02.common.MyConst;
 import com.tec02.configuration.model.itemTest.ItemConfig;
+import com.tec02.configuration.module.view.TabPanel;
 import com.tec02.main.ModeManagement;
 import com.tec02.main.modeFlow.ModeFlow;
 import com.tec02.view.subUI.FormDetail.AbsTabUI;

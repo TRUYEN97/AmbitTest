@@ -30,7 +30,7 @@ public class AmbitUI {
     }
 
     private void run() throws FileNotFoundException {
-        this.configurationManagement.setFile("test.json");
+        this.configurationManagement.setFile("config.json");
         this.configurationManagement.init();
         this.configurationManagement.execute();
         this.drawBoardUI.setDrawPanel(this.gui.getDrawPanel());

@@ -7,6 +7,7 @@ com\tec02\configuration\module\view\errorcode\ErrorCodePanel$6.class
 com\tec02\configuration\module\iml\Socket\Socket.class
 com\tec02\main\ItemFunciton\ItemFunctionFactory.class
 com\tec02\configuration\module\view\ItemTest\item\ItemPanel$3.class
+com\tec02\configuration\module\view\ItemTest\group\GroupElementPanel$4.class
 com\tec02\view\ShowConfigEdit.class
 com\tec02\configuration\model\errorCode\InputErrorcode.class
 com\tec02\function\Absbase.class
@@ -40,6 +41,7 @@ com\tec02\function\impl\common\CheckDutCompare.class
 com\tec02\configuration\module\view\errorcode\ErrorCodePanel$5.class
 com\tec02\view\loadModelTime\SubModeTime\TimeVnMode.class
 com\tec02\configuration\module\view\Socket\SocketPanel.class
+com\tec02\configuration\module\view\ItemTest\group\GroupElementPanel$5.class
 com\tec02\view\Gui$3.class
 com\tec02\function\baseFunction\AnalysisResult.class
 com\tec02\view\subUI\FormDetail\FormShow.class
@@ -61,6 +63,7 @@ com\tec02\function\impl\mblt\ThermalShutdown.class
 com\tec02\view\Gui$2.class
 com\tec02\view\subUI\FormDetail\TabItem\ShowLog\ShowLog.class
 com\tec02\configuration\model\errorCode\ErrorCodeModel.class
+com\tec02\configuration\module\view\ItemTest\group\GroupElementPanel$3.class
 com\tec02\view\subUI\FormDetail\showGroup\ShowGroupItem$2.class
 com\tec02\function\impl\runin\EmmcBadBlock.class
 com\tec02\configuration\module\view\ItemTest\config\ModePanel$1.class
@@ -107,6 +110,7 @@ com\tec02\view\subUI\FormDetail\showGroup\ItemGroupView$3.class
 com\tec02\configuration\module\view\ItemTest\item\ItemPanel$1.class
 com\tec02\configuration\module\view\errorcode\ErrorCodePanel$4.class
 com\tec02\view\subUI\SubUI\AbsSubUI.class
+com\tec02\configuration\module\view\ItemTest\group\GroupElementPanel$6.class
 com\tec02\main\UICellTester.class
 com\tec02\configuration\module\view\ItemTest\apply\ApplyPanel$1.class
 com\tec02\function\impl\mblt\OpenShort.class

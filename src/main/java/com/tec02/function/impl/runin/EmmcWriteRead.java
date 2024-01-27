@@ -80,4 +80,8 @@ public class EmmcWriteRead extends AbsFunction {
         config.put("Time", 50);
     }
 
+    @Override
+    protected void init() {
+    }
+
 }

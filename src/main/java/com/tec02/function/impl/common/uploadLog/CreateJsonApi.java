@@ -6,31 +6,32 @@ package com.tec02.function.impl.common.uploadLog;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.tec02.common.Constanct;
+import com.tec02.common.MyConst;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.function.AbsBaseFunction;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FileBaseFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.baseFunction.FunctionLogger;
+import com.tec02.view.managerUI.UICell;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author Administrator
  */
-public class CreateJsonApi extends AbsBaseFunction{
+public class CreateJsonApi extends AbsBaseFunction {
+
     private final FileBaseFunction fileBaseFunction;
     private String path;
 
-    public CreateJsonApi(FunctionLogger logger, FunctionConfig config) {
-        super(logger, config);
-        this.fileBaseFunction = new FileBaseFunction(logger, config);
+    public CreateJsonApi(FunctionLogger logger, FunctionConfig config, UICell uICell) {
+        super(logger, config, uICell);
+        this.fileBaseFunction = new FileBaseFunction(logger, config, uICell);
     }
-    
+
     public boolean test() {
         JSONObject root;
         JSONArray tests;
@@ -53,7 +54,7 @@ public class CreateJsonApi extends AbsBaseFunction{
     }
 
     private boolean isPass(JSONObject root) {
-        return root.getString(Constanct.SFIS.STATUS).equalsIgnoreCase("passed");
+        return root.getString(MyConst.SFIS.STATUS).equalsIgnoreCase("passed");
     }
 
     private JSONObject getRootJson(boolean limitErrorCode) {
@@ -71,16 +72,14 @@ public class CreateJsonApi extends AbsBaseFunction{
         if (key == null) {
             return;
         }
-        if (key.equalsIgnoreCase("serial")) {
-            value = this.dataCell.getString("mlbsn");
-        } else if (!limitErrorCode && key.equalsIgnoreCase(Constanct.MODEL.ERROR_CODE)) {
-            value = this.dataCell.getString(Constanct.MODEL.ERRORCODE);
+        if (!limitErrorCode && key.equalsIgnoreCase(MyConst.MODEL.ERROR_CODE)) {
+            value = this.dataCell.getString(MyConst.MODEL.ERRORCODE);
         } else {
             value = this.dataCell.getString(key);
         }
-        addLog("PC", "Root: " + key + " = " + value);
+        addLog(PC, "Root: %s = %s", key, value);
         data.put(key, value == null ? "" : value);
-        addLog("PC", "-----------------------------------------");
+        addLog(PC, "-----------------------------------------");
     }
 
     private JSONArray getTestsDataFollowLomit(boolean statusTest, boolean followLimit, boolean isUseLimitErrorCode) {
@@ -94,22 +93,20 @@ public class CreateJsonApi extends AbsBaseFunction{
         List<AbsFunction> itemTestDatas = this.dataCell.getItemFunctions();
         for (AbsFunction absFunction : itemTestDatas) {
             String itemName = absFunction.getConfig().getTest_name();
-            if (itemName == null) {
+            if (itemName == null || !absFunction.isDone()) {
                 continue;
             }
             addLog("PC", "Item name: %s", itemName);
             itemTest = absFunction.getData(testKeys, isUseLimitErrorCode);
             if (!followLimit || (checkLimitContain(limits.keySet(), absFunction))) {
                 if (itemTest != null) {
-                    addLog("PC", "ItemTest: %s" + itemName + " = " + itemTest.toJSONString());
+                    addLog("PC", "ItemTest: %s", itemName);
                     tests.add(itemTest);
                 } else if (limits.get(itemName).getRequired() == 1 && statusTest) {
-                    String mess = String.format("Missing \"%s\" item test!", itemName);
-                    addLog("PC", mess);
-                    JOptionPane.showMessageDialog(null, mess);
+                    addLog("PC", "Missing \"%s\" item test!", itemName);
                     return null;
                 } else {
-                    addLog("PC", "ItemTest: " + itemName + " = null");
+                    addLog("PC", "ItemTest: %s = null", itemName);
                 }
             }
         }
@@ -120,7 +117,6 @@ public class CreateJsonApi extends AbsBaseFunction{
         return function != null && (limitItems.contains(function.getConfig().getTest_name())
                 || limitItems.contains(function.getBaseItem()));
     }
-    
 
 //    private boolean isItemTestNotEnough(Set<String> limitItems, List<ItemTestData> itemTestDatas, Limit limit) {
 //        Set<String> itemTestNames = new HashSet<>();
@@ -141,5 +137,4 @@ public class CreateJsonApi extends AbsBaseFunction{
 //        }
 //        return rs;
 //    }
-    
 }

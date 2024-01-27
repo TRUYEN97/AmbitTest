@@ -9,6 +9,7 @@ import com.tec02.function.baseFunction.FileBaseFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.baseFunction.FunctionLogger;
 import com.tec02.main.ErrorLog;
+import com.tec02.view.managerUI.UICell;
 
 /**
  *
@@ -20,9 +21,9 @@ public class ZipFile extends AbsBaseFunction {
     private String zipPath;
     private String txtpath;
 
-    public ZipFile(FunctionLogger logger, FunctionConfig config) {
-        super(logger, config);
-        this.fileBaseFunction = new FileBaseFunction(this.logger, this.config);
+    public ZipFile(FunctionLogger logger, FunctionConfig config, UICell uICell) {
+        super(logger, config, uICell);
+        this.fileBaseFunction = new FileBaseFunction(this.logger, this.config, uICell);
     }
 
     public void setZipPath(String zipPath) {

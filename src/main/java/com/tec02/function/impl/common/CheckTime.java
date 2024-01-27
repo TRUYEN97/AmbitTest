@@ -84,5 +84,9 @@ public class CheckTime extends AbsFunction{
         }
         return dateStr;
     }
+
+    @Override
+    protected void init() {
+    }
     
 }

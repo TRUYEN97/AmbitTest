@@ -7,6 +7,7 @@ package com.tec02.main;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.view.managerUI.UICellManagement;
 import com.tec02.view.managerUI.UICell;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,6 +19,8 @@ public class Core {
     private final UICellManagement cellUIManager;
     private final ConfigurationManagement configurationManagement;
     private String softwareVsersion = "1.0.0";
+    private String appName = "AmbitUI";
+    private int updateStatus = 0;
 
     private Core() {
         this.cellUIManager = UICellManagement.getInstance();
@@ -40,11 +43,23 @@ public class Core {
     public void setSoftwareVsersion(String softwareVsersion) {
         this.softwareVsersion = softwareVsersion;
     }
-    
+
+    public void setInput(String input) {
+        String index = "";
+        if (cellUIManager.isMultiUi()) {
+            index = JOptionPane.showInputDialog(null,
+                    String.format("Input index for \"%s\"", input));
+        }
+        setInput(input, index);
+    }
+
     public void setInput(String input, String index) {
+        if (this.updateStatus != 0 && cellUIManager.isNotTest()) {
+            System.exit(0);
+        }
         input = input.trim();
         index = index.trim();
-        if(this.cellUIManager.isIndexFree(index)){
+        if (this.cellUIManager.isIndexFree(index)) {
             UICell uICell = this.cellUIManager.getUICell(index);
             uICell.setInput(input);
         }
@@ -64,5 +79,17 @@ public class Core {
 
     public String getSoftwareVersion() {
         return softwareVsersion;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setUpdateStatus(int i) {
+        this.updateStatus = i < 0 ? 0 : i;
+    }
+
+    public int getUpdateStatus() {
+        return updateStatus;
     }
 }

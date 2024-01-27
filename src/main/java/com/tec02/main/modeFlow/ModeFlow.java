@@ -10,7 +10,9 @@ import com.tec02.configuration.model.itemTest.ModeDto;
 import com.tec02.configuration.model.itemTest.ItemConfig;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.NonNull;
 
 /**
@@ -23,13 +25,19 @@ public class ModeFlow {
     private final ItemTestDto itemTestDto;
     private final String modeName;
     private ItemGroupDto itemGroupDto;
+    private String currGroupName;
 
     @NonNull
     public ModeFlow(ModeDto modeDto, ItemTestDto itemTestDto, String modeName) {
         this.modeDto = modeDto;
         this.itemTestDto = itemTestDto;
         this.modeName = modeName;
-        this.itemGroupDto = getGroup(modeDto.getGroup());
+        this.currGroupName = modeDto.getGroup();
+        this.itemGroupDto = getGroup(this.currGroupName);
+    }
+
+    public ItemGroupDto getItemGroupDto() {
+        return itemGroupDto;
     }
 
     public String getModeName() {
@@ -56,40 +64,82 @@ public class ModeFlow {
         if (itemGroupDto == null) {
             return null;
         }
+        Set<String> hasGroupsScan = new HashSet<>();
+        hasGroupsScan.add(this.currGroupName);
+        return scanItemIn(itemGroupDto, hasGroupsScan);
+    }
+
+    public List<ItemConfig> getPassToItems() {
+        ModeFlow modeFlow = new ModeFlow(modeDto, itemTestDto, modeName);
         List<ItemConfig> itemConfigs = new ArrayList<>();
-        ItemConfig itemConfig;
-        for (String itemName : this.itemGroupDto.getItems()) {
-            if ((itemConfig = (ItemConfig) this.itemTestDto.getItems().get(itemName)) != null) {
-                itemConfig.setTest_name(itemName);
-                itemConfigs.add(itemConfig);
-            }
+        List<ItemConfig> temps;
+        while ((temps = modeFlow.getListItem()) != null) {
+            itemConfigs.addAll(temps);
+            modeFlow.nextToPassFlow();
         }
         return itemConfigs;
     }
 
+    private List<ItemConfig> scanItemIn(ItemGroupDto itemGroupDto, Set<String> hasGroupsScan) {
+        List<ItemConfig> itemConfigs = new ArrayList<>();
+        if (itemGroupDto == null) {
+            return itemConfigs;
+        }
+        ItemConfig itemConfig;
+        int modeRun = itemGroupDto.getModeRun();
+        for (String name : itemGroupDto.getItems()) {
+            if (name.startsWith("*G-")) {
+                name = name.replaceFirst("\\*G-", "");
+                if (!hasGroupsScan.contains(name) && this.itemTestDto.getGroups().containsKey(name)) {
+                    hasGroupsScan.add(name);
+                    itemConfigs.addAll(scanItemIn(getGroup(name), hasGroupsScan));
+                    hasGroupsScan.remove(name);
+                }
+            } else if ((itemConfig = (ItemConfig) this.itemTestDto.getItems().get(name)) != null) {
+                itemConfig.setTest_name(name);
+                if (itemConfig.getModeRun() > modeRun) {
+                    itemConfig.setModeRun(modeRun);
+                }
+                itemConfigs.add(itemConfig);
+            }
+        }
+        List<ItemConfig> result = new ArrayList<>();
+        for (int i = 0; i < itemGroupDto.getLoop(); i++) {
+            result.addAll(itemConfigs);
+        }
+        return result;
+    }
+
     public boolean nextToPassFlow() {
         String group = itemGroupDto.getPassTo();
-        ItemGroupDto groupDto;
-        if (group == null || (groupDto = getGroup(group)) == null) {
-            itemGroupDto = null;
-            return false;
-        }
-        itemGroupDto = groupDto;
-        return true;
+        return setGroup(group);
     }
 
     public boolean nextToFailedFlow() {
-        String group = itemGroupDto.getFailedTo();
+        String group = this.itemGroupDto.getFailedTo();
+        return setGroup(group);
+    }
+
+    public boolean setGroup(String group) {
         ItemGroupDto groupDto;
         if (group == null || (groupDto = getGroup(group)) == null) {
-            itemGroupDto = null;
+            this.currGroupName = null;
+            this.itemGroupDto = null;
             return false;
         }
-        itemGroupDto = groupDto;
+        this.currGroupName = group;
+        this.itemGroupDto = groupDto;
         return true;
     }
 
+    public Set<String> getGroupNames() {
+        return this.itemTestDto.getGroups().keySet();
+    }
+
     public final ItemGroupDto getGroup(String groupName) {
+        if (groupName == null) {
+            return null;
+        }
         return this.itemTestDto.getGroups().get(groupName);
     }
 
@@ -101,5 +151,12 @@ public class ModeFlow {
     public Color getTestColor() {
         List<Integer> rgb = this.itemGroupDto.getTestColor();
         return new Color(rgb.get(0), rgb.get(1), rgb.get(2));
+    }
+
+    public boolean isCoreGroup() {
+        if(this.itemGroupDto == null){
+            return false;
+        }
+        return this.itemGroupDto.isCoreGroup();
     }
 }

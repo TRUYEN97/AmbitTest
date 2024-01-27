@@ -10,8 +10,6 @@ import com.tec02.main.dataCell.DataCell;
 import com.tec02.view.Gui;
 import com.tec02.view.managerUI.UICell;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -31,7 +29,7 @@ public abstract class AbsUI extends JPanel {
 
     protected AbsUI(String name, int timeDelay) {
         this.name = name;
-        timeDelay = timeDelay < 100 ? 100 : timeDelay;
+        timeDelay = timeDelay < 100 && timeDelay > 0 ? 100 : timeDelay;
         this.timeDelay = timeDelay;
     }
 
@@ -53,7 +51,7 @@ public abstract class AbsUI extends JPanel {
         this.threadUpdate = new Thread() {
             @Override
             public void run() {
-                while (true) {
+                while (timeDelay > 0) {
                     updateData();
                     try {
                         Thread.sleep(timeDelay);

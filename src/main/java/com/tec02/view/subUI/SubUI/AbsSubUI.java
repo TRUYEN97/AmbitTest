@@ -11,6 +11,7 @@ import com.tec02.view.subUI.AbsUI;
 import com.tec02.view.subUI.FormDetail.TabDetail;
 import com.tec02.view.subUI.FormDetail.TabItem.TabItem;
 import com.tec02.view.subUI.FormDetail.TabView.TabView;
+import com.tec02.view.subUI.FormDetail.showGroup.ShowGroupItem;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 
@@ -29,6 +30,7 @@ public abstract class AbsSubUI extends AbsUI {
         this.timeS = new TimeS();
         this.tabDetail.addTabView("View", new TabView());
         this.tabDetail.addTabView("Item", new TabItem());
+        this.tabDetail.addTabView("Groups", new ShowGroupItem());
     }
     
 

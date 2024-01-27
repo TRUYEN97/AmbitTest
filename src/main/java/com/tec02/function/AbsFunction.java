@@ -7,7 +7,7 @@ package com.tec02.function;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tec02.configuration.model.itemTest.ItemConfig;
-import com.tec02.common.Constanct;
+import com.tec02.common.MyConst;
 import com.tec02.common.MyObjectMapper;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.configuration.model.errorCode.ItemErrorCode;
@@ -18,9 +18,9 @@ import com.tec02.function.baseFunction.FileBaseFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.baseFunction.FunctionLogger;
 import com.tec02.function.baseFunction.Model;
-import com.tec02.function.impl.runin.EmmcSpeed;
 import com.tec02.main.ErrorLog;
 import com.tec02.main.ItemFunciton.IItemFunction;
+import com.tec02.view.managerUI.UICell;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,9 +39,9 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     protected final Model model;
     protected final ItemErrorCode errorCode;
     private final AnalysisResult analysisResult;
-    protected final BaseFunction baseFunction;
-    protected final AnalysisBase analysisBase;
-    protected final FileBaseFunction fileBaseFunction;
+    protected BaseFunction baseFunction;
+    protected AnalysisBase analysisBase;
+    protected FileBaseFunction fileBaseFunction;
     private IItemFunction functionManagement;
     private final ConfigurationManagement configurationManagement;
     protected boolean resultTest;
@@ -53,29 +53,38 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     protected int retry;
     private String configName;
     private String limitName;
-    private Integer begin;
 
     public AbsFunction() {
         this.configurationManagement = ConfigurationManagement.getInstance();
         this.config = getDefaultConfig();
         this.model = new Model();
+        MyObjectMapper.update(this.config, this.model);
         this.errorCode = new ItemErrorCode();
         this.logger = new FunctionLogger(model);
         this.analysisResult = new AnalysisResult(config, model, errorCode);
-        this.baseFunction = new BaseFunction(this.logger, this.config);
-        this.analysisBase = new AnalysisBase(this.logger, this.config);
-        this.fileBaseFunction = new FileBaseFunction(logger, config);
         this.resultTest = false;
         this.stop = false;
         this.statusCode = 0;
         this.retry = 0;
     }
 
-    protected AbsFunction getSubItem(String functionName,String item) {
-        return this.functionManagement.getFunction(
+    @Override
+    public void setUICell(UICell uICell) {
+        super.setUICell(uICell);
+        this.baseFunction = new BaseFunction(this.logger, this.config, uICell);
+        this.analysisBase = new AnalysisBase(this.logger, this.config, uICell);
+        this.fileBaseFunction = new FileBaseFunction(logger, config, uICell);
+        init();
+    }
+
+    protected abstract void init();
+
+    protected AbsFunction getSubItem(String functionName, String item) {
+        AbsFunction absFunction = this.functionManagement.getFunction(
                 functionName,
                 config.getTest_name(),
                 item);
+        return absFunction;
     }
 
     @Override
@@ -136,9 +145,6 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     public void setConfig(FunctionConfig config) {
         MyObjectMapper.update(config, this.config);
         MyObjectMapper.update(this.config, this.model);
-        this.model.setError_code("");
-        this.model.setErrorcode("");
-        this.model.setDescErrorcde("");
     }
 
     public void setErrorCode(ItemErrorCode errorCode) {
@@ -169,13 +175,14 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
             begin();
             for (retry = 0; retry < times && !stop; retry++) {
                 resultTest = false;
+                model.reset();
                 if (retry > 0) {
                     addLog("-------------------------------------------");
-                    addLog("----------------- retry %s ---------------", retry);
+                    addLog(PC, "----------------- retry %s ---------------", retry);
                 }
                 this.future = threadPool.submit(() -> {
                     if (this.config.isDebugCancellRun()
-                            && dataCell.getAPImode().equalsIgnoreCase("debug")) {
+                            && dataCell.getAPImode().equalsIgnoreCase(MyConst.CONFIG.DEBUG)) {
                         addLog(PC, "Cancellation run in debug mode");
                         resultTest = true;
                     } else {
@@ -250,7 +257,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         if (spec != null) {
             String mode = dataCell.getAPImode();
             if (this.config.isDebugCancellCheckSpec()
-                    && mode.equalsIgnoreCase("debug")) {
+                    && mode.equalsIgnoreCase(MyConst.CONFIG.DEBUG)) {
                 addLog(PC, "Ignore compare in debug mode");
             } else {
                 resultTest = value != null
@@ -264,7 +271,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         this.logger.addLog("RESULT", "Item type: \"%s\"", config.getLimit_type());
         this.logger.addLog("RESULT", "Upper limit: \"%s\"", model.getUpper_limit());
         this.logger.addLog("RESULT", "Lower limit: \"%s\"", model.getLower_limit());
-        this.logger.addLog("RESULT", "Value: \"%s\"", value);
+        this.logger.addLog("RESULT", "Value: \"%s\"", this.model.getTest_value());
         this.logger.addLog("RESULT", "Status: \"%s\"", model.getStatus());
         this.logger.addLog("RESULT", "Error description: \"%s\"", model.getDescErrorcde());
         this.logger.addLog("RESULT", "Errorcode: \"%s\"", model.getErrorcode());
@@ -279,7 +286,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     @Override
     public boolean isPass() {
         String stt = model.getStatus();
-        return stt != null && stt.equalsIgnoreCase(Constanct.MODEL.PASS);
+        return stt != null && stt.equalsIgnoreCase(MyConst.MODEL.PASS);
     }
 
     public JSONObject getData(List<String> testKeys, boolean useLimitErrorCode) {
@@ -299,19 +306,22 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
 
     public void setConfigName(String configName, String limitName, Integer begin) {
         this.configName = configName;
-        this.limitName = limitName;
-        this.begin = begin;
+        this.limitName = this.dataCell.getNextItemName(limitName, begin);
+        this.uICell.getDataCell().addItemFunction(this);
     }
 
     public void updateConfig() {
         FunctionConfig cf = this.configurationManagement.getFunctionConfig(configName, limitName);
-        cf.setTest_name(limitName == null ? this.dataCell.getNextItemName(limitName, begin) : limitName);
-        setConfig(cf);
+        if (cf != null) {
+            cf.setTest_name(limitName);
+            setConfig(cf);
+        }
         ItemErrorCode err = this.configurationManagement.getErrorcode(limitName);
-        if (err == null && this.configurationManagement.getSettingConfig().isShowMissingErrorcode()) {
+        if (err != null) {
+            setErrorCode(err);
+        } else if (this.configurationManagement.getSettingConfig().isShowMissingErrorcode()) {
             JOptionPane.showMessageDialog(null, String.format("Missing error code: %s", limitName));
         }
-        setErrorCode(err);
     }
 
 }

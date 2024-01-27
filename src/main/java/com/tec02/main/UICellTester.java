@@ -5,11 +5,14 @@
 package com.tec02.main;
 
 import com.tec02.common.Logger;
+import com.tec02.common.MyConst;
 import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.function.AbsFunction;
+import com.tec02.function.impl.common.SaveLocalLog;
 import com.tec02.main.ItemFunciton.IItemFunction;
 import com.tec02.main.modeFlow.ModeFlow;
 import com.tec02.view.managerUI.UICell;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -46,38 +49,79 @@ public class UICellTester {
         this.stop = false;
     }
 
-    public void setInput(String input) {
+    public void setInput(String input, int moderun) {
         if (isTesting() || input == null) {
             return;
         }
         this.input = input.toUpperCase();
         ModeFlow modeFlow = this.modeManagement.getModeFlow();
         this.rootFuture = this.pool.submit(() -> {
-            try {
-                uICell.getDataCell().reset();
-                this.uICell.getDataCell().putData("sn", this.input);
-                this.uICell.getDataCell().putData("mode", modeFlow.getAPIMode());
-                uICell.getAbsSubUi().startTest();
-                this.stop = false;
-                List<ItemConfig> items;
-                while ((items = modeFlow.getListItem()) != null && !this.stop) {
-                    uICell.getDataCell().setTestColor(modeFlow.getTestColor());
-                    if (runFlow(modeFlow, items)) {
-                        modeFlow.nextToPassFlow();
-                    } else {
-                        uICell.getDataCell().setFailColor(modeFlow.getFailColor());
-                        modeFlow.nextToFailedFlow();
+            this.stop = false;
+            for (int i = 0; i < modeFlow.getLoop() && !this.stop; i++) {
+                boolean isCoreGroup = false;
+                try {
+                    String modeName = moderun > 1 ? "*TE-Debug" : this.modeManagement.getCurrentModeName();
+                    String modeApi = moderun > 1 ? MyConst.CONFIG.DEBUG : modeFlow.getAPIMode();
+                    this.uICell.getDataCell().reset();
+                    this.uICell.getDataCell().start(this.input, modeName, modeApi);
+                    this.uICell.getAbsSubUi().startTest();
+                    List<ItemConfig> items;
+                    while ((items = modeFlow.getListItem()) != null && !this.stop) {
+                        if (!isCoreGroup) {
+                            isCoreGroup = modeFlow.isCoreGroup();
+                        }
+                        this.uICell.getDataCell().setTestColor(modeFlow.getTestColor());
+                        if (run(modeFlow.getBegin(), items, false, moderun)) {
+                            modeFlow.nextToPassFlow();
+                        } else {
+                            this.uICell.getDataCell().setFailColor(modeFlow.getFailColor());
+                            modeFlow.nextToFailedFlow();
+                        }
                     }
+                    waitForMultidone(500);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    this.logger.addLog("Error", ex.getLocalizedMessage());
+                } finally {
+                    saveLocalLog();
+                    if (moderun == 1 && isCoreGroup
+                            && !this.uICell.getDataCell().getAPImode()
+                                    .equals(MyConst.CONFIG.DEBUG)) {
+                        if (this.uICell.getDataCell().isPass()) {
+                            this.uICell.addPassCount();
+                        } else {
+                            this.uICell.addTestFailCount();
+                        }
+                    } else if (moderun == 2 && this.uICell.getDataCell().isPass()) {
+                        this.uICell.resetFailedConsecutive();
+                    }
+                    this.uICell.getAbsSubUi().endTest();
+                }
+            }
+        });
+    }
+
+    public void runDebugItem(List<ItemConfig> allItem) {
+        if (isTesting() || allItem == null || allItem.isEmpty()) {
+            return;
+        }
+        this.rootFuture = this.pool.submit(() -> {
+            this.stop = false;
+            try {
+                this.uICell.getDataCell().reset();
+                this.uICell.getDataCell().start("","**TE-Debug", MyConst.CONFIG.DEBUG);
+                this.uICell.getAbsSubUi().startTest();
+                this.uICell.getDataCell().setTestColor(Color.yellow);
+                if (!run(null, allItem, true, 3)) {
+                    this.uICell.getDataCell().setFailColor(Color.red);
                 }
                 waitForMultidone(500);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 this.logger.addLog("Error", ex.getLocalizedMessage());
             } finally {
-                uICell.getAbsSubUi().endTest();
-                if (uICell.getDataCell().isPass()) {
-                    uICell.resetFailedConsecutive();
-                }
+                this.uICell.getDataCell().updateResultTest();
+                this.uICell.getAbsSubUi().endTest();
             }
         });
     }
@@ -100,32 +144,32 @@ public class UICellTester {
         }
     }
 
-    private boolean runFlow(ModeFlow modeFlow, List<ItemConfig> items) throws InterruptedException, ExecutionException {
-        Integer begin = modeFlow.getBegin();
-        int looptimes = modeFlow.getLoop();
+    private boolean run(Integer begin, List<ItemConfig> items, boolean alwaysRun, int modeRun) throws InterruptedException, ExecutionException {
         Future currFt;
         AbsFunction function;
-        for (int i = 0; i < looptimes && !this.stop; i++) {
-            for (ItemConfig itemConfig : items) {
-                function = this.functionFactory.getFunction(
-                        itemConfig.getFunction(),
-                        itemConfig.getTest_name(), begin);
-                if (function == null) {
-                    throw new RuntimeException(
-                            String.format("Func: %s - %s, function not exists!",
-                                    itemConfig.getFunction(), itemConfig.getTest_name()));
-                }
-                function.setFunctionManagement(functionFactory);
-                currFt = this.poolRun.submit(function);
-                if (function.getConfig().isWait_multi_done()) {
-                    waitForMultidone(50);
-                }
-                this.marks.add(new Mark(currFt, function));
-                if (!function.getConfig().isMulti()) {
-                    currFt.get();
-                    if (!function.isPass()) {
-                        return false;
-                    }
+        if (modeRun < 1) {
+            modeRun = 1;
+        }
+        for (ItemConfig itemConfig : items) {
+            if (stop && !alwaysRun
+                    && !itemConfig.isAlwaysRun()) {
+                continue;
+            }
+            if (modeRun > itemConfig.getModeRun()) {
+                continue;
+            }
+            function = this.functionFactory.getFunction(
+                    itemConfig.getFunction(),
+                    itemConfig.getTest_name(), begin);
+            currFt = this.poolRun.submit(function);
+            if (function.getConfig().isWait_multi_done()) {
+                waitForMultidone(50);
+            }
+            this.marks.add(new Mark(currFt, function));
+            if (!function.getConfig().isMulti()) {
+                currFt.get();
+                if (!function.isPass()) {
+                    return false;
                 }
             }
         }
@@ -148,6 +192,13 @@ public class UICellTester {
             }
         }
         return rs;
+    }
+
+    public String getCurrentModeName() {
+        if (isTesting()) {
+            return this.uICell.getDataCell().get(MyConst.MODEL.MODE_NAME);
+        }
+        return this.modeManagement.getCurrentModeName();
     }
 
     public String getInput() {
@@ -179,6 +230,19 @@ public class UICellTester {
     public boolean isTesting() {
         return this.rootFuture != null && !this.rootFuture.isDone()
                 || (stopThread != null && stopThread.isAlive());
+    }
+
+    private void saveLocalLog() {
+        try {
+            this.uICell.getDataCell().updateResultTest();
+            SaveLocalLog saveLocalLog = new SaveLocalLog();
+            saveLocalLog.setUICell(uICell);
+            this.uICell.getDataCell().addItemFunction(saveLocalLog);
+            this.poolRun.submit(saveLocalLog).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorLog.addError(e.getLocalizedMessage());
+        }
     }
 
     private class Mark {

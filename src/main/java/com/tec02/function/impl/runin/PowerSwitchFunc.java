@@ -5,7 +5,6 @@
 package com.tec02.function.impl.runin;
 
 import com.tec02.communication.Communicate.Impl.PowerSwitch.PowerSwitch;
-import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import java.util.List;
@@ -140,6 +139,10 @@ public class PowerSwitchFunc extends AbsFunction {
             i = delays.size();
         }
         return delays.get(i);
+    }
+
+    @Override
+    protected void init() {
     }
 
  

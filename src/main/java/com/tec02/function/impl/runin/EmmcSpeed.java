@@ -101,5 +101,9 @@ public class EmmcSpeed extends AbsFunction{
     protected void createDefaultConfig(FunctionConfig config) {
         config.setTime_out(60);
     }
+
+    @Override
+    protected void init() {
+    }
     
 }

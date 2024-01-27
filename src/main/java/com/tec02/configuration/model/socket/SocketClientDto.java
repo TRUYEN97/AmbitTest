@@ -15,5 +15,4 @@ import lombok.Setter;
 @Setter
 public class SocketClientDto extends SocketServerDto{
     private String host;
-    
 }

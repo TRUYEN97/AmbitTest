@@ -5,6 +5,7 @@
 package com.tec02.function.impl.common;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
+import com.tec02.common.MyConst;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
@@ -40,7 +41,11 @@ public class CheckDutCompare extends AbsFunction {
             String value = this.analysisBase.getValue(communicate,
                     startkey, endkey, regex, new TimeS(time), readUntil);
             if (key != null && !key.isBlank()) {
-                setFunctionSpec(dataCell.getString(key));
+                String spec = dataCell.getString(key);
+                setFunctionSpec(spec);
+                if (this.dataCell.getAPImode().equalsIgnoreCase(MyConst.CONFIG.DEBUG) && spec == null) {
+                    this.dataCell.putData(key, value);
+                }
             }
             if (value == null) {
                 return false;
@@ -74,6 +79,10 @@ public class CheckDutCompare extends AbsFunction {
         config.put(REGEX, "");
         config.put(TIME, 40);
         config.put(COMPARE, "ethernetmac");
+    }
+
+    @Override
+    protected void init() {
     }
 
 }

@@ -19,4 +19,12 @@ public class ModeDto {
     private String mode;
     private Integer loop = 1;
     private String group;
+
+    public Integer getLoop() {
+        if(loop == null || loop < 1){
+            return 1;
+        }
+        return loop;
+    }
+
 }

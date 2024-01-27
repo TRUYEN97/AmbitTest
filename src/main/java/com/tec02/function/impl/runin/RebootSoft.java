@@ -65,5 +65,9 @@ public class RebootSoft extends AbsFunction{
         config.put("waitTime", 40);
         config.put("pingTimes", 300);
     }
+
+    @Override
+    protected void init() {
+    }
     
 }

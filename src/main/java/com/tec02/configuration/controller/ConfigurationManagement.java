@@ -23,7 +23,7 @@ import com.tec02.configuration.module.iml.Dhcp;
 import com.tec02.configuration.module.iml.ErrorCode;
 import com.tec02.configuration.module.iml.ItemTest;
 import com.tec02.configuration.module.iml.Setting;
-import com.tec02.configuration.module.iml.Socket;
+import com.tec02.configuration.module.iml.Socket.Socket;
 import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.model.setting.SettingDto;
@@ -36,7 +36,7 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class ConfigurationManagement implements Iexecute{
+public class ConfigurationManagement implements Iexecute {
 
     private static volatile ConfigurationManagement management;
     private final List<AbsModule> modules;
@@ -71,7 +71,7 @@ public class ConfigurationManagement implements Iexecute{
         this.logger = new Logger("Log/ConfigurationManagement");
         this.tabPanel = new TabConfiguramentPanel(this);
     }
- 
+
     public final void setFile(String filePath) throws FileNotFoundException {
         this.file = new File(filePath);
         if (!this.file.exists()) {
@@ -124,8 +124,6 @@ public class ConfigurationManagement implements Iexecute{
             throw new RuntimeException(ex.getLocalizedMessage());
         }
     }
-    
-    
 
     @NonNull
     public final void addModel(AbsModule model) {
@@ -142,7 +140,7 @@ public class ConfigurationManagement implements Iexecute{
         JSONObject model = new JSONObject();
         try {
             for (AbsModule module : modules) {
-                model.put(module.getName(),module.getInputModel());
+                model.put(module.getName(), module.getInputModel());
             }
             return model;
         } catch (Exception ex) {
@@ -150,8 +148,8 @@ public class ConfigurationManagement implements Iexecute{
             return null;
         }
     }
-    
-    public ErrorCode getErrorCode(){
+
+    public ErrorCode getErrorCode() {
         return (ErrorCode) this.getModel(ErrorCode.class);
     }
 
@@ -178,33 +176,46 @@ public class ConfigurationManagement implements Iexecute{
     public FunctionConfig getFunctionConfig(String itemName) {
         return getFunctionConfig(itemName, itemName);
     }
-    
+
     public FunctionConfig getFunctionConfig(String configName, String limitName) {
-       FunctionConfig config = getItemTestConfig(configName);
+        FunctionConfig config = getItemTestConfig(configName);
         if (config == null) {
             return null;
         }
         ItemLimit itemLimit = getItemLimit(limitName);
-        if(itemLimit != null){
+        if (itemLimit != null) {
             MyObjectMapper.update(itemLimit, config);
         }
         return config;
     }
-    
+
+    private String getBaseItem(String itemName) {
+        if (itemName.matches(".+_[0-9]+$")) {
+            return itemName.substring(0, itemName.lastIndexOf("_"));
+        }
+        return itemName;
+    }
+
     public FunctionConfig getItemTestConfig(String configName) {
         Map<String, ItemConfig> itemsCongfig = getItemTestConfig().getModel().getItems();
-        if (itemsCongfig == null || !itemsCongfig.containsKey(configName)) {
+        ItemConfig itemConfig;
+        if (itemsCongfig == null
+                || ((itemConfig = itemsCongfig.get(configName)) == null
+                && (itemConfig = itemsCongfig.get(getBaseItem(configName))) == null)) {
             return null;
         }
-        return new FunctionConfig(itemsCongfig.get(configName));
+        return new FunctionConfig(itemConfig);
     }
-    
+
     public ItemLimit getItemLimit(String itemName) {
         Map<String, ItemLimit> itemsLimit = getItemTestConfig().getModel().getLimits();
-        if (itemsLimit == null) {
+        ItemLimit itemLimit;
+        if (itemsLimit == null
+                || ((itemLimit = itemsLimit.get(itemName)) == null
+                && (itemLimit = itemsLimit.get(getBaseItem(itemName))) == null)) {
             return null;
         }
-        return itemsLimit.get(itemName);
+        return itemLimit;
     }
 
     @Override
@@ -216,10 +227,13 @@ public class ConfigurationManagement implements Iexecute{
 
     public ItemErrorCode getErrorcode(String limitName) {
         Map<String, ItemErrorCode> errorcodes = this.getErrorCode().getModel().getErrorcodes();
-        if(errorcodes == null || limitName == null){
+        ItemErrorCode itemErrorCode;
+        limitName = limitName.toUpperCase();
+        if (errorcodes == null || ((itemErrorCode = errorcodes.get(limitName)) == null
+                && (itemErrorCode = errorcodes.get(getBaseItem(limitName))) == null)) {
             return null;
         }
-        return errorcodes.get(limitName.toUpperCase());
+        return itemErrorCode;
     }
 
 }

@@ -48,7 +48,7 @@ public class FormShow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        setSize(new java.awt.Dimension(757, 403));
+        setSize(new java.awt.Dimension(753, 475));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

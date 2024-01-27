@@ -4,7 +4,6 @@
  */
 package com.tec02.function.impl.common.uploadLog.ftp;
 
-
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.uploadLog.CreateJsonApi;
@@ -18,15 +17,35 @@ import java.util.List;
  */
 public class UpLogFTP extends AbsFunction {
 
-    private final UpFTP upFTP;
-    private final CreateJsonApi jsonApi;
-    private final CreateTxt createTxt;
+    private UpFTP upFTP;
+    private CreateJsonApi jsonApi;
+    private CreateTxt createTxt;
 
-
-    public UpLogFTP() {
-        this.upFTP = new UpFTP(logger, config);
-        this.jsonApi = new CreateJsonApi(logger, config);
-        this.createTxt = new CreateTxt(logger, config);
+    @Override
+    protected void createDefaultConfig(FunctionConfig config) {
+        config.setAlwaysRun(true);
+        config.setRetry(1);
+        config.put("User", "oper");
+        config.put("Password", "mfg-oper");
+        config.put("Host", "10.90.100.168");
+        config.put("Port", 21);
+        config.put("followLimit", false);
+        config.put("limitErrorCode", false);
+        config.put("BaseKeys", List.of("mo", "sn",
+                "error_details", "status", "finish_time",
+                "test_software_version", "start_time", "station_type",
+                "error_code", "errorcode", "errorDes",
+                "serial", "mode", "station_name",
+                "position", "cycle_time"));
+        config.put("TestKeys", List.of("upper_limit",
+                "lower_limit", "status", "finish_time", "test_name",
+                "error_code", "errorcode", "errorDes",
+                "start_time", "test_value", "units"));
+        config.put("LocalPrefix", List.of("Log/TestLog"));
+        config.put("FtpPrefixTxt", List.of("data/Trieste", "Text", "pnname", "station_type", "start_day", "station_name", "status"));
+        config.put("FtpPrefixJson", List.of("data/Trieste", "json", "pnname", "station_type", "start_day", "station_name", "status"));
+        config.put("LocalName", List.of("mlbsn", "sn", "position", "status", "mode", "finish_time"));
+        config.put("LocalNameFail", List.of("mlbsn", "sn", "position", "status", "error_details", "errorcode", "mode", "finish_time"));
     }
 
     @Override
@@ -45,6 +64,9 @@ public class UpLogFTP extends AbsFunction {
             String localTxtPath = String.format("%s/text/%s.txt", localFolder, fileName);
             String ftpJsonPath = String.format("%s/%s.json", ftpFolderJson, fileName);
             String ftpTxtPath = String.format("%s/%s.txt", ftpFolderTxt, fileName);
+            if (retry < 1) {
+                this.dataCell.updateResultTest();
+            }
             if (upJson(localJsonPath, ftpJsonPath) && upTxt(localTxtPath, ftpTxtPath)) {
                 this.dataCell.putData("ftppath", ftpTxtPath);
                 setResult(ftpTxtPath);
@@ -83,8 +105,10 @@ public class UpLogFTP extends AbsFunction {
     }
 
     @Override
-    protected void createDefaultConfig(FunctionConfig config) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    protected void init() {
+        this.upFTP = new UpFTP(logger, config, uICell);
+        this.jsonApi = new CreateJsonApi(logger, config, uICell);
+        this.createTxt = new CreateTxt(logger, config, uICell);
     }
 
 }

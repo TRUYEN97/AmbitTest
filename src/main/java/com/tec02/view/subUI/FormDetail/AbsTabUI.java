@@ -5,7 +5,7 @@
 package com.tec02.view.subUI.FormDetail;
 
 import com.tec02.view.subUI.AbsUI;
-
+import javax.swing.event.ChangeEvent;
 
 /**
  *
@@ -18,4 +18,6 @@ public abstract class AbsTabUI extends AbsUI {
     }
 
     public abstract void keyEvent(java.awt.event.KeyEvent evt);
+
+    public abstract void tabSelected(ChangeEvent evt);
 }

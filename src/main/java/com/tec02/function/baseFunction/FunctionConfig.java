@@ -182,5 +182,12 @@ public class FunctionConfig extends ItemLimit implements IItemConfig{
     public boolean isAlwaysRun() {
         return this.ItemConfigClass.isAlwaysRun();
     }
+
+    public void merge(FunctionConfig defaultConfig) {
+        if(defaultConfig == null){
+            return;
+        }
+        this.ItemConfigClass.getBonus().putAll(defaultConfig.getBonus());
+    }
     
 }

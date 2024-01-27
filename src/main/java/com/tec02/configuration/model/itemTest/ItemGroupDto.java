@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 public class ItemGroupDto {
 
-    private boolean debug = false;
+    private int modeRun = 1;
     private List<Integer> failColor = List.of(255, 0, 0);
     private List<Integer> testColor = List.of(255, 255, 0);
     private String passTo;
@@ -25,6 +25,16 @@ public class ItemGroupDto {
     private List<String> items = new ArrayList<>();
     private Integer begin;
     private int loop = 1;
+    private boolean coreGroup = true;
+
+    public int getModeRun() {
+        if (modeRun < 1) {
+            modeRun = 1;
+        } else if (modeRun > 3) {
+            modeRun = 3;
+        }
+        return modeRun;
+    }
 
     public List<Integer> getFailColor() {
         if (failColor == null) {

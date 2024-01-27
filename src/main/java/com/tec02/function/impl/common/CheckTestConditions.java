@@ -82,4 +82,8 @@ public class CheckTestConditions extends AbsFunction {
                 JOptionPane.OK_CANCEL_OPTION);
     }
 
+    @Override
+    protected void init() {
+    }
+
 }

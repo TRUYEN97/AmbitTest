@@ -5,11 +5,16 @@
 package com.tec02.function.baseFunction;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tec02.FileService.FileService;
 import com.tec02.FileService.Zip;
+import com.tec02.common.MyObjectMapper;
 import com.tec02.function.AbsBaseFunction;
+import com.tec02.view.managerUI.UICell;
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,15 +25,20 @@ public class FileBaseFunction extends AbsBaseFunction {
     private final FileService fileService;
     private final Zip zip;
 
-    public FileBaseFunction(FunctionLogger logger, FunctionConfig config) {
-        super(logger, config);
+    public FileBaseFunction(FunctionLogger logger, FunctionConfig config, UICell uICell) {
+        super(logger, config, uICell);
         fileService = new FileService();
         zip = new Zip();
     }
 
-
     public boolean saveJson(JSONObject data, String path) {
-        return saveTxt(formatJson(data.toJSONString()), path);
+        String json = data.toJSONString();
+        try {
+            json = MyObjectMapper.prettyPrintJsonUsingDefaultPrettyPrinter(json);
+        } catch (JsonProcessingException ex) {
+            addLog(ERROR, ex.getLocalizedMessage());
+        }
+        return saveTxt(json, path);
     }
 
     public String createStringPath(String prefix, String fileName, String suffix) {
@@ -84,15 +94,6 @@ public class FileBaseFunction extends AbsBaseFunction {
         return false;
     }
 
-    public String formatJson(String str) {
-        addLog("PC", "Format for json data!");
-        str = str.replaceAll("\\},(?!\r\n)", "\r\n},\r\n");
-        str = str.replaceAll("\\{(?!\r\n)", "\r\n{\r\n");
-        str = str.replaceAll("\\}(?!,)", "\r\n}\r\n");
-        str = str.replaceAll(",(?=\")", ",\r\n");
-        return str.trim();
-    }
-
     public String createName(List<String> elementName) {
         StringBuilder pathName = new StringBuilder();
         addLog(CONFIG, "Name elements: %s", elementName);
@@ -100,8 +101,10 @@ public class FileBaseFunction extends AbsBaseFunction {
             if (!pathName.isEmpty()) {
                 pathName.append("_");
             }
-            String value = dataCell.getString(elem);
-            if (value == null) {
+            elem = elem.trim();
+            String value;
+            if ((value = dataCell.getString(elem)) == null || elem.matches("^\\{\\w+\\}$")) {
+                elem = elem.replaceAll("\\{|\\}", "");
                 pathName.append(elem);
             } else {
                 value = value.replace('\\', '-');
@@ -113,6 +116,7 @@ public class FileBaseFunction extends AbsBaseFunction {
         }
         return pathName.toString();
     }
+
     public String createDir(List<String> elementDir) {
         StringBuilder pathName = new StringBuilder();
         addLog(CONFIG, "Dir elements: %s", elementDir);

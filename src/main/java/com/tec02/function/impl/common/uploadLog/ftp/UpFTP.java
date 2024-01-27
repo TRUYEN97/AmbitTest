@@ -4,7 +4,6 @@
  */
 package com.tec02.function.impl.common.uploadLog.ftp;
 
-
 import com.tec02.communication.Communicate.Impl.FtpClient.FtpClient;
 import com.tec02.function.AbsBaseFunction;
 import com.tec02.function.baseFunction.BaseFunction;
@@ -12,6 +11,7 @@ import com.tec02.function.baseFunction.FileBaseFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.baseFunction.FunctionLogger;
 import com.tec02.main.ErrorLog;
+import com.tec02.view.managerUI.UICell;
 import java.io.File;
 import java.io.IOException;
 
@@ -20,17 +20,17 @@ import java.io.IOException;
  * @author Administrator
  */
 public class UpFTP extends AbsBaseFunction {
+
     private String ftpPath;
     private String localPath;
     private final BaseFunction baseFunction;
     private final FileBaseFunction fileBaseFunction;
 
-    public UpFTP(FunctionLogger logger, FunctionConfig config) {
-        super(logger, config);
-        this.baseFunction = new BaseFunction(logger, config);
-        this.fileBaseFunction = new FileBaseFunction(logger, config);
+    public UpFTP(FunctionLogger logger, FunctionConfig config, UICell uICell) {
+        super(logger, config, uICell);
+        this.baseFunction = new BaseFunction(logger, config, uICell);
+        this.fileBaseFunction = new FileBaseFunction(logger, config, uICell);
     }
-    
 
     public void setFtpPath(String ftpPath) {
         this.ftpPath = ftpPath;

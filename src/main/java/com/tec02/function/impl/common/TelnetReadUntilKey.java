@@ -6,7 +6,7 @@ package com.tec02.function.impl.common;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tec02.Time.WaitTime.Class.TimeS;
-import com.tec02.common.Constanct;
+import com.tec02.common.MyConst;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
 import com.tec02.function.AbsFunction;
@@ -63,7 +63,7 @@ public class TelnetReadUntilKey extends AbsFunction {
             }
         }
         String limitType = this.config.getLimit_type();
-        if (limitType != null && limitType.equalsIgnoreCase(Constanct.CONFIG.MATCH)) {
+        if (limitType != null && limitType.equalsIgnoreCase(MyConst.CONFIG.MATCH)) {
             setResult(spec);
         }
         return true;
@@ -81,6 +81,10 @@ public class TelnetReadUntilKey extends AbsFunction {
                                                            "keyWord": "successful run completed in",
                                                            "ReadUntil": "root@eero-test:/#",
                                                            "Time": 2200 }"""));
+    }
+
+    @Override
+    protected void init() {
     }
 
 }

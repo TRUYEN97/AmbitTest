@@ -40,5 +40,9 @@ public class Dutping extends AbsFunction{
         config.put("type", "check");
         config.put("time_ping", 120);
     }
+
+    @Override
+    protected void init() {
+    }
     
 }

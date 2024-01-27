@@ -96,5 +96,9 @@ public class EmmcBadBlock extends AbsFunction {
                                                            "Endkey": "bad blocks found",
                                                            "ReadUntil": "root@eero-test:/#"}"""));
     }
+
+    @Override
+    protected void init() {
+    }
     
 }

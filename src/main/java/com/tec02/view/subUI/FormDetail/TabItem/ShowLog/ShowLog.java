@@ -4,7 +4,7 @@
  */
 package com.tec02.view.subUI.FormDetail.TabItem.ShowLog;
 
-import com.tec02.common.Constanct;
+import com.tec02.common.MyConst;
 import com.tec02.function.IFunctionModel;
 import com.tec02.view.managerUI.UICell;
 import java.awt.event.MouseEvent;
@@ -82,9 +82,9 @@ public class ShowLog extends javax.swing.JFrame {
         String index = uICell.getName();
         var model = this.functionModel.getModel();
         var dataCell = uICell.getDataCell();
-        String sn = dataCell.get(Constanct.MODEL.SN, "");
-        String mlbsn = dataCell.get(Constanct.MODEL.MLBSN, "");
-        String mac = dataCell.get(Constanct.MODEL.MAC, "");
+        String sn = dataCell.get(MyConst.MODEL.SN, "");
+        String mlbsn = dataCell.get(MyConst.MODEL.MLBSN, "");
+        String mac = dataCell.get(MyConst.MODEL.MAC, "");
         String title = String.format("%s %s %s %s %s", index, model.getTest_name(),
                 sn == null ? "" : sn, mlbsn == null ? "" : mlbsn, mac == null ? "" : mac);
         this.setTitle(title);

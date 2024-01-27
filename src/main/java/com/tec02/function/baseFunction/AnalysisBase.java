@@ -8,6 +8,7 @@ import com.tec02.Time.WaitTime.AbsTime;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.IReadable;
 import com.tec02.function.AbsBaseFunction;
+import com.tec02.view.managerUI.UICell;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,8 +19,8 @@ import java.util.regex.Pattern;
  */
 public class AnalysisBase extends AbsBaseFunction {
 
-    public AnalysisBase(FunctionLogger logger, FunctionConfig config) {
-        super(logger, config);
+    public AnalysisBase(FunctionLogger logger, FunctionConfig config, UICell uICell) {
+        super(logger, config, uICell);
     }
 
     public String getValue(IReadable readable, String regex, AbsTime time, String readUntil) {

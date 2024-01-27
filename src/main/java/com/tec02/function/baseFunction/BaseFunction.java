@@ -5,7 +5,7 @@
 package com.tec02.function.baseFunction;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
-import com.tec02.common.Constanct;
+import com.tec02.common.MyConst;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.AbsStreamReadable;
 import com.tec02.communication.Communicate.ISender;
@@ -15,6 +15,7 @@ import com.tec02.communication.Communicate.Impl.FtpClient.FtpClient;
 import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
 import com.tec02.communication.DHCP.DhcpData;
 import com.tec02.function.AbsBaseFunction;
+import com.tec02.view.managerUI.UICell;
 import java.io.IOException;
 
 /**
@@ -23,8 +24,8 @@ import java.io.IOException;
  */
 public class BaseFunction extends AbsBaseFunction {
 
-    public BaseFunction(FunctionLogger logger, FunctionConfig config) {
-        super(logger, config);
+    public BaseFunction(FunctionLogger logger, FunctionConfig config, UICell uICell) {
+        super(logger, config, uICell);
     }
 
     public FtpClient initFtp(String user, String passWord, String host, int port) throws IOException {
@@ -91,7 +92,7 @@ public class BaseFunction extends AbsBaseFunction {
 
     public String getIp() throws Exception {
         if (this.dhcpDto.isOn()) {
-            String mac = this.dataCell.get(Constanct.MODEL.MAC);
+            String mac = this.dataCell.get(MyConst.MODEL.MAC);
             if (mac == null) {
                 addLog("It's DHCP mode but MAC is null!");
                 return null;
@@ -178,7 +179,7 @@ public class BaseFunction extends AbsBaseFunction {
     }
 
     public String getMac() {
-        String mac = this.dataCell.get(Constanct.MODEL.MAC);
+        String mac = this.dataCell.get(MyConst.MODEL.MAC);
         if (mac == null || ((mac.length() != 17 && mac.contains(":")) || (mac.length() != 12 && !mac.contains(":")))) {
             addLog("MAC is invalid: " + mac);
             return null;

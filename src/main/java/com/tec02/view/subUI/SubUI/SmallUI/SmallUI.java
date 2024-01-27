@@ -5,7 +5,6 @@
 package com.tec02.view.subUI.SubUI.SmallUI;
 
 import com.tec02.function.IFunctionModel;
-import com.tec02.main.ModeManagement;
 import com.tec02.view.subUI.FormDetail.FormShow;
 import com.tec02.view.subUI.SubUI.AbsSubUI;
 import java.awt.Color;
@@ -18,7 +17,6 @@ public class SmallUI extends AbsSubUI {
 
     private static final String DEFAULT_FORM = "<html><center>%s<br>%s<br>%s</html>";
     private final FormShow formShow;
-    private final ModeManagement modeManagement;
 
     /**
      * Creates new form SmallUI
@@ -31,7 +29,6 @@ public class SmallUI extends AbsSubUI {
         this.formShow = new FormShow(tabDetail);
         this.lbTime.setToolTipText(indexName);
         this.lbTime.setText(indexName);
-        this.modeManagement = ModeManagement.getInsatace();
     }
 
     /**
@@ -73,14 +70,15 @@ public class SmallUI extends AbsSubUI {
     private final String LABLEL_NAME_HTML = "<center><u><b><span style=\"font-size: 14px\">%s</span></u></b><br>";
     private void lbTimeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbTimeMouseEntered
         // TODO add your handling code here:
+        String currentMode = this.uICell.getCellTester().getCurrentModeName();
         StringBuilder messHtml = new StringBuilder("<html>");
         StringBuilder mess = new StringBuilder();
         messHtml.append(String.format(LABLEL_NAME_HTML, getName()));
-        mess.append(String.format("%s\r\n", this.modeManagement.getCurrentModeName()));
+        mess.append(String.format("%s\r\n", currentMode));
         mess.append(String.format("----------------- %s ------------------\r\n", getName()));
         if (this.uICell.isTesting()) {
             messHtml.append("<table>");
-            messHtml.append(String.format("<tr><td><center><span style=\"font-size: 14px\">Mode: %s</td></span></tr>", this.modeManagement.getCurrentModeName()));
+            messHtml.append(String.format("<tr><td><center><span style=\"font-size: 14px\">Mode: %s</td></span></tr>", currentMode));
             String itemName;
             for (IFunctionModel functionModel : functionModels) {
                 if (functionModel.isTesting()) {

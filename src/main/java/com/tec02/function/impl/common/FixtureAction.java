@@ -76,7 +76,16 @@ public class FixtureAction extends AbsFunction {
 
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        config.setTime_out(20);
+        config.put("FixtureCom", "COM5");
+        config.put("FixtureBaudRate", 9600);
+        config.put("FixtureCommands", List.of(""));
+        config.put("FixtureKeys", List.of(""));
+        config.put("FixtureWait", 15);
+    }
+
+    @Override
+    protected void init() {
     }
 
 }

@@ -5,13 +5,13 @@
 package com.tec02.main.dataCell;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tec02.API.DataWareHouse;
-import com.tec02.common.Constanct;
+import com.tec02.Time.TimeBase;
+import com.tec02.common.DataWareHouse;
+import com.tec02.common.MyConst;
 import com.tec02.common.MyObjectMapper;
 import com.tec02.common.PcInformation;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.function.AbsFunction;
-import com.tec02.function.IFunctionModel;
 import com.tec02.main.Core;
 import com.tec02.main.ModeManagement;
 import com.tec02.view.managerUI.UICell;
@@ -32,6 +32,8 @@ public class DataCell {
     private final Map<String, Integer> itemCounts;
     private final DataWareHouse wareHouse;
     private final UICell uICell;
+    private final TimeBase timeBase;
+    private long startTime;
     private Color failColor;
     private Color testColor;
 
@@ -39,12 +41,17 @@ public class DataCell {
         this.itemFunctions = new ArrayList<>();
         this.itemCounts = new HashMap<>();
         this.wareHouse = new DataWareHouse();
+        this.wareHouse.putkeyMap(MyConst.MODEL.MLBSN, MyConst.MODEL.SERIAL);
+        this.wareHouse.putkeyMap(MyConst.MODEL.PCNAME, MyConst.MODEL.STATION_NAME);
+        this.wareHouse.putkeyMap(MyConst.MODEL.STATION, MyConst.MODEL.STATION_TYPE);
         this.uICell = uICell;
+        this.timeBase = new TimeBase();
     }
 
     public void reset() {
         this.itemCounts.clear();
         this.itemFunctions.clear();
+        this.startTime = 0;
         initWarehouse();
     }
 
@@ -53,10 +60,11 @@ public class DataCell {
         ConfigurationManagement configurationManagement = ConfigurationManagement.getInstance();
         JSONObject model = MyObjectMapper.convertValue(configurationManagement.getSettingConfig().getModel(), JSONObject.class);
         wareHouse.putAll(model);
-        wareHouse.put(Constanct.MODEL.MODE, ModeManagement.getInsatace().getModeFlow().getAPIMode());
-        wareHouse.put(Constanct.MODEL.PCNAME, PcInformation.getInstance().getPcName());
-        wareHouse.put(Constanct.MODEL.POSITION, this.uICell.getName());
-        wareHouse.put(Constanct.MODEL.SOFTWARE_VERSION, Core.getInstance().getSoftwareVersion());
+        String mode = ModeManagement.getInsatace().getModeFlow().getAPIMode();
+        wareHouse.put(MyConst.MODEL.MODE, mode);
+        wareHouse.put(MyConst.MODEL.PCNAME, PcInformation.getInstance().getPcName());
+        wareHouse.put(MyConst.MODEL.POSITION, this.uICell.getName());
+        wareHouse.put(MyConst.MODEL.SOFTWARE_VERSION, Core.getInstance().getSoftwareVersion());
     }
 
     public void putData(String key, Object value) {
@@ -79,11 +87,12 @@ public class DataCell {
         return MyObjectMapper.convertValue(wareHouse.toJson(), clazz);
     }
 
-    public String getNextItemName(String itemName, Integer begin) {
+    public synchronized String getNextItemName(String itemName, Integer begin) {
         Integer count;
         String simpleName = itemName.toLowerCase();
         if ((count = this.itemCounts.get(simpleName)) != null) {
             if (begin == null || begin < count) {
+                this.itemCounts.put(simpleName, count + 1);
                 return String.format("%s_%s", itemName, count);
             } else {
                 this.itemCounts.put(simpleName, begin);
@@ -94,7 +103,7 @@ public class DataCell {
                 this.itemCounts.put(simpleName, 0);
                 return itemName;
             } else {
-                this.itemCounts.put(simpleName, begin);
+                this.itemCounts.put(simpleName, begin +1);
                 return String.format("%s_%s", itemName, begin);
             }
         }
@@ -114,21 +123,29 @@ public class DataCell {
         String itemName;
         String mess;
         String errorcode;
+        if (itemFunctions.isEmpty()) {
+            return "Ready";
+        }
         for (AbsFunction itemFunction : itemFunctions) {
             mess = itemFunction.getMessage();
-            if (mess != null && !mess.isBlank()) {
-                itemName = itemFunction.getConfig().getTest_name();
-                if (isFailed(itemFunction)) {
-                    errorcode = itemFunction.getModel().getErrorcode();
-                    builder.append(String.format("%s: \"%s\" %s\r\n",
-                            itemName,
-                            mess,
-                            errorcode));
-                } else {
-                    builder.append(String.format("%s: \"%s\"\r\n",
-                            itemName,
-                            mess));
-                }
+            itemName = itemFunction.getConfig().getTest_name();
+            if (isFailed(itemFunction)) {
+                errorcode = itemFunction.getModel().getErrorcode();
+                builder.append(String.format("%s: \"%s\" %s\r\n",
+                        itemName,
+                        mess == null ? "" : mess,
+                        errorcode));
+            } else if (mess != null && !mess.isBlank()) {
+                builder.append(String.format("%s: \"%s\"\r\n",
+                        itemName,
+                        mess));
+            }
+        }
+        if (builder.isEmpty()) {
+            if (isPass()) {
+                return "PASS";
+            } else {
+                return "FAIL";
             }
         }
         return builder.toString().trim();
@@ -162,15 +179,8 @@ public class DataCell {
     }
 
     public boolean isPass() {
-        if (itemFunctions.isEmpty()) {
-            return false;
-        }
-        for (AbsFunction itemFunction : itemFunctions) {
-            if (isFailed(itemFunction)) {
-                return false;
-            }
-        }
-        return true;
+        String status = wareHouse.getString(MyConst.MODEL.STATUS, MyConst.MODEL.FAIL);
+        return status != null && !status.equalsIgnoreCase(MyConst.MODEL.FAIL);
     }
 
     public void setTestColor(Color testColor) {
@@ -201,11 +211,21 @@ public class DataCell {
     }
 
     public String getString(String key) {
+        if (key == null) {
+            return null;
+        }
+        if (key.equals(MyConst.MODEL.STATUS)) {
+            return isPass() ? MyConst.MODEL.PASS : MyConst.MODEL.FAIL;
+        }
         return get(key);
     }
 
+    public String getTestmode() {
+        return get(MyConst.MODEL.MODE_NAME);
+    }
+    
     public String getAPImode() {
-        return get(Constanct.MODEL.MODE);
+        return get(MyConst.MODEL.MODE);
     }
 
     public String getString(String key, String defaultVal) {
@@ -213,7 +233,7 @@ public class DataCell {
     }
 
     public long getCycleTestTime() {
-        return 0;
+        return this.wareHouse.getLong(MyConst.MODEL.CYCLE_TIOME);
     }
 
     public AbsFunction getFirtFailItem() {
@@ -223,6 +243,30 @@ public class DataCell {
             }
         }
         return null;
+    }
+
+    public void updateResultTest() {
+        AbsFunction function = getFirtFailItem();
+        if (function != null) {
+            var mode = function.getModel();
+            this.wareHouse.put(MyConst.MODEL.ERRORCODE, mode.getErrorcode());
+            this.wareHouse.put(MyConst.MODEL.ERROR_CODE, mode.getError_code());
+            this.wareHouse.put(MyConst.MODEL.ERRORDES, mode.getDescErrorcde());
+            this.wareHouse.put(MyConst.MODEL.STATUS, MyConst.MODEL.FAIL);
+        } else {
+            this.wareHouse.put(MyConst.MODEL.STATUS, MyConst.MODEL.PASS);
+        }
+        this.wareHouse.put(MyConst.MODEL.CYCLE_TIOME, String.valueOf(System.currentTimeMillis() - startTime));
+        this.wareHouse.put(MyConst.MODEL.FINISH_TIME, timeBase.getSimpleDateTime());
+    }
+
+    public void start(String input, String modeName, String modeAPI) {
+        this.uICell.getDataCell().putData(MyConst.MODEL.SN, input);
+                    this.uICell.getDataCell().putData(MyConst.MODEL.MODE_NAME, modeName);
+                    this.uICell.getDataCell().putData(MyConst.MODEL.MODE,modeAPI);
+        this.wareHouse.put(MyConst.MODEL.START_TIME, timeBase.getSimpleDateTime());
+        wareHouse.put(MyConst.MODEL.ON_SFIS, modeAPI.equalsIgnoreCase(MyConst.CONFIG.DEBUG) ? "off" : "on");
+        this.startTime = System.currentTimeMillis();
     }
 
 }

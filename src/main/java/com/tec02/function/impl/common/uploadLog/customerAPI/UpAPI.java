@@ -8,7 +8,6 @@ import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.Impl.Cmd.Cmd;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.function.AbsFunction;
-import com.tec02.function.baseFunction.FileBaseFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.uploadLog.CreateJsonApi;
 import com.tec02.function.impl.common.uploadLog.CreateTxt;
@@ -21,17 +20,9 @@ import java.util.List;
  */
 public class UpAPI extends AbsFunction {
 
-    private final CreateJsonApi jsonApi;
-    private final CreateTxt createTxt;
-    private final ZipFile zipFile;
-    private final FileBaseFunction fileBaseFunction;
-
-    public UpAPI() {
-        this.createTxt = new CreateTxt(logger, config);
-        this.zipFile = new ZipFile(logger, config);
-        this.jsonApi = new CreateJsonApi(logger, config);
-        this.fileBaseFunction = new FileBaseFunction(logger, config);
-    }
+    private CreateJsonApi jsonApi;
+    private CreateTxt createTxt;
+    private ZipFile zipFile;
 
     @Override
     protected boolean test() {
@@ -49,13 +40,14 @@ public class UpAPI extends AbsFunction {
             ConfigurationManagement.getInstance().getItemTestConfig().execute();
             var limits = ConfigurationManagement.getInstance().getItemTestConfig().getModel().getLimits();
             for (AbsFunction itemFunction : dataCell.getItemFunctions()) {
-                itemFunction.updateConfig();
                 if (itemFunction.isDone() && (limits.containsKey(itemFunction.getConfig().getTest_name())
                         || limits.containsKey(itemFunction.getBaseItem()))) {
+                    itemFunction.updateConfig();
                     itemFunction.checkResult();
                 }
             }
         }
+        this.dataCell.updateResultTest();
         if (isCreateJsonOk(jsonPath)
                 && isCreateTxtOk(txtPath)
                 && isCreateZipOk(zipPath, txtPath)) {
@@ -107,7 +99,6 @@ public class UpAPI extends AbsFunction {
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
         config.setRetry(3);
-        config.setTime_out(60);
         config.put("followLimit", true);
         config.put("limitErrorCode", true);
         config.put("BaseKeys", List.of("error_details", "status", "finish_time",
@@ -118,9 +109,16 @@ public class UpAPI extends AbsFunction {
         config.put("LocalPrefix", List.of("python/log"));
         config.put("LocaljsonName", List.of("mlbsn", "station_name", "mode"));
         config.put("LocalPrefix", List.of("python/log"));
-        config.put("LocalTxtName", List.of("mlbsn", "station_name", "mode", "serial"));
+        config.put("LocalTxtName", List.of("mlbsn", "station_name", "mode", "{serial}"));
         config.put("Command", "cd python && eero_API_client.py log/");
         config.put("Spec", "200");
+    }
+
+    @Override
+    protected void init() {
+        this.createTxt = new CreateTxt(logger, config, uICell);
+        this.zipFile = new ZipFile(logger, config, uICell);
+        this.jsonApi = new CreateJsonApi(logger, config, uICell);
     }
 
 }

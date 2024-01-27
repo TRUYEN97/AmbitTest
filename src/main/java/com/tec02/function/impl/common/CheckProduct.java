@@ -203,4 +203,8 @@ public class CheckProduct extends AbsFunction {
                                                """));
     }
 
+    @Override
+    protected void init() {
+    }
+
 }

@@ -124,4 +124,8 @@ public class UICellManagement {
         this.gui = gui;
     }
 
+    public boolean isMultiUi() {
+        return this.uiCells.size() > 1;
+    }
+
 }

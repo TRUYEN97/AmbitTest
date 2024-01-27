@@ -35,7 +35,7 @@ public class UICell {
     private String input;
     private int failcount = 0;
     private int failConsecutivecount = 0;
-    private int testcount = 0;
+    private int passcount = 0;
 
     @NonNull
     public UICell(AbsSubUI absSubUi, int id, int row, int column) {
@@ -70,12 +70,12 @@ public class UICell {
 
     public void setInput(String input) {
         if (input != null && !isTesting()) {
-            this.cellTester.setInput(input);
+            this.cellTester.setInput(input, 1);
         }
     }
 
     public int getTestCount() {
-        return testcount;
+        return passcount + failcount;
     }
 
     public int getTestFailed() {
@@ -90,15 +90,24 @@ public class UICell {
         failConsecutivecount = 0;
     }
 
-    public int addTestCount() {
-        return testcount += 1;
+    public void addPassCount() {
+        passcount += 1;
+        failConsecutivecount = 0;
     }
 
-    public int addTestFailCount() {
-        return failcount += 1;
+    public void addTestFailCount() {
+        failConsecutivecount += 1;
+        failcount += 1;
     }
 
-    public int addTestFailConsecutiveCount() {
-        return failConsecutivecount += 1;
+    public double getYR() {
+        if (getTestCount() == 0) {
+            return 0.0;
+        }
+        return (double) (getFailcount() / getTestCount()) * 100;
+    }
+
+    public int getTestPass() {
+        return getTestCount() - getTestFailed();
     }
 }

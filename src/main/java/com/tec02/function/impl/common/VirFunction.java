@@ -26,7 +26,11 @@ public class VirFunction extends AbsFunction{
 
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
-        config.get("mess", "");
+        config.put("mess", "");
+    }
+
+    @Override
+    protected void init() {
     }
     
 }

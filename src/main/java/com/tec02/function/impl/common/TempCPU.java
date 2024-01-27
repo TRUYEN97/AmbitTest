@@ -99,4 +99,8 @@ public class TempCPU extends AbsFunction {
         config.put("Regexs", "");
     }
 
+    @Override
+    protected void init() {
+    }
+
 }

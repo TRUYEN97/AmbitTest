@@ -14,10 +14,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ItemConfig implements IItemConfig{
+public class ItemConfig implements IItemConfig {
 
     private int time_out = Integer.MAX_VALUE;
     private int retry = 0;
+    private int modeRun = 3;
     private boolean multi = false;
     private boolean check_spec = true;
     private boolean wait_multi_done = false;
@@ -31,6 +32,15 @@ public class ItemConfig implements IItemConfig{
     private String lower_limit = "";
     private String upper_limit = "";
     private JSONObject bonus = new JSONObject();
+
+    public int getModeRun() {
+        if (modeRun < 1) {
+            modeRun = 1;
+        } else if (modeRun > 3) {
+            modeRun = 3;
+        }
+        return modeRun;
+    }
 
     @Override
     public String toString() {

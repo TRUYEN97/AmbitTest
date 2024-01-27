@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.tec02.API.Response;
 import com.tec02.API.RestAPI;
 import com.tec02.Time.TimeBase;
-import com.tec02.common.Constanct;
+import com.tec02.common.MyConst;
 import com.tec02.communication.DHCP.DhcpData;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
@@ -23,13 +23,13 @@ import java.util.List;
  */
 public class SfisFunction extends AbsFunction {
 
-    public static final String SEND_SFIS__EXCEPTION = "Send SFIS Exception : ";   
+    public static final String SEND_SFIS__EXCEPTION = "Send SFIS Exception : ";
     private static final String DATA_FORMAT = "data_format";
     private static final String SEND_FORMAT = "send_format";
     private static final String SEND_FORMAT_FAIL = "send_format_fail";
     private static final MyLogger sfisLog = new MyLogger();
     private final RestAPI restAPI = new RestAPI();
-    
+
     private synchronized static void writeLog(String location, String log, Object... param) throws Exception {
         sfisLog.setFile(new File(String.format("../sfislog/%s.txt", new TimeBase().getDate())));
         sfisLog.setSaveMemory(true);
@@ -74,12 +74,11 @@ public class SfisFunction extends AbsFunction {
 
     private String getCommand(String type) {
         String command;
-        String status = this.dataCell.getString(Constanct.SFIS.STATUS);
-        if (type == null|| type.isBlank() || (status != null && status.equalsIgnoreCase("pass"))) {
+        String status = this.dataCell.getString(MyConst.SFIS.STATUS);
+        if (type == null || type.isBlank() || (status != null && status.equalsIgnoreCase("pass"))) {
             command = this.createCommand(SEND_FORMAT);
         } else {
             command = this.createCommand(SEND_FORMAT_FAIL);
-            uICell.addTestFailConsecutiveCount();
         }
         return command;
     }
@@ -88,7 +87,7 @@ public class SfisFunction extends AbsFunction {
         JSONObject command = new JSONObject();
         List<String> listKey = this.config.getJsonList(keyWord);
         int maxLength = this.config.getInteger(MAX_LENGTH, -1);
-        addLog("Input", "Input: " + this.dataCell.getString(Constanct.SFIS.SN));
+        addLog("Input", "Input: " + this.dataCell.getString(MyConst.SFIS.SN));
         addLog("Config", "MaxLength: " + maxLength);
         addLog(keyWord, listKey);
         if (listKey == null || listKey.isEmpty()) {
@@ -102,13 +101,14 @@ public class SfisFunction extends AbsFunction {
             if (value == null) {
                 continue;
             }
-            if (key.equalsIgnoreCase(Constanct.SFIS.PCNAME)) {
-                String location = this.dataCell.getString(Constanct.MODEL.POSITION, "");
+            if (key.equalsIgnoreCase(MyConst.SFIS.PCNAME)) {
+                String location = this.dataCell.getString(MyConst.MODEL.POSITION, "");
                 command.put(key, location.isBlank() ? value : String.format("%s-%s", value, location));
-            } else if (key.equalsIgnoreCase(Constanct.SFIS.STATUS)) {
+            } else if (key.equalsIgnoreCase(MyConst.SFIS.STATUS)) {
+                this.dataCell.putData(MyConst.MODEL.ON_SFIS, "on");
                 command.put(key, value.equalsIgnoreCase("passed") ? PASS : FAIL);
             } else if (maxLength != -1
-                    && key.equalsIgnoreCase(Constanct.SFIS.SN)
+                    && key.equalsIgnoreCase(MyConst.SFIS.SN)
                     && value.length() > maxLength) {
                 command.put(key, value.substring(0, maxLength));
             } else {
@@ -141,7 +141,7 @@ public class SfisFunction extends AbsFunction {
                 return false;
             }
             try {
-                if (this.dhcpDto.isOn()&& !putMacDHCP()) {
+                if (this.dhcpDto.isOn() && !putMacDHCP()) {
                     addLog("Get MAC from SFIS for DHCP failed!");
                     return false;
                 }
@@ -161,7 +161,7 @@ public class SfisFunction extends AbsFunction {
     private boolean getDataToProductInfo(JSONObject data) {
         String value;
         for (String key : data.keySet()) {
-            if (key.equals(Constanct.SFIS.MAC)) {
+            if (key.equals(MyConst.SFIS.MAC)) {
                 value = createTrueMac(getValueInData(data, key));
             } else {
                 value = getValueInData(data, key);
@@ -197,7 +197,7 @@ public class SfisFunction extends AbsFunction {
     }
 
     private boolean putMacDHCP() throws Exception {
-        String mac = this.dataCell.getString(Constanct.SFIS.MAC);
+        String mac = this.dataCell.getString(MyConst.SFIS.MAC);
         String oldIP = DhcpData.getInstance().getIP(mac);
         if (mac == null || mac.isBlank()
                 || !DhcpData.getInstance().put(mac, uICell.getId())) {
@@ -252,6 +252,10 @@ public class SfisFunction extends AbsFunction {
         config.put(SEND_FORMAT_FAIL, List.of("sn", "pcname", "status", "errorcode"));
         config.put(URL, "http://10.90.100.20/sfcapi/api/connect");
         config.put(SFIS_TYPE, "");
+    }
+
+    @Override
+    protected void init() {
     }
 
 }

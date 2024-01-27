@@ -5,7 +5,7 @@
 package com.tec02.function.impl.common.uploadLog.mydas;
 
 import com.tec02.Time.TimeBase;
-import com.tec02.common.Constanct;
+import com.tec02.common.MyConst;
 import com.tec02.common.PcInformation;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.IFunctionModel;
@@ -35,6 +35,9 @@ public class Mydas extends AbsFunction {
         addLog("CONFIG", String.format(String.format("flowVer: %s", flowVer)));
         String titleVer = this.dataCell.getString("titleVer", "3.0");
         addLog("CONFIG", String.format(String.format("titleVer: %s", titleVer)));
+        if (retry < 1) {
+            this.dataCell.updateResultTest();
+        }
         MydasClient mydasClient = new MydasClient(IP, pcName, flowVer, titleVer, dutModel, station, pn);
         return sendMydas(mydasClient, sendDetail);
     }
@@ -106,20 +109,20 @@ public class Mydas extends AbsFunction {
             builder.append(String.format("%s,%s,%.3f;",
                     itemTestData.isPass() ? "PASS" : "FAIL",
                     itemTestData.getModel().getTest_value(),
-                    itemTestData.getModel().getCycleTime()/1000.0));
+                    itemTestData.getModel().getCycleTime() / 1000.0));
         }
         return builder.toString();
     }
 
     private String getMainInfo() {
         StringBuilder builder = new StringBuilder();
-        int status = this.dataCell.getString(Constanct.SFIS.STATUS, "").equalsIgnoreCase("passed")
+        int status = this.dataCell.getString(MyConst.SFIS.STATUS, "").equalsIgnoreCase("passed")
                 ? 1 : 0;
-        builder.append(this.dataCell.getString(Constanct.SFIS.MLBSN, "")).append(",");
+        builder.append(this.dataCell.getString(MyConst.SFIS.MLBSN, "")).append(",");
         builder.append(status).append(",");
         builder.append(this.dataCell.getString("ftppath", "")).append(",");
-        builder.append(this.dataCell.getString(Constanct.MODEL.SOFTWARE_VERSION, "")).append(",");
-        builder.append(this.dataCell.getString(Constanct.MODEL.PCNAME, "")).append(",");
+        builder.append(this.dataCell.getString(MyConst.MODEL.SOFTWARE_VERSION, "")).append(",");
+        builder.append(this.dataCell.getString(MyConst.MODEL.PCNAME, "")).append(",");
         builder.append(this.dataCell.getString("cycle_time", "")).append(",");
         builder.append(getFinishTime()).append(",");
         builder.append(",").append(this.uICell.getName()).append(",");
@@ -127,8 +130,7 @@ public class Mydas extends AbsFunction {
     }
 
     private String getFinishTime() {
-        return new TimeBase().conVertToFormat(
-                this.dataCell.getString(Constanct.MODEL.FINISH_TIME, ""),
+        return new TimeBase().conVertToFormat(this.dataCell.getString(MyConst.MODEL.FINISH_TIME, ""),
                 TimeBase.SIMPLE_DATE_TIME, TimeBase.MM_DD_YYYY_HH_MM_SS);
 
     }
@@ -141,6 +143,10 @@ public class Mydas extends AbsFunction {
         config.put("titleVer", "3.0");
         config.put("IP", "10.90.100.168");
         config.put("sendDetail", false);
+    }
+
+    @Override
+    protected void init() {
     }
 
 }

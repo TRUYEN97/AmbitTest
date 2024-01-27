@@ -11,25 +11,34 @@ import com.tec02.function.baseFunction.FunctionConfig;
  *
  * @author Administrator
  */
-public class GetSfisAndCompareSpec extends AbsFunction{
+public class GetSfisAndCompareSpec extends AbsFunction {
 
     @Override
     protected boolean test() {
         String key = this.config.get("key");
         addLog(CONFIG, "key: %s", key);
-        if(key == null){
+        if (key == null) {
             return false;
         }
-        setFunctionSpec(this.config.get("compare"));
-        setResult(this.dataCell.get(key));
+        String value = this.dataCell.get(key);
+        addLog(PC, "Value: %s", value);
+        String spec = this.config.get("compare");
+        if (spec != null && spec.isBlank()) {
+            setFunctionSpec(spec);
+        }
+        setResult(value);
         return true;
     }
 
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
         config.setTime_out(60);
-        config.get("key", "");
-        config.get("compare", null);
+        config.put("key", "");
+        config.put("compare", "");
     }
-    
+
+    @Override
+    protected void init() {
+    }
+
 }

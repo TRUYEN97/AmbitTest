@@ -38,4 +38,8 @@ public class DutTelnet extends AbsFunction {
         config.put("IP", "192.168.1.1");
     }
 
+    @Override
+    protected void init() {
+    }
+
 }

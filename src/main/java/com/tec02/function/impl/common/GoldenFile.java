@@ -4,7 +4,7 @@
  */
 package com.tec02.function.impl.common;
 
-import com.tec02.common.Constanct;
+import com.tec02.common.MyConst;
 import com.tec02.communication.DHCP.DhcpData;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
@@ -28,7 +28,7 @@ public class GoldenFile extends AbsFunction {
                 addLog("config", "Golen file not valid!");
                 return false;
             }
-            String snInput = this.dataCell.getString(Constanct.SFIS.SN);
+            String snInput = this.dataCell.getString(MyConst.SFIS.SN);
             addLog("PC", "Input: %s", snInput);
             if (!findSNInGoldenFile(goldenFile, snInput)) {
                 return false;
@@ -49,7 +49,7 @@ public class GoldenFile extends AbsFunction {
     }
 
     private boolean putMacDHCP() throws Exception {
-        String mac = this.dataCell.getString(Constanct.SFIS.MAC);
+        String mac = this.dataCell.getString(MyConst.SFIS.MAC);
         int id = uICell.getId();
         addLog("PC", "MAC: %s", mac);
         addLog("PC", "id: %s", id);
@@ -115,6 +115,10 @@ public class GoldenFile extends AbsFunction {
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    protected void init() {
     }
 
 }

@@ -11,7 +11,10 @@
 package com.tec02.view.subUI.FormDetail.TabItem;
 
 import com.tec02.Jmodel.Component.MyTable;
+import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.function.IFunctionModel;
+import com.tec02.main.ModeManagement;
+import com.tec02.main.modeFlow.ModeFlow;
 import com.tec02.view.subUI.FormDetail.AbsTabUI;
 import com.tec02.view.subUI.FormDetail.TabItem.ShowLog.ShowLog;
 import java.awt.event.KeyEvent;
@@ -20,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import javax.swing.event.ChangeEvent;
 
 /**
  *
@@ -33,9 +37,15 @@ public class TabItem extends AbsTabUI {
     private static final String STT_COULMN = "STT";
     private static final String ERROR_CODE_COULMN = "Error code";
     private static final String CUS_ERROR_CODE_COULMN = "Cus error code";
+    private static final String DEBUG_ABLE = "debug-item";
     private final Map<String, ShowLog> itemLogs;
     private final MyTable myTable;
     private final List<Boolean> itemFinish;
+    private static final List<String> testColoumns = List.of(STT_COULMN,
+            ITEM_COULMN, TIME_COULMN,
+            STATUS_COULMN, CUS_ERROR_CODE_COULMN, ERROR_CODE_COULMN);
+    private static final List<String> showColoumns = List.of(STT_COULMN,
+            ITEM_COULMN, DEBUG_ABLE);
 
     /**
      * Creates new form TagLog
@@ -50,24 +60,20 @@ public class TabItem extends AbsTabUI {
     }
 
     private void showItemLogSelected() {
-        String functionName = this.myTable.getRowSelectedValue(name);
-        IFunctionModel dataBox = this.dataCell.getFunction(functionName);
-        if (dataBox == null) {
-            return;
+        var functionName = this.myTable.getRowSelectedValue(ITEM_COULMN);
+        if (functionName instanceof String funcName) {
+            IFunctionModel dataBox = this.dataCell.getFunction(funcName);
+            if (dataBox == null) {
+                return;
+            }
+            if (itemLogs.containsKey(funcName)) {
+                itemLogs.get(funcName).showLog();
+            } else {
+                ShowLog itemLog = new ShowLog(dataBox, uICell);
+                itemLog.showLog();
+                itemLogs.put(funcName, itemLog);
+            }
         }
-        if (itemLogs.containsKey(functionName)) {
-            itemLogs.get(functionName).showLog();
-        } else {
-            ShowLog itemLog = new ShowLog(dataBox, uICell);
-            itemLog.showLog();
-            itemLogs.put(functionName, itemLog);
-        }
-    }
-
-    private void initTable() {
-        this.myTable.initTable(List.of(STT_COULMN,
-                ITEM_COULMN, TIME_COULMN,
-                STATUS_COULMN, CUS_ERROR_CODE_COULMN, ERROR_CODE_COULMN));
     }
 
     /**
@@ -88,9 +94,7 @@ public class TabItem extends AbsTabUI {
         tableItem.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         tableItem.setModel(new javax.swing.table.DefaultTableModel(
             null,
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
+            new String [] {}
         ));
         tableItem.setName("tableItem"); // NOI18N
         tableItem.setRowHeight(30);
@@ -133,6 +137,8 @@ public class TabItem extends AbsTabUI {
     private static final int CTRL_S = 19;
     private static final int CTRL_D = 4;
     private static final int CTRL_Q = 17;
+    private static final int CTRL_R = 18;
+    private static final int CTRL_W = 23;
 
     @Override
     public void startTest() {
@@ -141,7 +147,7 @@ public class TabItem extends AbsTabUI {
         }
         this.itemLogs.clear();
         this.itemFinish.clear();
-        initTable();
+        this.myTable.initTable(testColoumns);
         super.startTest();
     }
 
@@ -151,23 +157,7 @@ public class TabItem extends AbsTabUI {
             return;
         }
         try {
-            IFunctionModel dataBox;
-            for (int row = 0; row < functionModels.size(); row++) {
-                if (isHasFinish(row)) {
-                    continue;
-                }
-                dataBox = functionModels.get(row);
-                if (row > this.myTable.getRowCount() - 1) {
-                    this.myTable.addRow(new Object[]{this.myTable.getRowCount()});
-                    this.itemFinish.add(false);
-                    showDataTest(dataBox, row);
-                } else {
-                    showDataTest(dataBox, row);
-                }
-                if (dataBox.isDone()) {
-                    this.itemFinish.set(row, true);
-                }
-            }
+            showItemTest(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -176,7 +166,7 @@ public class TabItem extends AbsTabUI {
     private void showDataTest(IFunctionModel dataBox, int row) {
         var model = dataBox.getModel();
         this.myTable.setValueAt(row, ITEM_COULMN, model.getTest_name());
-        this.myTable.setValueAt(row, TIME_COULMN, String.format("%.3f S", dataBox.getRunTime()/1000.0));
+        this.myTable.setValueAt(row, TIME_COULMN, String.format("%.3f S", dataBox.getRunTime() / 1000.0));
         this.myTable.setValueAt(row, STATUS_COULMN, getStatus(dataBox));
         this.myTable.setValueAt(row, ERROR_CODE_COULMN, model.getErrorcode());
         this.myTable.setValueAt(row, CUS_ERROR_CODE_COULMN, model.getError_code());
@@ -194,20 +184,94 @@ public class TabItem extends AbsTabUI {
 
     @Override
     public void keyEvent(KeyEvent evt) {
-        if(evt.getKeyChar() == CTRL_Q){
-            if(isAccepToStopTest()){
-               this.uICell.getCellTester().stop();
+        int a = evt.getKeyChar();
+        switch (a) {
+            case CTRL_Q -> {
+                if (this.uICell.isTesting() && isAccepToStopTest()) {
+                    this.uICell.getCellTester().stop();
+                }
+            }
+            case CTRL_S -> {
+                if (!this.uICell.isTesting()) {
+                    this.myTable.initTable(showColoumns);
+                    ModeFlow modeFlow = ModeManagement.getInsatace().getModeFlow();
+                    List<ItemConfig> itemConfigs = modeFlow.getPassToItems();
+                    ItemConfig itemConfig;
+                    for (int i = 0; i < itemConfigs.size(); i++) {
+                        itemConfig = itemConfigs.get(i);
+                        this.myTable.addRow(Map.of(STT_COULMN, i,
+                                ITEM_COULMN, itemConfig,
+                                DEBUG_ABLE, itemConfig.getModeRun() > 2));
+                    }
+                }
+            }
+            case CTRL_W -> {
+                if (!this.uICell.isTesting()) {
+                    this.myTable.initTable(testColoumns);
+                    showItemTest(true);
+                }
+            }
+            case CTRL_D -> {
+                if (!this.uICell.isTesting()) {
+                    var rows = this.myTable.getRowSelectedMapValues();
+                    List<ItemConfig> items = new ArrayList<>();
+                    Object val;
+                    for (Map<String, Object> row : rows) {
+                        val = row.get(ITEM_COULMN);
+                        if (val instanceof ItemConfig item) {
+                            if (item.getModeRun() > 2) {
+                                items.add(item);
+                            }
+                        }
+                    }
+                    if (!items.isEmpty()) {
+                        this.uICell.getCellTester().runDebugItem(items);
+                    }
+                }
+            }
+            case CTRL_R -> {
+                if (!this.uICell.isTesting()) {
+                    this.uICell.resetFailedConsecutive();
+                }
+            }
+        }
+    }
+
+    private void showItemTest(boolean reset) {
+        IFunctionModel dataBox;
+        if (reset) {
+            this.itemFinish.clear();
+        }
+        for (int row = 0; row < functionModels.size(); row++) {
+            if (isHasFinish(row)) {
+                continue;
+            }
+            dataBox = functionModels.get(row);
+            if (row > this.myTable.getRowCount() - 1) {
+                this.myTable.addRow(new Object[]{this.myTable.getRowCount()});
+                this.itemFinish.add(false);
+                showDataTest(dataBox, row);
+            } else {
+                showDataTest(dataBox, row);
+            }
+            if (dataBox.isDone()) {
+                this.itemFinish.set(row, true);
             }
         }
     }
 
     private String getStatus(IFunctionModel dataBox) {
-        if(dataBox.isWaiting()){
+        if (dataBox.isWaiting()) {
             return "Waiting";
-        }else if(dataBox.isTesting()){
+        } else if (dataBox.isTesting()) {
             return "Testing";
-        }else{
+        } else {
             return dataBox.getModel().getStatus();
         }
+    }
+
+    @Override
+    public void tabSelected(ChangeEvent evt) {
+        updateData();
     }
 }

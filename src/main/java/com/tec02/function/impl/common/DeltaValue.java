@@ -50,5 +50,9 @@ public class DeltaValue extends AbsFunction{
         config.put("item", "");
         config.put("item1", "");
     }
+
+    @Override
+    protected void init() {
+    }
     
 }

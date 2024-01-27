@@ -4,7 +4,7 @@
  */
 package com.tec02.function.baseFunction;
 
-import com.tec02.common.Constanct;
+import com.tec02.common.MyConst;
 import com.tec02.configuration.model.errorCode.ItemErrorCode;
 import lombok.NonNull;
 
@@ -42,14 +42,14 @@ public class AnalysisResult {
             return;
         }
         switch (config.getLimit_type()) {
-            case Constanct.CONFIG.MATCH -> {
+            case MyConst.CONFIG.MATCH -> {
                 if (!checkMatchType(StringResult)) {
                     setSimpleErrorcode();
                 } else {
                     setPass();
                 }
             }
-            case Constanct.CONFIG.LIMIT -> {
+            case MyConst.CONFIG.LIMIT -> {
                 checkLimitType(StringResult);
             }
             default -> {
@@ -61,7 +61,7 @@ public class AnalysisResult {
     private void setPass() {
         this.model.setError_code("");
         this.model.setErrorcode("");
-        this.model.setStatus(Constanct.MODEL.PASS);
+        this.model.setStatus(MyConst.MODEL.PASS);
     }
 
     private void setError(String errorcode, String error_code, String descError) {
@@ -77,7 +77,7 @@ public class AnalysisResult {
         this.model.setError_code(error_code);
         this.model.setErrorcode(errorcode);
         this.model.setDescErrorcde(descError);
-        this.model.setStatus(Constanct.MODEL.FAIL);
+        this.model.setStatus(MyConst.MODEL.FAIL);
     }
 
     private void setSimpleErrorcode() {

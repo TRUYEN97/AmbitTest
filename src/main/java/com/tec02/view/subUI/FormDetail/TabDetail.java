@@ -85,7 +85,7 @@ public class TabDetail extends JPanel{
         // TODO add your handling code here:
         for (String key : tabElements.keySet()) {
             if (tabElements.get(key).isVisible()) {
-                tabElements.get(key).updateData();
+                tabElements.get(key).tabSelected(evt);
             }
         }
     }//GEN-LAST:event_tabDetailStateChanged

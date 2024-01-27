@@ -20,11 +20,12 @@ public class AmbitUI {
     private final DrawBoardUI drawBoardUI;
     private final ConfigurationManagement configurationManagement;
     private final Gui gui;
+    
 
     public AmbitUI() {
         this.drawBoardUI = new DrawBoardUI();
         this.configurationManagement = ConfigurationManagement.getInstance();
-        this.gui = new Gui();
+        this.gui = Gui.getInstance();
         UICellManagement.getInstance().setGui(this.gui);
     }
 

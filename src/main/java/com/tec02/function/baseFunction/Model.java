@@ -26,6 +26,13 @@ public class Model extends ItemLimit {
     private String test_value = "";
     private String function = "";
 
+    public void setStatus(String status) {
+        this.status = status;
+        if (test_value == null || test_value.isBlank()) {
+            this.test_value = status;
+        }
+    }
+
     public String getTest_value() {
         return test_value == null || test_value.isBlank() ? status : test_value;
     }
@@ -34,7 +41,7 @@ public class Model extends ItemLimit {
         if (starttime == null) {
             return 0;
         }
-        if(finishtime == null || finishtime <= 0){
+        if (finishtime == null || finishtime <= 0) {
             return System.currentTimeMillis() - starttime;
         }
         return finishtime - starttime;
@@ -52,5 +59,13 @@ public class Model extends ItemLimit {
             return null;
         }
         return new TimeBase().simpleDateTimeFormat(new Date(starttime), TimeBase.SIMPLE_DATE_TIME);
+    }
+
+    public void reset() {
+        status = "";
+        descErrorcde = "";
+        errorcode = "";
+        error_code = "";
+        test_value = "";
     }
 }

@@ -23,10 +23,13 @@ import lombok.Setter;
 @Getter
 public class Absbase {
     
+    protected final static String DUT = "DUT";
+    protected final static String GOLDEN = "GOLDEN";
     protected final static String PC = "PC";
     protected final static String CONFIG = "CONFIG";
     protected final static String ERROR = "ERROR";
     protected final static String COMPORT = "COMPORT";
+    protected final static String CMD = "CMD";
     protected final ItemTestDto itemTestDto;
     protected final SettingDto settingDto;
     protected final DhcpDto dhcpDto;
@@ -44,7 +47,7 @@ public class Absbase {
         this.socketDto = management.getSocketConfig().getModel();
     }
 
-    public void setuICell(UICell uICell) {
+    public void setUICell(UICell uICell) {
         this.uICell = uICell;
         this.dataCell = uICell.getDataCell();
     }

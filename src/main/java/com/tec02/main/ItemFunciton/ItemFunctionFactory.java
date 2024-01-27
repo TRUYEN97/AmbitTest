@@ -5,7 +5,7 @@
 package com.tec02.main.ItemFunciton;
 
 import com.tec02.function.AbsFunction;
-import com.tec02.function.baseFunction.FunctionFactory;
+import com.tec02.function.FunctionFactory;
 import com.tec02.main.dataCell.DataCell;
 import com.tec02.view.managerUI.UICell;
 import lombok.NonNull;
@@ -14,31 +14,29 @@ import lombok.NonNull;
  *
  * @author Administrator
  */
-public class ItemFunctionFactory implements IItemFunction{
-    
-    
+public class ItemFunctionFactory implements IItemFunction {
+
     private final FunctionFactory functionFactory;
     private final UICell uICell;
-    private final DataCell dataCell;
 
     @NonNull
     public ItemFunctionFactory(UICell cell) {
         this.functionFactory = FunctionFactory.getInstance();
         this.uICell = cell;
-        this.dataCell = cell.getDataCell();
     }
-    
-    
+
     @Override
-    public AbsFunction getFunction(String functionName, String itemName, String limitName, Integer begin) {
+    public synchronized AbsFunction getFunction(String functionName, String itemName, String limitName, Integer begin) {
         AbsFunction absFunction = this.functionFactory.getFunction(functionName);
         if (absFunction == null) {
-            return null;
+            throw new RuntimeException(
+                    String.format("Func: \"%s\" - \"%s\", function not exists!",
+                            functionName, itemName));
         }
+        absFunction.setUICell(uICell);
         absFunction.setConfigName(itemName, limitName, begin);
         absFunction.updateConfig();
-        absFunction.setuICell(uICell);
-        this.dataCell.addItemFunction(absFunction);
+        absFunction.setFunctionManagement(this);
         return absFunction;
     }
 

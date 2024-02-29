@@ -8,11 +8,10 @@ import com.tec02.common.MyConst;
 import com.tec02.function.AbsBaseFunction;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FileBaseFunction;
-import com.tec02.function.baseFunction.FunctionConfig;
-import com.tec02.function.baseFunction.FunctionLogger;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
+import com.tec02.main.dataCell.DataCell;
 import com.tec02.mylogger.MyLogger;
-import com.tec02.view.managerUI.UICell;
 import java.io.File;
 import java.io.IOException;
 
@@ -25,9 +24,9 @@ public class CreateTxt extends AbsBaseFunction {
     private final FileBaseFunction fileBaseFunction;
     private String path;
 
-    public CreateTxt(FunctionLogger logger, FunctionConfig config, UICell uICell) {
-        super(logger, config, uICell);
-        this.fileBaseFunction = new FileBaseFunction(logger, config, uICell);
+    public CreateTxt(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        this.fileBaseFunction = new FileBaseFunction(constructorModel);
     }
 
     public void setPath(String path) {
@@ -45,9 +44,9 @@ public class CreateTxt extends AbsBaseFunction {
             loger.clear();
             createInfo(loger);
             int id = 0;
-            for (AbsFunction dataBox : this.dataCell.getItemFunctions()) {
+            for (AbsFunction dataBox : this.dataCell.getFunctions(DataCell.JUST_PARENT_ITEM)) {
                 loger.add(String.format("//////////////////////////- ID[%s] -//////////////////////////\r\n", id++));
-                addLog(PC, " - add item: " + dataBox.getModel().getTest_name());
+                addLog(PC, " - add item log: " + dataBox.getModel().getTest_name());
                 String log = dataBox.getLogger().getLog();
                 loger.add(log == null ? "\r\n" : log);
                 loger.add("\r\n//////////////////////////////////////////////////////////////\r\n");

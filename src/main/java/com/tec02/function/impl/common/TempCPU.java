@@ -6,8 +6,8 @@ package com.tec02.function.impl.common;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.AbsCommunicate;
-import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +15,16 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class TempCPU extends AbsFunction {
+public class TempCPU extends AbsFucnUseTelnetOrCommportConnector {
+
+    public TempCPU(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
         try {
-            String commands = this.config.getString("command");
+            String commands = this.config.getString(COMMAND);
             if (commands == null) {
                 addLog("CONFIG", "command is empty!");
                 return false;
@@ -47,11 +51,11 @@ public class TempCPU extends AbsFunction {
 
     private ArrayList<Integer> getTempCPU(String commands, final AbsCommunicate telnet) throws NumberFormatException {
         ArrayList<Integer> temps = new ArrayList<>();
-        List<String> startKeys = this.config.getJsonList("Startkeys");
-        List<String> endKeys = this.config.getJsonList("Endkeys");
-        List<String> Regexs = this.config.getJsonList("Regexs");
-        int time = config.getInteger("Time", 10);
-        String readUntil = config.getString("ReadUntil");
+        List<String> startKeys = this.config.getJsonList(STARTKEYS);
+        List<String> endKeys = this.config.getJsonList(ENDKEYS);
+        List<String> Regexs = this.config.getJsonList(REGEXS);
+        int time = config.getInteger(TIME, 10);
+        String readUntil = config.getString(READ_UNTIL);
         int length = Integer.max(startKeys.size(), endKeys.size());
         if (!this.baseFunction.sendCommand(telnet, commands)) {
             return null;
@@ -60,7 +64,7 @@ public class TempCPU extends AbsFunction {
             String startkey = getKey(i, startKeys);
             String endkey = getKey(i, endKeys);
             String regex = getKey(i, Regexs);
-            String value = this.analysisBase.getValue(telnet, startkey, endkey, regex, new TimeS(time), readUntil);
+            String value = this.analysisBase.getValue(telnet, startkey, endkey, regex, new TimeS(time), readUntil, 0);
             if (!this.analysisBase.isNumber(value)) {
                 addLog("ERROR", String.format("value is not number! value: %s", value));
                 return null;
@@ -69,6 +73,8 @@ public class TempCPU extends AbsFunction {
         }
         return temps;
     }
+    private static final String READ_UNTIL = "ReadUntil";
+    private static final String TIME = "Time";
 
     private String getKey(int i, List<String> keys) {
         if (i >= 0 && i < keys.size()) {
@@ -86,21 +92,19 @@ public class TempCPU extends AbsFunction {
     }
 
     @Override
-    protected void createDefaultConfig(FunctionConfig config) {
+    protected void createConfig(FunctionConfig config) {
         config.setTime_out(100);
         config.setRetry(1);
-        config.put("command", "temperature");
-        config.put("type", "telnet");
-        config.put("IP", "192.168.1.1");
-        config.put("comport", 1);
-        config.put("baudrate", 115200);
-        config.put("Startkeys", "");
-        config.put("Endkeys", "");
-        config.put("Regexs", "");
+        config.put(COMMAND, "temperature");
+        config.put(STARTKEYS, "");
+        config.put(ENDKEYS, "");
+        config.put(REGEXS, "");
+        config.put(TIME, 10);
+        config.put(READ_UNTIL, "root@eero-test:/#");
     }
-
-    @Override
-    protected void init() {
-    }
+    private static final String REGEXS = "Regexs";
+    private static final String ENDKEYS = "Endkeys";
+    private static final String STARTKEYS = "Startkeys";
+    private static final String COMMAND = "command";
 
 }

@@ -8,7 +8,6 @@ import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.view.UIFactory;
 import com.tec02.view.subUI.SubUI.AbsSubUI;
 import java.awt.GridLayout;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import lombok.NonNull;
 

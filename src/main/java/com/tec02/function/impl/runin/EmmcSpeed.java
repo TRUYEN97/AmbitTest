@@ -6,19 +6,24 @@ package com.tec02.function.impl.runin;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.AbsCommunicate;
-import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 
 /**
  *
  * @author Administrator
  */
-public class EmmcSpeed extends AbsFunction{
+public class EmmcSpeed extends AbsFucnUseTelnetOrCommportConnector{
 
     private String data;
     private String block;
     private String key;
+
+    public EmmcSpeed(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
     
     @Override
     protected boolean test() {
@@ -76,17 +81,17 @@ public class EmmcSpeed extends AbsFunction{
 
     private boolean getSpeed() {
         String[] blockData = data.split("\r\n");
-        int model = 0;
+        int step = 0;
         for (String line : blockData) {
             if (line.contains("B of " + block + " in ")) {
-                model = 1;
+                step = 1;
             }
-            if (line.contains(key) && model == 1) {
-                model = 2;
+            if (line.contains(key) && step == 1) {
+                step = 2;
             }
             int start = line.lastIndexOf(" seconds, ") + 10;
             int end = line.lastIndexOf("MB/s");
-            if (model == 2 && start < end && end > -1) {
+            if (step == 2 && start < end && end > -1) {
                 String value = line.substring(start, end);
                 if (this.analysisBase.isNumber(value)) {
                     setResult(value);
@@ -98,12 +103,9 @@ public class EmmcSpeed extends AbsFunction{
     }
 
     @Override
-    protected void createDefaultConfig(FunctionConfig config) {
-        config.setTime_out(60);
+    protected void createConfig(FunctionConfig config) {
+         config.setTime_out(60);
     }
 
-    @Override
-    protected void init() {
-    }
     
 }

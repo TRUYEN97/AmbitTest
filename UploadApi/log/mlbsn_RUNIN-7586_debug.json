@@ -1,0 +1,41 @@
+{
+  "product" : "Trieste",
+  "mo" : "",
+  "onSfis" : "off",
+  "line" : "MP",
+  "pnname" : "",
+  "mlbsn" : "",
+  "finish_time" : "2024-01-31 10:20:27",
+  "mode" : "debug",
+  "start_time" : "2024-01-31 10:20:01",
+  "tests" : [ {
+    "start_time" : "2024-01-31 10:20:01",
+    "lower_limit" : "",
+    "upper_limit" : "",
+    "error_code" : "1.3",
+    "units" : "",
+    "test_name" : "wps_ok",
+    "finish_time" : "2024-01-31 10:20:27",
+    "test_value" : "failed",
+    "status" : "failed"
+  }, {
+    "start_time" : "2024-01-31 10:20:27",
+    "lower_limit" : "",
+    "upper_limit" : "",
+    "error_code" : "",
+    "units" : "",
+    "test_name" : "UpLogFTP",
+    "finish_time" : "2024-01-31 10:20:27",
+    "test_value" : "data/Trieste/Text/pnname/RUNIN/start_day/RUNIN-7586/failed/mlbsn__A1_failed_WPS_OK_39.3.0_debug_2024-01-31-10-20-27.txt",
+    "status" : "passed"
+  } ],
+  "error_details" : "WPS_OK",
+  "station" : "RUNIN",
+  "error_code" : "39.3.0",
+  "sn" : "",
+  "position" : "A1",
+  "pcname" : "RUNIN-7586",
+  "ethernetmac" : "",
+  "status" : "failed",
+  "test_software_version" : "1.0.0"
+}

@@ -15,7 +15,7 @@ import com.tec02.communication.Communicate.Impl.FtpClient.FtpClient;
 import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
 import com.tec02.communication.DHCP.DhcpData;
 import com.tec02.function.AbsBaseFunction;
-import com.tec02.view.managerUI.UICell;
+import com.tec02.function.model.FunctionConstructorModel;
 import java.io.IOException;
 
 /**
@@ -24,8 +24,11 @@ import java.io.IOException;
  */
 public class BaseFunction extends AbsBaseFunction {
 
-    public BaseFunction(FunctionLogger logger, FunctionConfig config, UICell uICell) {
-        super(logger, config, uICell);
+    private final AnalysisBase analysisBase;
+
+    public BaseFunction(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        analysisBase = new AnalysisBase(constructorModel);
     }
 
     public FtpClient initFtp(String user, String passWord, String host, int port) throws IOException {
@@ -44,7 +47,7 @@ public class BaseFunction extends AbsBaseFunction {
         return ftp;
     }
 
-    public Telnet getTelnet() throws Exception {
+    public Telnet getTelnet() {
         String ip = this.getIp();
         return getTelnet(ip);
     }
@@ -90,8 +93,8 @@ public class BaseFunction extends AbsBaseFunction {
         return telnet;
     }
 
-    public String getIp() throws Exception {
-        if (this.dhcpDto.isOn()) {
+    public String getIp() {
+        if (this.dhcpDto.isOn() && !config.get("nonDHCP", false)) {
             String mac = this.dataCell.get(MyConst.MODEL.MAC);
             if (mac == null) {
                 addLog("It's DHCP mode but MAC is null!");
@@ -117,7 +120,7 @@ public class BaseFunction extends AbsBaseFunction {
 
     public ComPort getComport() {
         String com = this.getComportName();
-        int baudrate = this.config.get("baudrate", 9600);
+        int baudrate = this.config.get("baudrate", 115200);
         addLog(COMPORT, "comport: %s -- baudrate: %s", com, baudrate);
         return this.getComport(com, baudrate);
     }
@@ -137,11 +140,16 @@ public class BaseFunction extends AbsBaseFunction {
 
     public AbsCommunicate getTelnetOrComportConnector() throws Exception {
         String type = this.config.get("type", "telnet");
+        AbsCommunicate absCommunicate;
         if (type.equalsIgnoreCase("comport")) {
-            return this.getComport();
+            absCommunicate = this.getComport();
         } else {
-            return this.getTelnet();
+            absCommunicate = this.getTelnet();
         }
+        if (absCommunicate == null) {
+            throw new NullPointerException("Connector is null!");
+        }
+        return absCommunicate;
     }
 
     public boolean rebootSoft(String ip, String cmd, int waitTime, int pingTime) throws IOException {
@@ -160,6 +168,16 @@ public class BaseFunction extends AbsBaseFunction {
             addLog("PC", "*************** Reboot soft failed! *********************");
             return false;
         }
+    }
+
+    public boolean sendcommad(final AbsCommunicate comport, String startPushCmd, String readUntils, int time) {
+        if (!this.sendCommand(comport, startPushCmd)) {
+            return true;
+        }
+        if (this.analysisBase.isResponseContainKeyAndShow(comport,
+                readUntils, readUntils, new TimeS(time))) {
+        }
+        return false;
     }
 
     private boolean sendRebootDUT(int waitTime, String ip) {
@@ -188,7 +206,7 @@ public class BaseFunction extends AbsBaseFunction {
         return mac;
     }
 
-    public boolean insertCommand(ISender sender, String command) {
+    public boolean insertCommand(final ISender sender, String command) {
         String name = sender.getClass().getSimpleName();
         addLog(name, "insert command: " + command);
         if (command == null || !sender.insertCommand(command)) {
@@ -198,7 +216,7 @@ public class BaseFunction extends AbsBaseFunction {
         return true;
     }
 
-    public boolean sendCommand(ISender sender, String command) {
+    public boolean sendCommand(final ISender sender, String command) {
         String name = sender.getClass().getSimpleName();
         addLog(name, "Send command: " + command);
         if (command == null || !sender.sendCommand(command)) {
@@ -206,6 +224,44 @@ public class BaseFunction extends AbsBaseFunction {
             return false;
         }
         return true;
+    }
+
+    public boolean ubuntuPingTo(final AbsCommunicate communicate, String ip, int time) {
+        return ubuntuPingTo(communicate, ip, time, true);
+    }
+
+    public boolean ubuntuPingTo(final AbsCommunicate communicate, String ip, int time, boolean checkPing) {
+        if (communicate == null) {
+            return false;
+        }
+        if (ip == null) {
+            addLog(ERROR, "IP == null ");
+            return false;
+        }
+        if (time <= 0) {
+            addLog(ERROR, "Ping time out <= 0: %s", time);
+            return false;
+        }
+        addLog(communicate.getName(), "Ping to IP: %s - %s S", ip, time);
+        boolean pingRs;
+        TimeS timeS = new TimeS(time);
+        while (timeS.onTime()) {
+            if (!this.sendCommand(communicate, String.format("ping -c 2 %s", ip))) {
+                return false;
+            }
+            pingRs = this.analysisBase.isResponseContainKeyAndShow(communicate,
+                    "ttl=", "root@eero-test:/#", timeS);
+            if (checkPing) {
+                if (pingRs) {
+                    return true;
+                }
+            } else {
+                if (!pingRs) {
+                    return false;
+                }
+            }
+        }
+        return !checkPing;
     }
 
     public boolean pingTo(String ip, int times) {
@@ -216,30 +272,30 @@ public class BaseFunction extends AbsBaseFunction {
         return pingTo(ip, times, !this.dhcpDto.isOn(), checkPing);
     }
 
-    public boolean pingTo(String ip, int times, boolean arp_d, boolean checkPing) {
-        if (ip == null || times <= 0) {
-            addLog("Error", "IP == null ", ip);
+    public boolean pingTo(String ip, int time, boolean arp_d, boolean checkPing) {
+        if (ip == null) {
+            addLog(ERROR, "IP == null ");
             return false;
         }
-        if (times <= 0) {
-            addLog("Error", "Ping times <= 0", ip);
+        if (time <= 0) {
+            addLog(ERROR, "Ping time out <= 0: %s", time);
             return false;
         }
-        addLog("PC", "Ping to IP: %s - %s S", ip, times);
+        addLog(PC, "Ping to IP: %s - %s S", ip, time);
         Cmd cmd = new Cmd();
         String arp = "arp -d";
         String command = String.format("ping %s -n 1", ip);
-        TimeS timer = new TimeS(times);
+        TimeS timer = new TimeS(time);
         try {
             for (int i = 1; timer.onTime(); i++) {
-                addLog("Cmd", "------------------------------------ " + i);
+                addLog(CMD, "------------------------------------ " + i);
                 try {
                     if (arp_d && sendCommand(cmd, arp)) {
-                        addLog("Cmd", cmd.readAll().trim());
+                        addLog(CMD, cmd.readAll().trim());
                     }
                     if (sendCommand(cmd, command)) {
                         String response = cmd.readAll();
-                        addLog("Cmd", response.trim());
+                        addLog(CMD, response.trim());
                         if (checkPing) {
                             if (response.contains("TTL=")) {
                                 return true;
@@ -253,12 +309,21 @@ public class BaseFunction extends AbsBaseFunction {
                         break;
                     }
                 } finally {
-                    addLog("Cmd", "------------------------------------");
+                    addLog(CMD, "------------------------------------");
                 }
             }
         } finally {
             addLog("PC", "ping time: %.3f S", timer.getTime());
         }
         return !checkPing;
+    }
+
+    public void delay(int i) {
+        if (i > 0) {
+            try {
+                Thread.sleep(i);
+            } catch (Exception e) {
+            }
+        }
     }
 }

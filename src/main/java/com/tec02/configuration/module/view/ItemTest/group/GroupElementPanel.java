@@ -10,6 +10,7 @@ import com.tec02.configuration.model.itemTest.ItemGroupDto;
 import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.module.view.AbsTabElement;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,8 @@ import javax.swing.event.ChangeListener;
  */
 public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
 
-    private final MyListTabel<String> modeListTabel;
-    private final MyListTabel<String> applyListTabel;
+    private final MyListTabel<Object> modeListTabel;
+    private final MyListTabel<Object> applyListTabel;
     private ItemTestDto modelParent;
 
     public GroupElementPanel(String tabName, ItemGroupDto model) {
@@ -74,6 +75,7 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         listItems = new javax.swing.JList<>();
         btAdd = new javax.swing.JButton();
         btRemove = new javax.swing.JButton();
+        txtItemName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         spnTr = new javax.swing.JSpinner();
         spnTg = new javax.swing.JSpinner();
@@ -123,34 +125,49 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
             }
         });
 
+        txtItemName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtItemName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtItemNameKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btAdd, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btRemove, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btAdd)
+                            .addComponent(btRemove))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
+                    .addComponent(txtItemName))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(txtItemName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                         .addComponent(btAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btRemove)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap(33, Short.MAX_VALUE))))
         );
 
         jLabel4.setText("Test color");
@@ -253,7 +270,7 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(spLooptest)
                             .addComponent(spBegin)
-                            .addComponent(slModerun, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                            .addComponent(slModerun, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(spnTr, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -300,7 +317,7 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(spBegin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(cbbPassTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -310,7 +327,7 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
                     .addComponent(jLabel3)
                     .addComponent(cbbFailTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btFailTo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -348,8 +365,8 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         // TODO add your handling code here:
         Color selectedColor = JColorChooser.showDialog(this, "Choose a Test-Color", this.pnTcolor.getBackground());
         if (selectedColor != null) {
-            showTestColor(List.of(selectedColor.getRed(), 
-                    selectedColor.getGreen(), 
+            showTestColor(List.of(selectedColor.getRed(),
+                    selectedColor.getGreen(),
                     selectedColor.getBlue()));
         }
     }//GEN-LAST:event_pnTcolorMouseClicked
@@ -358,8 +375,8 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         // TODO add your handling code here:
         Color selectedColor = JColorChooser.showDialog(this, "Choose a Failed-Color", this.pnFColor.getBackground());
         if (selectedColor != null) {
-            showFailColor(List.of(selectedColor.getRed(), 
-                    selectedColor.getGreen(), 
+            showFailColor(List.of(selectedColor.getRed(),
+                    selectedColor.getGreen(),
                     selectedColor.getBlue()));
         }
     }//GEN-LAST:event_pnFColorMouseClicked
@@ -373,6 +390,23 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         // TODO add your handling code here:
         tabPanelCurrent.setSelectedTab(String.valueOf(this.cbbFailTo.getSelectedItem()));
     }//GEN-LAST:event_btFailToActionPerformed
+
+    private void txtItemNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtItemNameKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            String input = txtItemName.getText();
+            if(input.isBlank()){
+               return;
+            }
+            if(input.startsWith("%")){
+                for (Object item : modeListTabel.getAllItem()) {
+                    if(item.toString().contains(input.replaceFirst("%", ""))){
+                        modeListTabel.setSelected(item);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_txtItemNameKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -406,6 +440,7 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
     private javax.swing.JSpinner spnTb;
     private javax.swing.JSpinner spnTg;
     private javax.swing.JSpinner spnTr;
+    private javax.swing.JTextField txtItemName;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -474,19 +509,31 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
             List<String> itemsInConfig = model.getItems();
             for (String itemName : itemsInConfig) {
                 if (items.containsKey(itemName)) {
-                    this.applyListTabel.addItem(itemName);
+                    this.applyListTabel.addItem(items.get(itemName));
                 }
             }
             if (this.tabPanelCurrent != null) {
-                var tabGroups = this.tabPanelCurrent.getTabElements().keySet();
-                for (Object grName : tabGroups) {
-                    this.modeListTabel.addItem(String.format("*G-%s", grName));
+                var tabGroups = this.tabPanelCurrent.getTabElements();
+                for (String item : itemsInConfig) {
+                    for (Object group : tabGroups.values()) {
+                        if (group.toString().equalsIgnoreCase(item)) {
+                            this.applyListTabel.addItem(group);
+                        }
+                    }
+                }
+                for (Object group : tabGroups.values()) {
+                    this.modeListTabel.addItem(group);
                 }
             }
-            for (String itemName : items.keySet()) {
-                this.modeListTabel.addItem(itemName);
+            for (ItemConfig item : items.values()) {
+                this.modeListTabel.addItem(item);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("*G-%s", getTabName());
     }
 
     @Override
@@ -507,8 +554,8 @@ public class GroupElementPanel extends AbsTabElement<ItemGroupDto> {
         model.setBegin((int) spBegin.getValue());
         model.setCoreGroup(cbCoreGroup.isSelected());
         List<String> items = new ArrayList<>();
-        for (String item : applyListTabel.getAllItem()) {
-            items.add(item);
+        for (Object item : applyListTabel.getAllItem()) {
+            items.add(item.toString());
         }
         model.setItems(items);
     }

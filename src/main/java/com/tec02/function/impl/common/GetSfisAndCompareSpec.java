@@ -6,12 +6,17 @@ package com.tec02.function.impl.common;
 
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 
 /**
  *
  * @author Administrator
  */
 public class GetSfisAndCompareSpec extends AbsFunction {
+
+    public GetSfisAndCompareSpec(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -37,8 +42,5 @@ public class GetSfisAndCompareSpec extends AbsFunction {
         config.put("compare", "");
     }
 
-    @Override
-    protected void init() {
-    }
 
 }

@@ -4,13 +4,12 @@
  */
 package com.tec02.function.impl.common;
 
-import com.alibaba.fastjson.JSONObject;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.common.MyConst;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
-import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +18,11 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class TelnetReadUntilKey extends AbsFunction {
+public class TelnetReadUntilKey extends AbsFucnUseTelnetOrCommportConnector {
+
+    public TelnetReadUntilKey(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -36,14 +39,14 @@ public class TelnetReadUntilKey extends AbsFunction {
     }
 
     private boolean runTest(AbsCommunicate communicate) {
-        List<String> commands = this.config.getJsonList("command");
+        List<String> commands = this.config.getJsonList(COMMAND);
         if (commands.isEmpty()) {
             addLog("ERROR", "Commands is empty!");
             return false;
         }
-        String readUntil = this.config.getString("ReadUntil");
-        String spec = this.config.getString("keyWord");
-        Integer time = this.config.getInteger("Time");
+        String readUntil = this.config.getString(READ_UNTIL);
+        String spec = this.config.getString(KEY_WORD);
+        Integer time = this.config.getInteger(TIME);
         if (time == null) {
             addLog("Config", "Time == null !!");
             return false;
@@ -70,21 +73,15 @@ public class TelnetReadUntilKey extends AbsFunction {
     }
 
     @Override
-    protected void createDefaultConfig(FunctionConfig config) {
-        config.setBonus(JSONObject.parseObject("""
-                                               {
-                                               "type": "telnet",
-                                                           "IP": "192.168.1.1",
-                                                           "comport": 1,
-                                                           "baudrate": 115200,
-                                                           "command": ["stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 1800s"],
-                                                           "keyWord": "successful run completed in",
-                                                           "ReadUntil": "root@eero-test:/#",
-                                                           "Time": 2200 }"""));
+    protected void createConfig(FunctionConfig config) {
+        config.put(COMMAND, List.of("stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 1800s"));
+        config.put(KEY_WORD, "successful run completed in");
+        config.put(READ_UNTIL, "root@eero-test:/#");
+        config.put(TIME, 2200);
     }
-
-    @Override
-    protected void init() {
-    }
+    private static final String TIME = "Time";
+    private static final String READ_UNTIL = "ReadUntil";
+    private static final String KEY_WORD = "keyWord";
+    private static final String COMMAND = "command";
 
 }

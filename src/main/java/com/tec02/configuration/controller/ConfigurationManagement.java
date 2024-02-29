@@ -99,29 +99,33 @@ public class ConfigurationManagement implements Iexecute {
 
     public boolean init() {
         if (file == null) {
-            return false;
-        }
-        try {
-            JSONObject data = JSONObject.parseObject(Files.readString(file.toPath()));
-            AbsModule module;
-            for (Map.Entry<String, Object> entry : data.entrySet()) {
-                String modelName = entry.getKey();
-                if (entry.getValue() instanceof JSONObject moduleData) {
-                    if ((module = this.getModel(modelName)) == null) {
-                        String error = String.format("init(): \"%s\" model not found!", modelName);
-                        this.logger.addLog(error);
-                        return false;
-                    }
-                    module.setData(moduleData);
-                    module.refesh();
-                }
+            for (AbsModule entry : modules) {
+                entry.refesh();
             }
             return true;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            String error = String.format("init(): %s", ex.getLocalizedMessage());
-            this.logger.addLog(error);
-            throw new RuntimeException(ex.getLocalizedMessage());
+        } else {
+            try {
+                JSONObject data = JSONObject.parseObject(Files.readString(file.toPath()));
+                AbsModule module;
+                for (Map.Entry<String, Object> entry : data.entrySet()) {
+                    String modelName = entry.getKey();
+                    if (entry.getValue() instanceof JSONObject moduleData) {
+                        if ((module = this.getModel(modelName)) == null) {
+                            String error = String.format("init(): \"%s\" model not found!", modelName);
+                            this.logger.addLog(error);
+                            return false;
+                        }
+                        module.setData(moduleData);
+                        module.refesh();
+                    }
+                }
+                return true;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                String error = String.format("init(): %s", ex.getLocalizedMessage());
+                this.logger.addLog(error);
+                throw new RuntimeException(ex.getLocalizedMessage());
+            }
         }
     }
 
@@ -190,7 +194,7 @@ public class ConfigurationManagement implements Iexecute {
     }
 
     private String getBaseItem(String itemName) {
-        if (itemName.matches(".+_[0-9]+$")) {
+        if (itemName != null && itemName.matches(".+_[0-9]+$")) {
             return itemName.substring(0, itemName.lastIndexOf("_"));
         }
         return itemName;

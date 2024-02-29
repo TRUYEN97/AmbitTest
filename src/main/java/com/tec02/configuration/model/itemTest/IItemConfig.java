@@ -31,6 +31,8 @@ public interface IItemConfig {
     boolean isDebugCancellRun();
 
     String getFunction();
+    
+    String getFailApiName();
 
     JSONObject getBonus();
 }

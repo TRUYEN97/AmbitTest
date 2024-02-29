@@ -13,7 +13,9 @@ package com.tec02.view.subUI.FormDetail.TabItem;
 import com.tec02.Jmodel.Component.MyTable;
 import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.function.IFunctionModel;
+import com.tec02.main.ErrorLog;
 import com.tec02.main.ModeManagement;
+import com.tec02.main.UICellTester;
 import com.tec02.main.modeFlow.ModeFlow;
 import com.tec02.view.subUI.FormDetail.AbsTabUI;
 import com.tec02.view.subUI.FormDetail.TabItem.ShowLog.ShowLog;
@@ -134,12 +136,6 @@ public class TabItem extends AbsTabUI {
     private javax.swing.JTable tableItem;
     // End of variables declaration//GEN-END:variables
 
-    private static final int CTRL_S = 19;
-    private static final int CTRL_D = 4;
-    private static final int CTRL_Q = 17;
-    private static final int CTRL_R = 18;
-    private static final int CTRL_W = 23;
-
     @Override
     public void startTest() {
         for (ShowLog itemLog : itemLogs.values()) {
@@ -152,7 +148,7 @@ public class TabItem extends AbsTabUI {
     }
 
     @Override
-    public void updateData() {
+    public synchronized void updateData() {
         if (!this.isVisible()) {
             return;
         }
@@ -164,12 +160,17 @@ public class TabItem extends AbsTabUI {
     }
 
     private void showDataTest(IFunctionModel dataBox, int row) {
-        var model = dataBox.getModel();
-        this.myTable.setValueAt(row, ITEM_COULMN, model.getTest_name());
-        this.myTable.setValueAt(row, TIME_COULMN, String.format("%.3f S", dataBox.getRunTime() / 1000.0));
-        this.myTable.setValueAt(row, STATUS_COULMN, getStatus(dataBox));
-        this.myTable.setValueAt(row, ERROR_CODE_COULMN, model.getErrorcode());
-        this.myTable.setValueAt(row, CUS_ERROR_CODE_COULMN, model.getError_code());
+        try {
+            var model = dataBox.getModel();
+            this.myTable.setValueAt(row, ITEM_COULMN, model.getTest_name());
+            this.myTable.setValueAt(row, TIME_COULMN, String.format("%.3f S", dataBox.getRunTime() / 1000.0));
+            this.myTable.setValueAt(row, STATUS_COULMN, getStatus(dataBox));
+            this.myTable.setValueAt(row, ERROR_CODE_COULMN, model.getErrorcode());
+            this.myTable.setValueAt(row, CUS_ERROR_CODE_COULMN, model.getError_code());
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorLog.addError(this, e.getLocalizedMessage());
+        }
     }
 
     private boolean isHasFinish(int row) {
@@ -219,7 +220,7 @@ public class TabItem extends AbsTabUI {
                     for (Map<String, Object> row : rows) {
                         val = row.get(ITEM_COULMN);
                         if (val instanceof ItemConfig item) {
-                            if (item.getModeRun() > 2) {
+                            if (item.getModeRun() >= UICellTester.MODE_DEBUG_ITEM) {
                                 items.add(item);
                             }
                         }
@@ -238,25 +239,36 @@ public class TabItem extends AbsTabUI {
     }
 
     private void showItemTest(boolean reset) {
-        IFunctionModel dataBox;
-        if (reset) {
-            this.itemFinish.clear();
-        }
-        for (int row = 0; row < functionModels.size(); row++) {
-            if (isHasFinish(row)) {
-                continue;
+        try {
+            IFunctionModel dataBox;
+            if (reset) {
+                this.itemFinish.clear();
             }
-            dataBox = functionModels.get(row);
-            if (row > this.myTable.getRowCount() - 1) {
-                this.myTable.addRow(new Object[]{this.myTable.getRowCount()});
-                this.itemFinish.add(false);
-                showDataTest(dataBox, row);
-            } else {
-                showDataTest(dataBox, row);
+            int a = 0;
+            for (int row = 0; row < functions.size(); row++) {
+                dataBox = functions.get(row);
+                if (dataBox.isSubItem()) {
+                    a += 1;
+                    continue;
+                }
+                int tempIndex = row - a;
+                if (isHasFinish(tempIndex)) {
+                    continue;
+                }
+                if (tempIndex > this.myTable.getRowCount() - 1) {
+                    this.myTable.addRow(new Object[]{this.myTable.getRowCount()});
+                    this.itemFinish.add(false);
+                    showDataTest(dataBox, tempIndex);
+                } else {
+                    showDataTest(dataBox, tempIndex);
+                }
+                if (dataBox.isDone()) {
+                    this.itemFinish.set(tempIndex, true);
+                }
             }
-            if (dataBox.isDone()) {
-                this.itemFinish.set(row, true);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorLog.addError(this, e.getLocalizedMessage());
         }
     }
 

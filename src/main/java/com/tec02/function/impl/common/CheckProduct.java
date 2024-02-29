@@ -7,6 +7,7 @@ package com.tec02.function.impl.common;
 import com.alibaba.fastjson.JSONObject;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import java.util.List;
 
 /**
@@ -14,6 +15,10 @@ import java.util.List;
  * @author Administrator
  */
 public class CheckProduct extends AbsFunction {
+
+    public CheckProduct(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -202,9 +207,4 @@ public class CheckProduct extends AbsFunction {
                                                }
                                                """));
     }
-
-    @Override
-    protected void init() {
-    }
-
 }

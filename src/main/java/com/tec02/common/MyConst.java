@@ -50,6 +50,6 @@ public final class MyConst {
         public static final String STATION_TYPE = "station_type";
         public static final String SERIAL = "serial";
         public static final String ON_SFIS = "onSfis";
-        public static final String CYCLE_TIOME = "cycle_time";
+        public static final String CYCLE_TIME = "cycle_time";
     }
 }

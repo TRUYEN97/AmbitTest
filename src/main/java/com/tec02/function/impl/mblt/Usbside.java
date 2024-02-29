@@ -4,44 +4,41 @@
  */
 package com.tec02.function.impl.mblt;
 
+import com.tec02.function.impl.common.AbsSendRetryCommand;
 import com.tec02.Time.WaitTime.Class.TimeMs;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.Impl.Comport.ComPort;
-import com.tec02.configuration.model.errorCode.ItemErrorCode;
-import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.FixtureAction;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
-
 
 /**
  *
  * @author Administrator
  */
-public class Usbside extends AbsFunction {
+public class Usbside extends AbsSendRetryCommand {
 
     private final FixtureAction fixture;
 
-
-    public Usbside() {
-        this.fixture = new FixtureAction();
-    }
-    
-     @Override
-    public void setConfig(FunctionConfig config) {
-        super.setConfig(config); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-        this.fixture.setConfig(config);
+    public Usbside(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        this.fixture = (FixtureAction) createElementFunction(FixtureAction.class);
     }
 
     @Override
-    public void setErrorCode(ItemErrorCode errorCode) {
-        super.setErrorCode(errorCode); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-        this.fixture.setErrorCode(errorCode);
+    protected void defaultConfig(FunctionConfig config) {
+        config.merge(FixtureAction.class);
+        config.setTime_out(10);
+        config.setRetry(2);
+        config.put("DutCom", "COM4");
+        config.put("DutBaudRate", 115200);
+        config.put("DutWait", 2);
     }
 
     @Override
-    public boolean test() {
-        if (!this.fixture.test()) {
+    protected boolean testfunc() {
+        if (!this.fixture.testfunc()) {
             return false;
         }
         String dutCom = this.config.getString("DutCom");
@@ -65,22 +62,8 @@ public class Usbside extends AbsFunction {
         } catch (Exception e) {
             e.printStackTrace();
             ErrorLog.addError(this, e.getMessage());
+            addLog(ERROR, e.getMessage());
             return false;
         }
     }
-
-    @Override
-    protected void createDefaultConfig(FunctionConfig config) {
-        config.setTime_out(10);
-        config.setRetry(2);
-        config.merge(new FixtureAction().getDefaultConfig());
-        config.put("DutCom", "COM4");
-        config.put("DutBaudRate", 115200);
-        config.put("DutWait", 2);
-    }
-
-    @Override
-    protected void init() {
-    }
-
 }

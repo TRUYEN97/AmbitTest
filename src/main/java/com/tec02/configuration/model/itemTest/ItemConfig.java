@@ -28,6 +28,8 @@ public class ItemConfig implements IItemConfig {
     private boolean alwaysRun = false;
     private String function = "";
     private String test_name = "";
+    private String failApiName;
+    private String itemName = "";
     private String limit_type = "BOOL";
     private String lower_limit = "";
     private String upper_limit = "";
@@ -42,9 +44,17 @@ public class ItemConfig implements IItemConfig {
         return modeRun;
     }
 
+    public String getTest_name() {
+        if(test_name == null || test_name.isBlank()){
+            return itemName;
+        }
+        return test_name;
+    }
+    
+
     @Override
     public String toString() {
-        return test_name;
+        return itemName;
     }
 
 }

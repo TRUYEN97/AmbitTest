@@ -8,6 +8,7 @@ import com.tec02.Time.TimeBase;
 import com.tec02.communication.Communicate.Impl.Cmd.Cmd;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,13 +18,14 @@ import java.util.TimeZone;
  *
  * @author Administrator
  */
-public class CheckTime extends AbsFunction{
+public class CheckTime extends AbsFunction {
+
     private final TimeBase timeBase;
 
-    public CheckTime() {
+    public CheckTime(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
         this.timeBase = new TimeBase();
     }
-    
 
     @Override
     protected boolean test() {
@@ -31,7 +33,7 @@ public class CheckTime extends AbsFunction{
             int spec = this.config.get("delta_time", 900);
             TimeZone tz = TimeZone.getTimeZone(this.config.get("timezone", "UTC"));
             String webUrl = this.config.get("wedUrl", "http://time.windows.com");
-            addLog("CONFIG","time zone: %s", tz.getDisplayName());
+            addLog("CONFIG", "time zone: %s", tz.getDisplayName());
             addLog("CONFIG", "wedURl: %s", webUrl);
             String PatternDate = TimeBase.DATE_TIME_MS;
             SimpleDateFormat sdf = new SimpleDateFormat(PatternDate);
@@ -72,7 +74,7 @@ public class CheckTime extends AbsFunction{
         config.put("timezone", "UTC");
         config.put("wedUrl", "http://time.windows.com");
     }
-    
+
     public String getDateByFormatUTC(String format) {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         Calendar cal_Two = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -85,8 +87,4 @@ public class CheckTime extends AbsFunction{
         return dateStr;
     }
 
-    @Override
-    protected void init() {
-    }
-    
 }

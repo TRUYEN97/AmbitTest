@@ -7,6 +7,7 @@ package com.tec02.main;
 import com.tec02.view.managerUI.DrawBoardUI;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.view.Gui;
+import com.tec02.view.ShowConfigEdit;
 import com.tec02.view.managerUI.UICellManagement;
 import java.io.FileNotFoundException;
 import javax.swing.JOptionPane;
@@ -20,9 +21,11 @@ public class AmbitUI {
     private final DrawBoardUI drawBoardUI;
     private final ConfigurationManagement configurationManagement;
     private final Gui gui;
-    
 
-    public AmbitUI() {
+    public AmbitUI(String name, String version) {
+        Core core = Core.getInstance();
+        core.setAppName(name);
+        core.setSoftwareVsersion(version);
         this.drawBoardUI = new DrawBoardUI();
         this.configurationManagement = ConfigurationManagement.getInstance();
         this.gui = Gui.getInstance();
@@ -40,8 +43,21 @@ public class AmbitUI {
 
     public static void main(String[] args) {
         try {
-            AmbitUI ambitUI = new AmbitUI();
-            ambitUI.run();
+            String version = "1.0.0";
+            String name = "AmbitUI";
+            if (args.length >= 1) {
+                version = args[0].trim();
+            }
+            if (args.length >= 2) {
+                name = args[1].trim();
+            }
+            if (version.equalsIgnoreCase("config")) {
+                ShowConfigEdit showConfigEdit = new ShowConfigEdit();
+                showConfigEdit.display();
+            } else {
+                AmbitUI ambitUI = new AmbitUI(name, version);
+                ambitUI.run();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, ex.getLocalizedMessage());

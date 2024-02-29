@@ -37,8 +37,6 @@ public abstract class AbsSubUI extends AbsUI {
     public void setGui(Gui gui) {
         this.gui = gui;
     }
-    
-    public abstract void setText(String txt);
 
     protected abstract void showEnd(Color color, boolean status);
 

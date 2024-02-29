@@ -6,13 +6,19 @@ package com.tec02.function.impl.runin;
 
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
+import com.tec02.view.managerUI.UICell;
 
 /**
  *
  * @author Administrator
  */
 public class RebootSoft extends AbsFunction{
+
+    public RebootSoft(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -64,10 +70,6 @@ public class RebootSoft extends AbsFunction{
         config.put("times", 3);
         config.put("waitTime", 40);
         config.put("pingTimes", 300);
-    }
-
-    @Override
-    protected void init() {
     }
     
 }

@@ -6,10 +6,8 @@ package com.tec02.function.impl.common.uploadLog;
 
 import com.tec02.function.AbsBaseFunction;
 import com.tec02.function.baseFunction.FileBaseFunction;
-import com.tec02.function.baseFunction.FunctionConfig;
-import com.tec02.function.baseFunction.FunctionLogger;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
-import com.tec02.view.managerUI.UICell;
 
 /**
  *
@@ -21,9 +19,9 @@ public class ZipFile extends AbsBaseFunction {
     private String zipPath;
     private String txtpath;
 
-    public ZipFile(FunctionLogger logger, FunctionConfig config, UICell uICell) {
-        super(logger, config, uICell);
-        this.fileBaseFunction = new FileBaseFunction(this.logger, this.config, uICell);
+    public ZipFile(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        this.fileBaseFunction = new FileBaseFunction(constructorModel);
     }
 
     public void setZipPath(String zipPath) {

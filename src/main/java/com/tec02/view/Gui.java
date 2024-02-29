@@ -6,7 +6,6 @@ package com.tec02.view;
 
 import com.tec02.common.PcInformation;
 import com.tec02.communication.DHCP.DHCP;
-import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.main.Core;
 import com.tec02.main.ModeManagement;
 import com.tec02.view.loadModelTime.LoadModeTime;
@@ -35,7 +34,6 @@ public class Gui extends javax.swing.JFrame {
     private final ModeManagement modeManagement;
     private final Core core;
     private final PcInformation information;
-    private final ShowConfigEdit configEdit;
 
     /**
      * Creates new form Gui
@@ -69,11 +67,13 @@ public class Gui extends javax.swing.JFrame {
         this.modeManagement = ModeManagement.getInsatace();
         this.core = Core.getInstance();
         this.information = PcInformation.getInstance();
-        this.configEdit = new ShowConfigEdit();
         initComponents();
         DHCP.getgetInstance().setView(textMess);
         setIcon();
-        new Timer(10000, (e) -> {
+        new Timer(1000, (e) -> {
+            this.lbDhcp.setBackground(DHCP.getgetInstance().isRunning() ? Color.GREEN : Color.RED);
+            setTitle(String.format("%s - %s",
+                    this.core.getAppName(), this.core.getSoftwareVersion()));
             if (this.information.isChanged()) {
                 updatePcInfo();
             }
@@ -127,9 +127,6 @@ public class Gui extends javax.swing.JFrame {
         txtInput = new javax.swing.JTextField();
         txtInputIndex = new javax.swing.JTextField();
         boardSubUI = new javax.swing.JPanel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        mnItemConfig = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -141,7 +138,7 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        panelBackground.setBackground(new java.awt.Color(0, 0, 0));
+        panelBackground.setBackground(new java.awt.Color(153, 153, 255));
         panelBackground.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         panelBackground.setPreferredSize(new java.awt.Dimension(1104, 768));
 
@@ -274,8 +271,8 @@ public class Gui extends javax.swing.JFrame {
                     .addComponent(lbDhcp)
                     .addComponent(lbsocket, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbTimeVN, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -346,7 +343,7 @@ public class Gui extends javax.swing.JFrame {
                     .addComponent(txtInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtInputIndex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -354,7 +351,7 @@ public class Gui extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        boardSubUI.setBackground(new java.awt.Color(0, 51, 0));
+        boardSubUI.setBackground(new java.awt.Color(153, 204, 255));
         boardSubUI.setPreferredSize(new java.awt.Dimension(794, 700));
 
         javax.swing.GroupLayout boardSubUILayout = new javax.swing.GroupLayout(boardSubUI);
@@ -381,27 +378,13 @@ public class Gui extends javax.swing.JFrame {
         );
         panelBackgroundLayout.setVerticalGroup(
             panelBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBackgroundLayout.createSequentialGroup()
+            .addGroup(panelBackgroundLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(boardSubUI, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                .addGroup(panelBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(boardSubUI, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-
-        jMenu1.setText("Tool");
-
-        mnItemConfig.setText("config");
-        mnItemConfig.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnItemConfigActionPerformed(evt);
-            }
-        });
-        jMenu1.add(mnItemConfig);
-
-        jMenuBar1.add(jMenu1);
-
-        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -413,7 +396,7 @@ public class Gui extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
+            .addComponent(panelBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
         );
 
         pack();
@@ -457,7 +440,7 @@ public class Gui extends javax.swing.JFrame {
     public void showSfisText(String mess) {
         this.txtShowSfis.setText(mess);
     }
-    
+
     public void showMess(String mess) {
         this.textMess.setText(mess);
     }
@@ -506,11 +489,6 @@ public class Gui extends javax.swing.JFrame {
         showSfisText(null);
     }//GEN-LAST:event_txtInputIndexKeyPressed
 
-    private void mnItemConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnItemConfigActionPerformed
-        // TODO add your handling code here:
-//        this.configEdit.display();
-    }//GEN-LAST:event_mnItemConfigActionPerformed
-
     public void display() {
         java.awt.EventQueue.invokeLater(() -> {
             setVisible(true);
@@ -521,8 +499,6 @@ public class Gui extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel boardSubUI;
     private javax.swing.JComboBox<String> cbbModeTest;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
@@ -535,7 +511,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel lbStation;
     private javax.swing.JLabel lbTimeVN;
     private javax.swing.JLabel lbsocket;
-    private javax.swing.JMenuItem mnItemConfig;
     private javax.swing.JPanel panelBackground;
     private javax.swing.JTextArea textMess;
     private javax.swing.JTextField txtInput;

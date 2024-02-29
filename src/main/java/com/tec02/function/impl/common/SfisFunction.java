@@ -12,8 +12,10 @@ import com.tec02.common.MyConst;
 import com.tec02.communication.DHCP.DhcpData;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 import com.tec02.mylogger.MyLogger;
+import com.tec02.view.managerUI.UICell;
 import java.io.File;
 import java.util.List;
 
@@ -36,22 +38,26 @@ public class SfisFunction extends AbsFunction {
         sfisLog.addLog(location, log, param);
     }
 
+    public SfisFunction(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
+
     @Override
     protected boolean test() {
         try {
             String url = this.config.getString(URL);
-            String type = this.config.getString(SFIS_TYPE);
+            boolean send_final = this.config.get(SEND_FINAL, false);
             if (url == null || url.isBlank()) {
                 addLog("URL_CHECK_SN is null or emtpty!");
                 return false;
             }
-            if (type == null || type.isBlank()) {
-                addLog("Check SN....");
-            } else {
+            if (send_final) {
                 addLog("Send test result to sfis");
+            } else {
+                addLog("Check SN....");
             }
             addLog("send to url: " + url);
-            String command = getCommand(type);
+            String command = getCommand(send_final);
             if (command == null) {
                 return false;
             }
@@ -59,23 +65,23 @@ public class SfisFunction extends AbsFunction {
             Response response = this.restAPI.sendPost(url, command);
             writeLog("API->TE", String.format("%s %s", this.uICell.getName(), response));
             addLog("Response is: " + response);
-            if (type == null || type.isBlank()) {
-                return checkResponse(response);
-            } else {
+            if (send_final) {
                 return checkFinalResponse(response);
+            } else {
+                return checkResponse(response);
             }
         } catch (Exception e) {
             addLog(ERROR, e.getMessage());
             return false;
         }
     }
-    private static final String SFIS_TYPE = "sfis_type";
+    private static final String SEND_FINAL = "send_final";
     private static final String URL = "url";
 
-    private String getCommand(String type) {
+    private String getCommand(boolean send_final) {
         String command;
         String status = this.dataCell.getString(MyConst.SFIS.STATUS);
-        if (type == null || type.isBlank() || (status != null && status.equalsIgnoreCase("pass"))) {
+        if (!send_final || (status != null && status.equalsIgnoreCase("pass"))) {
             command = this.createCommand(SEND_FORMAT);
         } else {
             command = this.createCommand(SEND_FORMAT_FAIL);
@@ -251,11 +257,6 @@ public class SfisFunction extends AbsFunction {
         config.put(DATA_FORMAT, List.of("mlbsn", "ethernetmac", "pnname", "model"));
         config.put(SEND_FORMAT_FAIL, List.of("sn", "pcname", "status", "errorcode"));
         config.put(URL, "http://10.90.100.20/sfcapi/api/connect");
-        config.put(SFIS_TYPE, "");
+        config.put(SEND_FINAL, false);
     }
-
-    @Override
-    protected void init() {
-    }
-
 }

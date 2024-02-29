@@ -42,9 +42,6 @@ public class BigUI extends AbsSubUI {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void setText(String txt) {
-    }
 
     @Override
     public void updateData() {

@@ -6,6 +6,7 @@ package com.tec02.function.impl.common;
 
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import java.awt.HeadlessException;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,6 +18,10 @@ import javax.swing.JTextField;
  * @author Administrator
  */
 public class CheckTestConditions extends AbsFunction {
+
+    public CheckTestConditions(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -82,8 +87,5 @@ public class CheckTestConditions extends AbsFunction {
                 JOptionPane.OK_CANCEL_OPTION);
     }
 
-    @Override
-    protected void init() {
-    }
 
 }

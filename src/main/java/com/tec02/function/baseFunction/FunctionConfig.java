@@ -9,6 +9,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.tec02.configuration.model.itemTest.IItemConfig;
 import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.configuration.model.itemTest.ItemLimit;
+import com.tec02.function.AbsFunction;
+import com.tec02.function.FunctionFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,108 +18,112 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class FunctionConfig extends ItemLimit implements IItemConfig{
-    
-    private final ItemConfig ItemConfigClass;
-    
-     public void setTime_out(int time_out) {
-         this.ItemConfigClass.setTime_out(time_out);
+public class FunctionConfig extends ItemLimit implements IItemConfig {
+
+    private final ItemConfig ItemConfig;
+
+    public void setTime_out(int time_out) {
+        this.ItemConfig.setTime_out(time_out);
     }
 
     public void setRetry(int retry) {
-        this.ItemConfigClass.setRetry(retry);
+        this.ItemConfig.setRetry(retry);
     }
 
     public void setMulti(boolean multi) {
-        this.ItemConfigClass.setMulti(multi);
+        this.ItemConfig.setMulti(multi);
     }
 
     public void setCheck_spec(boolean check_spec) {
-        this.ItemConfigClass.setCheck_spec(check_spec);
+        this.ItemConfig.setCheck_spec(check_spec);
     }
 
     public void setWait_multi_done(boolean wait_multi_done) {
-        this.ItemConfigClass.setWait_multi_done(wait_multi_done);
+        this.ItemConfig.setWait_multi_done(wait_multi_done);
     }
 
     public void setFail_continue(boolean fail_continue) {
-        this.ItemConfigClass.setFail_continue(fail_continue);
+        this.ItemConfig.setFail_continue(fail_continue);
     }
 
     public void setDebugCancellCheckSpec(boolean debugCancellCheckSpec) {
-        this.ItemConfigClass.setDebugCancellCheckSpec(debugCancellCheckSpec);
+        this.ItemConfig.setDebugCancellCheckSpec(debugCancellCheckSpec);
+    }
+
+    public void setModeRun(int modeRun) {
+        this.ItemConfig.setModeRun(modeRun);
     }
 
     public void setDebugCancellRun(boolean debugCancellRun) {
-      this.ItemConfigClass.setDebugCancellRun(debugCancellRun);
+        this.ItemConfig.setDebugCancellRun(debugCancellRun);
     }
 
     public void setFunction(String function) {
-        this.ItemConfigClass.setFunction(function);
+        this.ItemConfig.setFunction(function);
     }
 
     public void setBonus(JSONObject bonus) {
-       this.ItemConfigClass.setBonus(bonus);
-    }
-    
-    public void setAlwaysRun(boolean b) {
-       this.ItemConfigClass.setAlwaysRun(b);
+        this.ItemConfig.setBonus(bonus);
     }
 
-    public FunctionConfig(ItemConfig ItemConfigClass) {
-        this.ItemConfigClass = ItemConfigClass;
+    public void setAlwaysRun(boolean b) {
+        this.ItemConfig.setAlwaysRun(b);
+    }
+
+    public FunctionConfig(ItemConfig ItemConfig) {
+        this.ItemConfig = ItemConfig;
     }
 
     @Override
     public int getTime_out() {
-        return this.ItemConfigClass.getTime_out();
+        return this.ItemConfig.getTime_out();
     }
 
     @Override
     public int getRetry() {
-        return this.ItemConfigClass.getRetry();
+        return this.ItemConfig.getRetry();
     }
 
     @Override
     public boolean isMulti() {
-        return this.ItemConfigClass.isMulti();
+        return this.ItemConfig.isMulti();
     }
 
     @Override
     public boolean isCheck_spec() {
-        return this.ItemConfigClass.isCheck_spec();
+        return this.ItemConfig.isCheck_spec();
     }
 
     @Override
     public boolean isWait_multi_done() {
-        return this.ItemConfigClass.isWait_multi_done();
+        return this.ItemConfig.isWait_multi_done();
     }
 
     @Override
     public boolean isFail_continue() {
-        return this.ItemConfigClass.isFail_continue();
+        return this.ItemConfig.isFail_continue();
     }
 
     @Override
     public boolean isDebugCancellCheckSpec() {
-        return this.ItemConfigClass.isDebugCancellCheckSpec();
+        return this.ItemConfig.isDebugCancellCheckSpec();
     }
 
     @Override
     public boolean isDebugCancellRun() {
-        return this.ItemConfigClass.isDebugCancellRun();
+        return this.ItemConfig.isDebugCancellRun();
     }
 
     @Override
     public String getFunction() {
-        return this.ItemConfigClass.getFunction();
+        return this.ItemConfig.getFunction();
     }
 
     @Override
     public JSONObject getBonus() {
-        return this.ItemConfigClass.getBonus();
+        return this.ItemConfig.getBonus();
     }
-    
+
     @Override
     public String toString() {
         return test_name;
@@ -180,14 +186,38 @@ public class FunctionConfig extends ItemLimit implements IItemConfig{
 
     @Override
     public boolean isAlwaysRun() {
-        return this.ItemConfigClass.isAlwaysRun();
+        return this.ItemConfig.isAlwaysRun();
+    }
+
+    public void merge(Class configClass) {
+        if (configClass == null) {
+            return;
+        }
+        merge(configClass.getSimpleName());
+    }
+
+    public void merge(String configClassName) {
+        FunctionConfig config = FunctionFactory.getInstance().getDefaultConfigOfFunction(configClassName);
+        if (config == null) {
+            return;
+        }
+        this.ItemConfig.getBonus().putAll(config.getBonus());
     }
 
     public void merge(FunctionConfig defaultConfig) {
-        if(defaultConfig == null){
+        if (defaultConfig == null) {
             return;
         }
-        this.ItemConfigClass.getBonus().putAll(defaultConfig.getBonus());
+        this.ItemConfig.getBonus().putAll(defaultConfig.getBonus());
     }
-    
+
+    public void setFailApiName(String name) {
+        this.ItemConfig.setFailApiName(name);
+    }
+
+    @Override
+    public String getFailApiName() {
+        return this.ItemConfig.getFailApiName();
+    }
+
 }

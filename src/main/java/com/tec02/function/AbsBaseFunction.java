@@ -4,22 +4,31 @@
  */
 package com.tec02.function;
 
+import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.baseFunction.FunctionLogger;
-import com.tec02.view.managerUI.UICell;
-
+import com.tec02.function.baseFunction.Model;
+import com.tec02.function.model.FunctionConstructorModel;
 
 /**
  *
  * @author Administrator
  */
 public class AbsBaseFunction extends Absbase {
-
+    
     protected FunctionConfig config;
-
-    protected AbsBaseFunction(FunctionLogger logger, FunctionConfig config, UICell uICell) {
-        this.logger = logger;
-        this.config = config;
-        setUICell(uICell);
+    
+    protected AbsBaseFunction(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        if (constructorModel != null && constructorModel.getConfig() != null) {
+            this.config = constructorModel.getConfig();
+        } else {
+            this.config = new FunctionConfig(new ItemConfig());
+        }
+        if (constructorModel != null && constructorModel.getLogger() != null) {
+            this.logger = constructorModel.getLogger();
+        } else {
+            this.logger = new FunctionLogger(new Model());
+        }
     }
 }

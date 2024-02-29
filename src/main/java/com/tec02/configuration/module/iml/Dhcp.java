@@ -23,6 +23,10 @@ public class Dhcp extends AbsModule<DhcpDto, DhcpDto> {
         super(dhcpDto, dhcpDto, new DhcpPanal());
         this.dhcp = DHCP.getgetInstance();
     }
+    
+    public boolean isRunning(){
+        return this.thread != null && this.thread.isAlive();
+    }
 
     @Override
     public void execute() {

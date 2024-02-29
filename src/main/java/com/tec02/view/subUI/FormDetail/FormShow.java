@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class FormShow extends javax.swing.JFrame {
 
+    private final TabDetail tabDetail;
     /**
      * Creates new form Detail
      *
@@ -29,12 +30,14 @@ public class FormShow extends javax.swing.JFrame {
     public FormShow(TabDetail tabDetail) {
         initComponents();
         this.add(tabDetail);
+        this.tabDetail = tabDetail;
     }
 
     
     public void display(String title){
         this.setTitle(title);
         this.setVisible(true);
+        this.tabDetail.setSelectedIndex(0);
     }
 
     /**

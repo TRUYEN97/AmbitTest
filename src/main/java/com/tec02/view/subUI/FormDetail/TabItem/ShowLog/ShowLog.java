@@ -44,6 +44,8 @@ public class ShowLog extends javax.swing.JFrame {
         initComponents();
         this.uICell = uICell;
         this.functionModel = functionModel;
+        DefaultCaret caret = (DefaultCaret) txtLog.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }
 
     private void runtheard() {
@@ -61,7 +63,7 @@ public class ShowLog extends javax.swing.JFrame {
                         stopTimer();
                     }
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(200);
                     } catch (InterruptedException ex) {
                     }
                 }

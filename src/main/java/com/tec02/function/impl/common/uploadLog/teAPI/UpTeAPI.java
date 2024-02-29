@@ -10,6 +10,7 @@ import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.uploadLog.CreateJsonApi;
 import com.tec02.function.impl.common.uploadLog.CreateTxt;
+import com.tec02.function.model.FunctionConstructorModel;
 import java.util.List;
 
 /**
@@ -18,8 +19,14 @@ import java.util.List;
  */
 public class UpTeAPI extends AbsFunction {
 
-    private CreateJsonApi jsonApi;
-    private CreateTxt createTxt;
+    private final CreateJsonApi jsonApi;
+    private final CreateTxt createTxt;
+
+    public UpTeAPI(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        this.jsonApi = (CreateJsonApi) getBaseFunction(CreateJsonApi.class);
+        this.createTxt = (CreateTxt) getBaseFunction(CreateTxt.class);
+    }
 
     @Override
     protected boolean test() {
@@ -86,12 +93,6 @@ public class UpTeAPI extends AbsFunction {
         config.put("LocalTxtName", List.of("mlbsn", "station_name", "mode", "{serial}"));
         config.put("Command", "cd UploadApi && java -jar UploadLogAPI.jar 10.90.100.168");
         config.put("Spec", "{\"result\":true,\"message\":\"Save succeed!\",\"data\":null}");
-    }
-
-    @Override
-    protected void init() {
-        this.jsonApi = new CreateJsonApi(logger, config, uICell);
-        this.createTxt = new CreateTxt(logger, config, uICell);
     }
 
 }

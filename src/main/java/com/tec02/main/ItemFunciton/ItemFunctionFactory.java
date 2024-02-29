@@ -4,54 +4,73 @@
  */
 package com.tec02.main.ItemFunciton;
 
+import com.tec02.function.AbsBaseFunction;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.FunctionFactory;
-import com.tec02.main.dataCell.DataCell;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.view.managerUI.UICell;
-import lombok.NonNull;
 
 /**
  *
  * @author Administrator
  */
-public class ItemFunctionFactory implements IItemFunction {
+public class ItemFunctionFactory {
 
+    private static volatile ItemFunctionFactory instance;
     private final FunctionFactory functionFactory;
-    private final UICell uICell;
 
-    @NonNull
-    public ItemFunctionFactory(UICell cell) {
-        this.functionFactory = FunctionFactory.getInstance();
-        this.uICell = cell;
+    public static ItemFunctionFactory getInsatance() {
+        ItemFunctionFactory ins = ItemFunctionFactory.instance;
+        if (ins == null) {
+            synchronized (ItemFunctionFactory.class) {
+                ins = ItemFunctionFactory.instance;
+                if (ins == null) {
+                    ItemFunctionFactory.instance = ins = new ItemFunctionFactory();
+                }
+            }
+        }
+        return ins;
     }
 
-    @Override
-    public synchronized AbsFunction getFunction(String functionName, String itemName, String limitName, Integer begin) {
-        AbsFunction absFunction = this.functionFactory.getFunction(functionName);
-        if (absFunction == null) {
-            throw new RuntimeException(
-                    String.format("Func: \"%s\" - \"%s\", function not exists!",
-                            functionName, itemName));
+    private ItemFunctionFactory() {
+        this.functionFactory = FunctionFactory.getInstance();
+    }
+
+    public synchronized AbsFunction getFunction(String functionName,
+            FunctionConstructorModel constructorModel, UICell uICell, boolean addToDataCell) {
+        if (constructorModel == null) {
+            constructorModel = FunctionConstructorModel.builder().build();
         }
-        absFunction.setUICell(uICell);
-        absFunction.setConfigName(itemName, limitName, begin);
+        AbsFunction absFunction = getFunction(functionName, constructorModel);
         absFunction.updateConfig();
-        absFunction.setFunctionManagement(this);
+        if (uICell != null && uICell.getDataCell() != null) {
+            uICell.getDataCell().addItemFunction(absFunction);
+        }
         return absFunction;
     }
 
-    @Override
-    public AbsFunction getFunction(String functionName, String itemName, Integer begin) {
-        return getFunction(functionName, itemName, itemName, begin);
+    public synchronized AbsBaseFunction getBaseFunction(String functionName, FunctionConstructorModel constructorModel) {
+        AbsBaseFunction absFunction = this.functionFactory.getBaseFunction(functionName, constructorModel);
+        if (absFunction == null) {
+            throw new RuntimeException(
+                    String.format("Base-Func: \"%s\", Base-function not exists!",
+                            functionName));
+        }
+        return absFunction;
     }
 
-    @Override
-    public AbsFunction getFunction(String functionName, String itemName, String limitName) {
-        return getFunction(functionName, itemName, limitName, null);
+    public AbsFunction getFunction(String functionName, UICell uICell, String itemName, Integer begin, boolean addToDataCell) {
+        FunctionConstructorModel constructorModel = FunctionConstructorModel.builder()
+                .uICell(uICell)
+                .itemName(itemName)
+                .configName(itemName)
+                .begin(begin)
+                .build();
+        return getFunction(functionName, constructorModel, uICell, addToDataCell);
     }
 
-    @Override
-    public AbsFunction getFunction(String functionName, String itemName) {
-        return getFunction(functionName, itemName, itemName, null);
+    public AbsFunction getFunction(String functionName, FunctionConstructorModel constructorModel) {
+        AbsFunction absFunction = this.functionFactory.getFunction(functionName, constructorModel);
+        return absFunction;
     }
 }

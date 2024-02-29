@@ -8,6 +8,7 @@ import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.uploadLog.CreateJsonApi;
 import com.tec02.function.impl.common.uploadLog.CreateTxt;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 import java.util.List;
 
@@ -17,9 +18,16 @@ import java.util.List;
  */
 public class UpLogFTP extends AbsFunction {
 
-    private UpFTP upFTP;
-    private CreateJsonApi jsonApi;
-    private CreateTxt createTxt;
+    private final UpFTP upFTP;
+    private final CreateJsonApi jsonApi;
+    private final CreateTxt createTxt;
+
+    public UpLogFTP(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        this.upFTP = (UpFTP) getBaseFunction(UpFTP.class);
+        this.jsonApi = (CreateJsonApi) getBaseFunction(CreateJsonApi.class);
+        this.createTxt = (CreateTxt) getBaseFunction(CreateTxt.class);
+    }
 
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
@@ -102,13 +110,6 @@ public class UpLogFTP extends AbsFunction {
         this.upFTP.setLocalPath(localPath);
         this.upFTP.setFtpPath(ftpPath);
         return this.upFTP.upFtp();
-    }
-
-    @Override
-    protected void init() {
-        this.upFTP = new UpFTP(logger, config, uICell);
-        this.jsonApi = new CreateJsonApi(logger, config, uICell);
-        this.createTxt = new CreateTxt(logger, config, uICell);
     }
 
 }

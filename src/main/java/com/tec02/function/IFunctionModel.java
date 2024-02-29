@@ -17,6 +17,10 @@ import com.tec02.function.baseFunction.Model;
 public interface IFunctionModel {
 
     Model getModel();
+    
+    boolean isSubItem();
+    
+    boolean isElementFucntion();
 
     boolean isWaiting();
 

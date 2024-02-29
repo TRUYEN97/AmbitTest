@@ -9,8 +9,10 @@ import com.tec02.function.IFunctionModel;
 import com.tec02.main.dataCell.DataCell;
 import com.tec02.view.Gui;
 import com.tec02.view.managerUI.UICell;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  *
@@ -19,18 +21,21 @@ import javax.swing.JPanel;
 public abstract class AbsUI extends JPanel {
 
     protected final String name;
-    private Thread threadUpdate;
     protected UICell uICell;
     protected Gui gui;
-    protected List<? extends IFunctionModel> functionModels;
+    protected List<? extends IFunctionModel> functions;
     protected DataCell dataCell;
     protected TimeS timeS;
-    private final int timeDelay;
+    private final Timer timer;
 
     protected AbsUI(String name, int timeDelay) {
         this.name = name;
         timeDelay = timeDelay < 100 && timeDelay > 0 ? 100 : timeDelay;
-        this.timeDelay = timeDelay;
+        this.functions = new ArrayList<>();
+        this.timeS = new TimeS();
+        this.timer = new Timer(timeDelay, (e) -> {
+            updateData();
+        });
     }
 
     protected String getTestTime() {
@@ -45,29 +50,13 @@ public abstract class AbsUI extends JPanel {
     }
 
     public void startTest() {
-        if (this.threadUpdate != null && threadUpdate.isAlive()) {
-            this.threadUpdate.stop();
-        }
-        this.threadUpdate = new Thread() {
-            @Override
-            public void run() {
-                while (timeDelay > 0) {
-                    updateData();
-                    try {
-                        Thread.sleep(timeDelay);
-                    } catch (InterruptedException ex) {
-                    }
-                }
-            }
-        };
-        this.threadUpdate.start();
         this.timeS.start(0);
+        this.timer.start();
+        updateData();
     }
 
     public void endTest() {
-        if (this.threadUpdate != null && threadUpdate.isAlive()) {
-            this.threadUpdate.stop();
-        }
+        this.timer.stop();
         this.timeS.stop();
         updateData();
     }
@@ -76,9 +65,9 @@ public abstract class AbsUI extends JPanel {
 
     public void setUICell(UICell uiCell) {
         this.uICell = uiCell;
-        this.functionModels = this.uICell.getDataCell().getItemFunctions();
         this.dataCell = this.uICell.getDataCell();
         this.timeS = this.uICell.getTimeS();
+        this.functions = this.dataCell.getFunctions(DataCell.ALL_ITEM);
     }
 
     public UICell getUICell() {

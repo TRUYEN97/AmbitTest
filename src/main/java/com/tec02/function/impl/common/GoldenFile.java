@@ -8,6 +8,7 @@ import com.tec02.common.MyConst;
 import com.tec02.communication.DHCP.DhcpData;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,6 +18,10 @@ import java.io.FileReader;
  * @author Administrator
  */
 public class GoldenFile extends AbsFunction {
+
+    public GoldenFile(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -117,8 +122,5 @@ public class GoldenFile extends AbsFunction {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
-    protected void init() {
-    }
 
 }

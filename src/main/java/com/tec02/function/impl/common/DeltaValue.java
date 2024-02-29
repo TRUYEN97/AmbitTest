@@ -7,12 +7,17 @@ package com.tec02.function.impl.common;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.IFunctionModel;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 
 /**
  *
  * @author Administrator
  */
 public class DeltaValue extends AbsFunction{
+
+    public DeltaValue(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -49,10 +54,6 @@ public class DeltaValue extends AbsFunction{
         config.setTime_out(100);
         config.put("item", "");
         config.put("item1", "");
-    }
-
-    @Override
-    protected void init() {
     }
     
 }

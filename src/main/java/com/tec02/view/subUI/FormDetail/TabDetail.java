@@ -19,7 +19,7 @@ import javax.swing.JPanel;
  *
  * @author Administrator
  */
-public class TabDetail extends JPanel{
+public class TabDetail extends JPanel {
 
     private final HashMap<String, AbsTabUI> tabElements;
     private final AbsSubUI boss;
@@ -114,6 +114,12 @@ public class TabDetail extends JPanel{
     public void endTest() {
         for (String item : tabElements.keySet()) {
             tabElements.get(item).endTest();
+        }
+    }
+
+    public void setSelectedIndex(int index) {
+        if (index < tabDetail.getTabCount()) {
+            tabDetail.setSelectedIndex(index);
         }
     }
 

@@ -8,10 +8,8 @@ import com.tec02.communication.Communicate.Impl.FtpClient.FtpClient;
 import com.tec02.function.AbsBaseFunction;
 import com.tec02.function.baseFunction.BaseFunction;
 import com.tec02.function.baseFunction.FileBaseFunction;
-import com.tec02.function.baseFunction.FunctionConfig;
-import com.tec02.function.baseFunction.FunctionLogger;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
-import com.tec02.view.managerUI.UICell;
 import java.io.File;
 import java.io.IOException;
 
@@ -26,10 +24,10 @@ public class UpFTP extends AbsBaseFunction {
     private final BaseFunction baseFunction;
     private final FileBaseFunction fileBaseFunction;
 
-    public UpFTP(FunctionLogger logger, FunctionConfig config, UICell uICell) {
-        super(logger, config, uICell);
-        this.baseFunction = new BaseFunction(logger, config, uICell);
-        this.fileBaseFunction = new FileBaseFunction(logger, config, uICell);
+    public UpFTP(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        this.baseFunction = new BaseFunction(constructorModel);
+        this.fileBaseFunction = new FileBaseFunction(constructorModel);
     }
 
     public void setFtpPath(String ftpPath) {

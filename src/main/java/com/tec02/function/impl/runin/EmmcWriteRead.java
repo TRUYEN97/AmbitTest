@@ -6,8 +6,9 @@ package com.tec02.function.impl.runin;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.AbsCommunicate;
-import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 import java.util.List;
 
@@ -15,7 +16,11 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class EmmcWriteRead extends AbsFunction {
+public class EmmcWriteRead extends AbsFucnUseTelnetOrCommportConnector {
+
+    public EmmcWriteRead(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -24,7 +29,7 @@ public class EmmcWriteRead extends AbsFunction {
             if (communicate == null) {
                 return false;
             }
-            String command = this.config.getString("command");
+            String command = this.config.getString(COMMAND);
             if (!this.baseFunction.sendCommand(communicate, command)) {
                 return false;
             }
@@ -34,9 +39,9 @@ public class EmmcWriteRead extends AbsFunction {
             ErrorLog.addError(this, e.getMessage());
             return false;
         }
-        List<String> items = this.config.getJsonList("ItemNames");
-        List<String> blocks = this.config.getJsonList("Block");
-        List<String> KeyWords = this.config.getJsonList("KeyWord");
+        List<String> items = this.config.getJsonList(ITEM_NAMES);
+        List<String> blocks = this.config.getJsonList(BLOCK);
+        List<String> KeyWords = this.config.getJsonList(KEY_WORD);
         addLog("Config", "Items: %s", items);
         addLog("Config", "Block: %s", blocks);
         addLog("Config", "KeyWord: %s", KeyWords);
@@ -49,7 +54,7 @@ public class EmmcWriteRead extends AbsFunction {
         for (int i = 0; i < itemsSize; i++) {
             String item = items.get(i);
             addLog("PC", item);
-            EmmcSpeed mmc_speed = (EmmcSpeed) getSubItem("EmmcSpeed", item);
+            EmmcSpeed mmc_speed = createSubItem(EmmcSpeed.class, item);
             mmc_speed.setData(response, blocks.get(i), KeyWords.get(i));
             mmc_speed.runTest(1);
             if (!mmc_speed.isPass()) {
@@ -61,27 +66,29 @@ public class EmmcWriteRead extends AbsFunction {
     
 
     private String getResponse(AbsCommunicate telnet) {
-        int time = this.config.getInteger("Time", 5);
-        String until = this.config.getString("ReadUntil");
+        int time = this.config.getInteger(TIME, 5);
+        String until = this.config.getString(READ_UNTIL);
         return this.analysisBase.readShowUntil(telnet, until, new TimeS(time));
     }
 
-    @Override
-    protected void createDefaultConfig(FunctionConfig config) {
-        config.put("type", "telnet");
-        config.put("IP", "192.168.1.1");
-        config.put("comport", 1);
-        config.put("baudrate", 115200);
-        config.put("ItemNames", List.of("emmc_speed_read", "emmc_speed_write"));
-        config.put("command", "test-emmc");
-        config.put("KeyWord", List.of("Reading", "Writing"));
-        config.put("Block", List.of("0x00", "0x00"));
-        config.put("ReadUntil", "root@eero-test:/#");
-        config.put("Time", 50);
-    }
 
     @Override
-    protected void init() {
+    protected void createConfig(FunctionConfig config) {
+        config.setTime_out(50);
+        config.setRetry(2);
+        config.setFailApiName("emmc_speed_read");
+        config.put(ITEM_NAMES, List.of("emmc_speed_read", "emmc_speed_write"));
+        config.put(COMMAND, "test-emmc");
+        config.put(KEY_WORD, List.of("Reading", "Writing"));
+        config.put(BLOCK, List.of("0x00", "0x00"));
+        config.put(READ_UNTIL, "root@eero-test:/#");
+        config.put(TIME, 50);
     }
+    private static final String ITEM_NAMES = "ItemNames";
+    private static final String TIME = "Time";
+    private static final String READ_UNTIL = "ReadUntil";
+    private static final String BLOCK = "Block";
+    private static final String KEY_WORD = "KeyWord";
+    private static final String COMMAND = "command";
 
 }

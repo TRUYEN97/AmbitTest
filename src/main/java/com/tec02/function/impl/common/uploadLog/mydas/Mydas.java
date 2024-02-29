@@ -10,12 +10,18 @@ import com.tec02.common.PcInformation;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.IFunctionModel;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
+import com.tec02.main.dataCell.DataCell;
 
 /**
  *
  * @author Administrator
  */
 public class Mydas extends AbsFunction {
+
+    public Mydas(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -102,7 +108,7 @@ public class Mydas extends AbsFunction {
 
     private String getDetaiLItem() {
         StringBuilder builder = new StringBuilder();
-        for (IFunctionModel itemTestData : this.dataCell.getItemFunctions()) {
+        for (IFunctionModel itemTestData : this.dataCell.getFunctions(DataCell.ALL_ITEM)) {
             if (itemTestData == null) {
                 continue;
             }
@@ -144,9 +150,4 @@ public class Mydas extends AbsFunction {
         config.put("IP", "10.90.100.168");
         config.put("sendDetail", false);
     }
-
-    @Override
-    protected void init() {
-    }
-
 }

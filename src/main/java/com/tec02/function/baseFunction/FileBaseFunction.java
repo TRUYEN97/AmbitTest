@@ -10,11 +10,9 @@ import com.tec02.FileService.FileService;
 import com.tec02.FileService.Zip;
 import com.tec02.common.MyObjectMapper;
 import com.tec02.function.AbsBaseFunction;
-import com.tec02.view.managerUI.UICell;
+import com.tec02.function.model.FunctionConstructorModel;
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -25,8 +23,8 @@ public class FileBaseFunction extends AbsBaseFunction {
     private final FileService fileService;
     private final Zip zip;
 
-    public FileBaseFunction(FunctionLogger logger, FunctionConfig config, UICell uICell) {
-        super(logger, config, uICell);
+    public FileBaseFunction(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
         fileService = new FileService();
         zip = new Zip();
     }

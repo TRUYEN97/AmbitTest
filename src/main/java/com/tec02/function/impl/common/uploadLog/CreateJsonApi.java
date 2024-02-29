@@ -11,9 +11,8 @@ import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.function.AbsBaseFunction;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FileBaseFunction;
-import com.tec02.function.baseFunction.FunctionConfig;
-import com.tec02.function.baseFunction.FunctionLogger;
-import com.tec02.view.managerUI.UICell;
+import com.tec02.function.model.FunctionConstructorModel;
+import com.tec02.main.dataCell.DataCell;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,9 +26,9 @@ public class CreateJsonApi extends AbsBaseFunction {
     private final FileBaseFunction fileBaseFunction;
     private String path;
 
-    public CreateJsonApi(FunctionLogger logger, FunctionConfig config, UICell uICell) {
-        super(logger, config, uICell);
-        this.fileBaseFunction = new FileBaseFunction(logger, config, uICell);
+    public CreateJsonApi(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        this.fileBaseFunction = new FileBaseFunction(constructorModel);
     }
 
     public boolean test() {
@@ -90,7 +89,7 @@ public class CreateJsonApi extends AbsBaseFunction {
         if (limits == null) {
             return null;
         }
-        List<AbsFunction> itemTestDatas = this.dataCell.getItemFunctions();
+        List<AbsFunction> itemTestDatas = this.dataCell.getFunctions(DataCell.ALL_ITEM);
         for (AbsFunction absFunction : itemTestDatas) {
             String itemName = absFunction.getConfig().getTest_name();
             if (itemName == null || !absFunction.isDone()) {
@@ -100,7 +99,7 @@ public class CreateJsonApi extends AbsBaseFunction {
             itemTest = absFunction.getData(testKeys, isUseLimitErrorCode);
             if (!followLimit || (checkLimitContain(limits.keySet(), absFunction))) {
                 if (itemTest != null) {
-                    addLog("PC", "ItemTest: %s", itemName);
+                    addLog("PC", "Add to test json: %s", itemName);
                     tests.add(itemTest);
                 } else if (limits.get(itemName).getRequired() == 1 && statusTest) {
                     addLog("PC", "Missing \"%s\" item test!", itemName);

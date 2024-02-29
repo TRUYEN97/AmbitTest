@@ -6,12 +6,15 @@ package com.tec02.function.baseFunction;
 
 import com.tec02.Time.WaitTime.AbsTime;
 import com.tec02.Time.WaitTime.Class.TimeS;
+import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.IReadable;
 import com.tec02.function.AbsBaseFunction;
-import com.tec02.view.managerUI.UICell;
+import com.tec02.function.model.FunctionConstructorModel;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -19,24 +22,27 @@ import java.util.regex.Pattern;
  */
 public class AnalysisBase extends AbsBaseFunction {
 
-    public AnalysisBase(FunctionLogger logger, FunctionConfig config, UICell uICell) {
-        super(logger, config, uICell);
+    public AnalysisBase(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
     }
 
-    public String getValue(IReadable readable, String regex, AbsTime time, String readUntil) {
-        return getValue(readable, null, null, regex, time, readUntil);
+    public String getValue(IReadable readable, String regex, AbsTime time, String readUntil, int begin) {
+        return getValue(readable, null, null, regex, time, readUntil, 0);
     }
 
-    public String getValue(IReadable readable, String startkey, String endkey, AbsTime time, String readUntil) {
-        return getValue(readable, startkey, endkey, null, time, readUntil);
+    public String getValue(IReadable readable, String startkey, String endkey, AbsTime time, String readUntil, int begin) {
+        return getValue(readable, startkey, endkey, null, time, readUntil, 0);
     }
 
-    public String getValue(IReadable readable, String startkey, String endkey, String readUntil) {
-        return getValue(readable, startkey, endkey, null, null, readUntil);
+    public String getValue(IReadable readable, String startkey, String endkey, String readUntil, int begin) {
+        return getValue(readable, startkey, endkey, null, null, readUntil, 0);
     }
 
-    public String getValue(IReadable readable, String startkey, String endkey,
-            String regex, AbsTime time, String readUntil) {
+    public String getValueAtLineNumber(AbsCommunicate communicate, AbsTime timer, int i) {
+        return getValue(communicate, null, timer, null, i);
+    }
+
+    public String getValue(IReadable readable, String startkey, String endkey, String regex, AbsTime time, String readUntil, int begin) {
         String line;
         String name = readable.getClass().getSimpleName();
         String value = null;
@@ -47,7 +53,7 @@ public class AnalysisBase extends AbsBaseFunction {
             while (time == null || time.onTime()) {
                 line = getLine(time, readable);
                 addLog(name, line);
-                if(line == null){
+                if (line == null) {
                     continue;
                 }
                 if (regex != null && !regex.isBlank()) {
@@ -88,7 +94,7 @@ public class AnalysisBase extends AbsBaseFunction {
         String name = readable.getClass().getSimpleName();
         timeS.update();
         while (timeS.onTime()) {
-            line = readable.readLine(timeS);
+            line = readable.readUntil(keyWords.toArray(String[]::new));
             addLog(name, line);
             if (line != null && keyWords.contains(line.trim())) {
                 return true;
@@ -164,7 +170,7 @@ public class AnalysisBase extends AbsBaseFunction {
             addLog(PC, "String data == null");
             return false;
         }
-        addLog(CONFIG, "Check contains: %s", specs);
+//        addLog(CONFIG, "Check contains: %s", specs);
         for (String spec : specs) {
             if (response.contains(spec)) {
                 return true;
@@ -172,7 +178,7 @@ public class AnalysisBase extends AbsBaseFunction {
         }
         return false;
     }
-    
+
     public boolean macthAll(String response, List<String> specs) {
         if (response == null) {
             addLog(PC, "String data == null");
@@ -235,7 +241,7 @@ public class AnalysisBase extends AbsBaseFunction {
         }
         try {
             double result = Double.parseDouble(value);
-            addLog("PC", "Convert sucessed! value: " + result);
+//            addLog("PC", "Convert sucessed! value: " + result);
             return result;
         } catch (NumberFormatException e) {
             addLog("ERROR", e.getLocalizedMessage());
@@ -265,6 +271,12 @@ public class AnalysisBase extends AbsBaseFunction {
             return matcher.group();
         }
         return null;
+    }
+
+    public List<String> findGroups(String line, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(line);
+        return matcher.results().map((t) -> t.group()).collect(Collectors.toList());
     }
 
     public String subString(String line, String startkey, String endkey) {

@@ -59,6 +59,7 @@ public class AnalysisResult {
     }
 
     private void setPass() {
+        this.model.setDescErrorcde("");
         this.model.setError_code("");
         this.model.setErrorcode("");
         this.model.setStatus(MyConst.MODEL.PASS);
@@ -150,17 +151,21 @@ public class AnalysisResult {
         if (lower == null) {
             if (aGreatThanB(value, upper)) {
                 setTooHighErrorcode();
+                return;
             }
         } else if (upper == null) {
             if (aGreatThanB(lower, value)) {
                 setTooLowErrorcode();
+                return;
             }
         } else {
             if (aGreatThanB(value, upper)) {
                 setTooHighErrorcode();
+                return;
             }
             if (aGreatThanB(lower, value)) {
                 setTooLowErrorcode();
+                return;
             }
         }
         setPass();

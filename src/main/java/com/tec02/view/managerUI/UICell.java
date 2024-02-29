@@ -29,7 +29,6 @@ public class UICell {
     private final Core core;
     private final ModeManagement modeManagement;
     private final UICellTester cellTester;
-    private final ItemFunctionFactory itemFunctionFactory;
     private final DataCell dataCell;
     private final TimeS timeS;
     private String input;
@@ -48,8 +47,7 @@ public class UICell {
         this.core = Core.getInstance();
         this.modeManagement = ModeManagement.getInsatace();
         this.dataCell = new DataCell(this);
-        this.itemFunctionFactory = new ItemFunctionFactory(this);
-        this.cellTester = new UICellTester(this, this.itemFunctionFactory);
+        this.cellTester = new UICellTester(this);
     }
 
     public String getName() {
@@ -70,7 +68,7 @@ public class UICell {
 
     public void setInput(String input) {
         if (input != null && !isTesting()) {
-            this.cellTester.setInput(input, 1);
+            this.cellTester.setInput(input, UICellTester.MODE_ROOT);
         }
     }
 
@@ -104,10 +102,10 @@ public class UICell {
         if (getTestCount() == 0) {
             return 0.0;
         }
-        return (double) (getFailcount() / getTestCount()) * 100;
+        return (getFailcount() / (double) getTestCount()) * 100;
     }
 
     public int getTestPass() {
-        return getTestCount() - getTestFailed();
+        return passcount;
     }
 }

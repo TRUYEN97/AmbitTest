@@ -12,6 +12,8 @@ import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.uploadLog.CreateJsonApi;
 import com.tec02.function.impl.common.uploadLog.CreateTxt;
 import com.tec02.function.impl.common.uploadLog.ZipFile;
+import com.tec02.function.model.FunctionConstructorModel;
+import com.tec02.main.dataCell.DataCell;
 import java.util.List;
 
 /**
@@ -20,9 +22,16 @@ import java.util.List;
  */
 public class UpAPI extends AbsFunction {
 
-    private CreateJsonApi jsonApi;
-    private CreateTxt createTxt;
-    private ZipFile zipFile;
+    private final CreateJsonApi jsonApi;
+    private final CreateTxt createTxt;
+    private final ZipFile zipFile;
+
+    public UpAPI(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+        this.jsonApi = (CreateJsonApi) getBaseFunction(CreateJsonApi.class);
+        this.createTxt = (CreateTxt) getBaseFunction(CreateTxt.class);
+        this.zipFile = (ZipFile) getBaseFunction(ZipFile.class);
+    }
 
     @Override
     protected boolean test() {
@@ -39,7 +48,7 @@ public class UpAPI extends AbsFunction {
         if (retry > 0) {
             ConfigurationManagement.getInstance().getItemTestConfig().execute();
             var limits = ConfigurationManagement.getInstance().getItemTestConfig().getModel().getLimits();
-            for (AbsFunction itemFunction : dataCell.getItemFunctions()) {
+            for (AbsFunction itemFunction : dataCell.getFunctions(DataCell.ALL_ITEM)) {
                 if (itemFunction.isDone() && (limits.containsKey(itemFunction.getConfig().getTest_name())
                         || limits.containsKey(itemFunction.getBaseItem()))) {
                     itemFunction.updateConfig();
@@ -112,13 +121,6 @@ public class UpAPI extends AbsFunction {
         config.put("LocalTxtName", List.of("mlbsn", "station_name", "mode", "{serial}"));
         config.put("Command", "cd python && eero_API_client.py log/");
         config.put("Spec", "200");
-    }
-
-    @Override
-    protected void init() {
-        this.createTxt = new CreateTxt(logger, config, uICell);
-        this.zipFile = new ZipFile(logger, config, uICell);
-        this.jsonApi = new CreateJsonApi(logger, config, uICell);
     }
 
 }

@@ -96,7 +96,7 @@ public class ModeFlow {
                     hasGroupsScan.remove(name);
                 }
             } else if ((itemConfig = (ItemConfig) this.itemTestDto.getItems().get(name)) != null) {
-                itemConfig.setTest_name(name);
+                itemConfig.setItemName(itemConfig.getTest_name());
                 if (itemConfig.getModeRun() > modeRun) {
                     itemConfig.setModeRun(modeRun);
                 }

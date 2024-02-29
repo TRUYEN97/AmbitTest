@@ -6,30 +6,30 @@ package com.tec02.function.impl.common;
 
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 
 /**
  *
  * @author Administrator
  */
-public class Dutping extends AbsFunction{
+public class Dutping extends AbsFunction {
+
+    public Dutping(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
-         try {
-            String ip = this.baseFunction.getIp();
-            addLog("IP: " + ip);
-            if (ip == null) {
-                return false;
-            }
-            String type = this.config.getString("type", "check");
-            addLog("Error", "type: %s", type);
-            int timePing = config.getInteger("time_ping", 120);
-            return this.baseFunction.pingTo(ip, timePing, !type.equalsIgnoreCase("keep"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            addLog(ERROR, ex.getLocalizedMessage());
+        String ip = this.baseFunction.getIp();
+        addLog("IP: " + ip);
+        if (ip == null) {
             return false;
         }
+        boolean type = this.config.get("keepPing", false);
+        addLog(CONFIG, "keep Ping: %s", type);
+        int timePing = config.getInteger("time_ping", 120);
+        return this.baseFunction.pingTo(ip, timePing, !type);
+
     }
 
     @Override
@@ -37,12 +37,9 @@ public class Dutping extends AbsFunction{
         config.setRetry(1);
         config.setTime_out(140);
         config.put("IP", "192.168.1.1");
-        config.put("type", "check");
+        config.put("nonDHCP", false);
+        config.put("keepPing", false);
         config.put("time_ping", 120);
     }
 
-    @Override
-    protected void init() {
-    }
-    
 }

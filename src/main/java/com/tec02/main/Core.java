@@ -27,6 +27,10 @@ public class Core {
         this.configurationManagement = ConfigurationManagement.getInstance();
     }
 
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
     public static Core getInstance() {
         Core ins = Core.instance;
         if (ins == null) {

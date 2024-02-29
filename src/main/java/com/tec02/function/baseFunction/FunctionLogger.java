@@ -15,8 +15,8 @@ import lombok.NonNull;
  */
 public class FunctionLogger {
 
-    private final Queue<String> testQueue;
-    private final StringBuffer testLogger;
+    private Queue<String> testQueue;
+    private StringBuffer testLogger;
     private final TimeBase timeBase;
     private final Model model;
 
@@ -27,13 +27,7 @@ public class FunctionLogger {
         this.timeBase = new TimeBase();
         this.model = model;
     }
-
-    public void begin() {
-        add(String.format("-------------------------- %s --------------------------\r\n",
-                String.format("ITEM[%s] - FUNCTION[%s]",
-                        model.getTest_name(), model.getFunction())));
-    }
-
+    
     public Queue<String> getTestQueue() {
         return testQueue;
     }
@@ -113,9 +107,14 @@ public class FunctionLogger {
     public String getLog() {
         StringBuilder builder = new StringBuilder();
         builder.append(testLogger);
-        builder.append(String.format("\r\n-------------------------- TIME[%.3f s] - STATUS[%S] --------------------------",
+        builder.append(String.format("-------------------------- TIME[%.3f s] - STATUS[%S] --------------------------",
                 model.getCycleTime() / 1000.0, model.getStatus()));
         return builder.toString();
+    }
+
+    public void replace(FunctionLogger logger) {
+        this.testLogger = logger.testLogger;
+        this.testQueue = logger.testQueue;
     }
 
 }

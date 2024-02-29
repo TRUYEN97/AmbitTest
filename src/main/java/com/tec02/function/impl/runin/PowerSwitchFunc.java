@@ -7,6 +7,7 @@ package com.tec02.function.impl.runin;
 import com.tec02.communication.Communicate.Impl.PowerSwitch.PowerSwitch;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import java.util.List;
 
 /**
@@ -14,6 +15,10 @@ import java.util.List;
  * @author Administrator
  */
 public class PowerSwitchFunc extends AbsFunction {
+
+    public PowerSwitchFunc(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -139,10 +144,6 @@ public class PowerSwitchFunc extends AbsFunction {
             i = delays.size();
         }
         return delays.get(i);
-    }
-
-    @Override
-    protected void init() {
     }
 
  

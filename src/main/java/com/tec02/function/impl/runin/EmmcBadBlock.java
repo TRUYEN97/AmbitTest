@@ -7,8 +7,9 @@ package com.tec02.function.impl.runin;
 import com.alibaba.fastjson.JSONObject;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.AbsCommunicate;
-import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 import java.util.List;
 
@@ -16,8 +17,12 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class EmmcBadBlock extends AbsFunction {
-    
+public class EmmcBadBlock extends AbsFucnUseTelnetOrCommportConnector {
+
+    public EmmcBadBlock(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
+
     @Override
     protected boolean test() {
         try {
@@ -33,7 +38,7 @@ public class EmmcBadBlock extends AbsFunction {
             return false;
         }
     }
-    
+
     private boolean check(String ip) {
         try ( AbsCommunicate communicate = this.baseFunction.getTelnetOrComportConnector()) {
             if (communicate == null) {
@@ -46,14 +51,14 @@ public class EmmcBadBlock extends AbsFunction {
             return false;
         }
     }
-    
+
     private boolean runCommand(AbsCommunicate telnet) {
         int sunBadblock = 0;
-        String readUntil = this.config.getString("ReadUntil");
-        int time = this.config.getInteger("Time", 10);
-        List<String> commands = this.config.getJsonList("command");
+        String readUntil = this.config.getString(READ_UNTIL);
+        int time = this.config.getInteger(TIME, 10);
+        List<String> commands = this.config.getJsonList(COMMAND);
         if (commands == null || commands.isEmpty()) {
-            addLog("ERROR", "command in config is null or empty!");
+            addLog(ERROR, "command in config is null or empty!");
             return false;
         }
         for (String subCommand : commands) {
@@ -66,39 +71,35 @@ public class EmmcBadBlock extends AbsFunction {
                 return false;
             }
             sunBadblock += this.analysisBase.string2Integer(value);
-            addLog("PC", "Sum of bad blocks: " + sunBadblock);
+            addLog(PC, "Sum of bad blocks: " + sunBadblock);
         }
         setResult(sunBadblock);
         return true;
     }
-    
+
     private String getValue(String result) {
         if (result == null) {
             return null;
         }
-        String startkey = config.getString("Startkey");
-        String endkey = config.getString("Endkey");
+        String startkey = config.getString(STARTKEY);
+        String endkey = config.getString(ENDKEY);
         return this.analysisBase.subString(result, startkey, endkey);
     }
-    
-    @Override
-    protected void createDefaultConfig(FunctionConfig config) {
-        config.setTime_out(800);
-        config.setRetry(1);
-        config.setBonus(JSONObject.parseObject("""
-                                               {"type": "telnet",
-                                                           "IP": "192.168.1.1",
-                                                           "comport": 1,
-                                                           "baudrate": 115200,
-                                                           "Time": 700,
-                                                           "command": ["badblocks -svw /dev/mmcblk0p17", "badblocks -svw /dev/mmcblk0p20"],
-                                                           "Startkey": "Pass completed,",
-                                                           "Endkey": "bad blocks found",
-                                                           "ReadUntil": "root@eero-test:/#"}"""));
-    }
+    private static final String ENDKEY = "Endkey";
+    private static final String STARTKEY = "Startkey";
+    private static final String TIME = "Time";
+    private static final String READ_UNTIL = "ReadUntil";
+    private static final String COMMAND = "command";
 
     @Override
-    protected void init() {
+    protected void createConfig(FunctionConfig config) {
+        config.setTime_out(800);
+        config.setRetry(1);
+        config.put(COMMAND, List.of("stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 1800s"));
+        config.put(STARTKEY, "Pass completed,");
+        config.put(ENDKEY, "bad blocks found");
+        config.put(READ_UNTIL, "root@eero-test:/#");
+        config.put(TIME, 2200);
     }
-    
+
 }

@@ -23,6 +23,11 @@
             <artifactId>AppServiceUtil</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.external</groupId>
+            <artifactId>AbsoluteLayout</artifactId>
+            <version>RELEASE150</version>
+        </dependency>
     </dependencies>
     
     <build>

@@ -12,6 +12,8 @@ import com.tec02.common.MyObjectMapper;
 import com.tec02.common.PcInformation;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.function.AbsFunction;
+import com.tec02.function.IFunctionModel;
+import com.tec02.function.baseFunction.Model;
 import com.tec02.main.Core;
 import com.tec02.main.ModeManagement;
 import com.tec02.view.managerUI.UICell;
@@ -28,7 +30,8 @@ import lombok.NonNull;
  */
 public class DataCell {
 
-    private final List<AbsFunction> itemFunctions;
+    private final List<AbsFunction> allFunctions;
+    private final List<AbsFunction> failedFunctions;
     private final Map<String, Integer> itemCounts;
     private final DataWareHouse wareHouse;
     private final UICell uICell;
@@ -38,7 +41,8 @@ public class DataCell {
     private Color testColor;
 
     public DataCell(UICell uICell) {
-        this.itemFunctions = new ArrayList<>();
+        this.allFunctions = new ArrayList<>();
+        this.failedFunctions = new ArrayList<>();
         this.itemCounts = new HashMap<>();
         this.wareHouse = new DataWareHouse();
         this.wareHouse.putkeyMap(MyConst.MODEL.MLBSN, MyConst.MODEL.SERIAL);
@@ -50,7 +54,8 @@ public class DataCell {
 
     public void reset() {
         this.itemCounts.clear();
-        this.itemFunctions.clear();
+        this.allFunctions.clear();
+        this.failedFunctions.clear();
         this.startTime = 0;
         initWarehouse();
     }
@@ -88,76 +93,96 @@ public class DataCell {
     }
 
     public synchronized String getNextItemName(String itemName, Integer begin) {
-        Integer count;
         String simpleName = itemName.toLowerCase();
-        if ((count = this.itemCounts.get(simpleName)) != null) {
-            if (begin == null || begin < count) {
-                this.itemCounts.put(simpleName, count + 1);
-                return String.format("%s_%s", itemName, count);
-            } else {
+        Integer count = this.itemCounts.get(simpleName);
+        if (count != null) {
+            if (begin != null && begin >= count) {
                 this.itemCounts.put(simpleName, begin);
                 return String.format("%s_%s", itemName, begin);
             }
         } else {
-            if (begin == null || begin < 0) {
-                this.itemCounts.put(simpleName, 0);
-                return itemName;
-            } else {
-                this.itemCounts.put(simpleName, begin +1);
+            if (begin != null && begin >= 0) {
+                this.itemCounts.put(simpleName, begin);
                 return String.format("%s_%s", itemName, begin);
             }
         }
+        return itemName;
     }
 
-    @NonNull
     public void addItemFunction(AbsFunction absFunction) {
-        this.itemFunctions.add(absFunction);
+        if (absFunction == null) {
+            return;
+        }
+        String testItemName = absFunction.getBaseItem().trim().toLowerCase();
+        Integer count = 0;
+        if (this.itemCounts.containsKey(testItemName)
+                && (count = this.itemCounts.get(testItemName)) != null) {
+            this.itemCounts.put(testItemName, count + 1);
+        } else {
+            this.itemCounts.put(testItemName, 0);
+        }
+        this.allFunctions.add(absFunction);
     }
 
-    public List<AbsFunction> getItemFunctions() {
-        return itemFunctions;
+    public void addFailedItemFunction(AbsFunction function) {
+        this.failedFunctions.add(function);
     }
+
+    public List<AbsFunction> getFunctions(int funcType) {
+        List<AbsFunction> functions = new ArrayList<>();
+        if (funcType < ALL_ITEM) {
+            funcType = ALL_ITEM;
+        } else if (funcType > JUST_PARENT_ITEM) {
+            funcType = JUST_PARENT_ITEM;
+        }
+        if (funcType == ALL_ITEM) {
+            return allFunctions;
+        }
+        for (AbsFunction absFunction : allFunctions) {
+            if (funcType == JUST_SUB_ITEM && absFunction.isSubItem()) {
+                functions.add(absFunction);
+            } else if (funcType == JUST_PARENT_ITEM && !absFunction.isSubItem()) {
+                functions.add(absFunction);
+            }
+        }
+        return functions;
+    }
+    public static final int JUST_PARENT_ITEM = 2;
+    public static final int JUST_SUB_ITEM = 1;
+    public static final int ALL_ITEM = 0;
 
     public String getMassage() {
         StringBuilder builder = new StringBuilder();
         String itemName;
         String mess;
-        String errorcode;
-        if (itemFunctions.isEmpty()) {
+        if (allFunctions.isEmpty()) {
             return "Ready";
         }
-        for (AbsFunction itemFunction : itemFunctions) {
+        if (isPass()) {
+            builder.append("PASS\r\n");
+        } else {
+            var fail = getFirtFailItem().getModel();
+            builder.append(String.format("%s: \"%s\"\r\n",
+                    fail.getTest_name(),
+                    fail.getErrorcode()));
+        }
+        for (AbsFunction itemFunction : allFunctions) {
             mess = itemFunction.getMessage();
-            itemName = itemFunction.getConfig().getTest_name();
-            if (isFailed(itemFunction)) {
-                errorcode = itemFunction.getModel().getErrorcode();
-                builder.append(String.format("%s: \"%s\" %s\r\n",
-                        itemName,
-                        mess == null ? "" : mess,
-                        errorcode));
-            } else if (mess != null && !mess.isBlank()) {
+            if (mess != null && !mess.isBlank()) {
+                itemName = itemFunction.getConfig().getTest_name();
                 builder.append(String.format("%s: \"%s\"\r\n",
                         itemName,
                         mess));
-            }
-        }
-        if (builder.isEmpty()) {
-            if (isPass()) {
-                return "PASS";
-            } else {
-                return "FAIL";
             }
         }
         return builder.toString().trim();
     }
 
     public String getErrorCode() {
-        for (AbsFunction itemFunction : itemFunctions) {
-            if (isFailed(itemFunction)) {
-                return itemFunction.getModel().getErrorcode();
-            }
+        if (failedFunctions.isEmpty()) {
+            return "";
         }
-        return "";
+        return failedFunctions.get(0).getModel().getErrorcode();
     }
 
     private boolean isFailed(AbsFunction itemFunction) {
@@ -191,23 +216,8 @@ public class DataCell {
         return failColor == null ? Color.YELLOW : testColor;
     }
 
-    public List<AbsFunction> getTestingItemFunctions() {
-        List<AbsFunction> functionTestings = new ArrayList<>();
-        for (AbsFunction itemFunction : itemFunctions) {
-            if (!itemFunction.isDone()) {
-                functionTestings.add(itemFunction);
-            }
-        }
-        return functionTestings;
-    }
-
-    public AbsFunction getFunction(String functionName) {
-        for (AbsFunction itemFunction : itemFunctions) {
-            if (itemFunction.getModel().getTest_name().equalsIgnoreCase(functionName)) {
-                return itemFunction;
-            }
-        }
-        return null;
+    public List<AbsFunction> getFailedFunctions() {
+        return failedFunctions;
     }
 
     public String getString(String key) {
@@ -223,7 +233,7 @@ public class DataCell {
     public String getTestmode() {
         return get(MyConst.MODEL.MODE_NAME);
     }
-    
+
     public String getAPImode() {
         return get(MyConst.MODEL.MODE);
     }
@@ -233,16 +243,14 @@ public class DataCell {
     }
 
     public long getCycleTestTime() {
-        return this.wareHouse.getLong(MyConst.MODEL.CYCLE_TIOME);
+        return this.wareHouse.getLong(MyConst.MODEL.CYCLE_TIME);
     }
 
     public AbsFunction getFirtFailItem() {
-        for (AbsFunction itemFunction : itemFunctions) {
-            if (isFailed(itemFunction)) {
-                return itemFunction;
-            }
+        if (failedFunctions.isEmpty()) {
+            return null;
         }
-        return null;
+        return failedFunctions.get(0);
     }
 
     public void updateResultTest() {
@@ -256,17 +264,30 @@ public class DataCell {
         } else {
             this.wareHouse.put(MyConst.MODEL.STATUS, MyConst.MODEL.PASS);
         }
-        this.wareHouse.put(MyConst.MODEL.CYCLE_TIOME, String.valueOf(System.currentTimeMillis() - startTime));
+        this.wareHouse.put(MyConst.MODEL.CYCLE_TIME, String.valueOf(System.currentTimeMillis() - startTime));
         this.wareHouse.put(MyConst.MODEL.FINISH_TIME, timeBase.getSimpleDateTime());
     }
 
     public void start(String input, String modeName, String modeAPI) {
         this.uICell.getDataCell().putData(MyConst.MODEL.SN, input);
-                    this.uICell.getDataCell().putData(MyConst.MODEL.MODE_NAME, modeName);
-                    this.uICell.getDataCell().putData(MyConst.MODEL.MODE,modeAPI);
+        this.uICell.getDataCell().putData(MyConst.MODEL.MODE_NAME, modeName);
+        this.uICell.getDataCell().putData(MyConst.MODEL.MODE, modeAPI);
         this.wareHouse.put(MyConst.MODEL.START_TIME, timeBase.getSimpleDateTime());
-        wareHouse.put(MyConst.MODEL.ON_SFIS, modeAPI.equalsIgnoreCase(MyConst.CONFIG.DEBUG) ? "off" : "on");
+        this.wareHouse.put(MyConst.MODEL.ON_SFIS, modeAPI.equalsIgnoreCase(MyConst.CONFIG.DEBUG) ? "off" : "on");
         this.startTime = System.currentTimeMillis();
+    }
+
+    public AbsFunction getFunction(String funcName) {
+        for (AbsFunction itemFunction : allFunctions) {
+            if (itemFunction.getModel().getTest_name().equalsIgnoreCase(funcName)) {
+                return itemFunction;
+            }
+        }
+        return null;
+    }
+
+    public int size() {
+        return this.allFunctions.size();
     }
 
 }

@@ -4,7 +4,14 @@
  */
 package com.tec02.view;
 
+import com.tec02.common.MyObjectMapper;
 import com.tec02.configuration.controller.ConfigurationManagement;
+import com.tec02.gui.frameGui.Component.MyChooser;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,10 +19,15 @@ import com.tec02.configuration.controller.ConfigurationManagement;
  */
 public class ShowConfigEdit extends javax.swing.JFrame {
 
+    private final ConfigurationManagement management;
+    private final MyChooser myChooser;
+
     /**
      * Creates new form ShowConfigEdit
+     *
+     * @throws java.lang.Exception
      */
-    public ShowConfigEdit() {
+    public ShowConfigEdit() throws Exception {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -31,16 +43,26 @@ public class ShowConfigEdit extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
         }
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */
         initComponents();
         setTitle("Edit config");
-        this.jPanel1.add(ConfigurationManagement.getInstance().getTabPanel());
+        this.management = ConfigurationManagement.getInstance();
+        this.myChooser = new MyChooser(System.getProperty("user.dir"));
+        init();
     }
-    
-    public void display(){
+
+    private void init() throws Exception {
+        if (myChooser.showOpenFile(null, ".") == JFileChooser.APPROVE_OPTION) {
+            this.management.setFile(myChooser.getSelectedFile().getPath());
+        }
+        this.management.getTabPanel().refesh();
+        this.jPanel1.add(this.management.getTabPanel());
+    }
+
+    public void display() {
         java.awt.EventQueue.invokeLater(() -> {
             setVisible(true);
         });
@@ -61,6 +83,11 @@ public class ShowConfigEdit extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         btsave.setText("Save");
+        btsave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btsaveActionPerformed(evt);
+            }
+        });
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -83,7 +110,7 @@ public class ShowConfigEdit extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btsave)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -91,10 +118,32 @@ public class ShowConfigEdit extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btsaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsaveActionPerformed
+        // TODO add your handling code here:
+        this.management.updateModel();
+        var model = this.management.getInputModel();
+        if (model == null) {
+            JOptionPane.showMessageDialog(null, "model == null!");
+            return;
+        }
+        if (JFileChooser.APPROVE_OPTION
+                == this.myChooser.showSaveDialog(null,
+                        String.format("config_%s.json",
+                                System.currentTimeMillis()))) {
+            try {
+                File file = myChooser.getSelectedFile();
+                Files.writeString(file.toPath(), MyObjectMapper.prettyPrintJsonUsingDefaultPrettyPrinter(model.toJSONString()));
+                JOptionPane.showMessageDialog(null, String.format("Save ok! %s", file));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getLocalizedMessage());
+            }
+        }
+    }//GEN-LAST:event_btsaveActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btsave;

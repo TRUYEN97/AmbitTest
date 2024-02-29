@@ -9,13 +9,14 @@ import com.tec02.common.MyConst;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 
 /**
  *
  * @author Administrator
  */
-public class CheckDutCompare extends AbsFunction {
+public class CheckDutCompare extends AbsFucnUseTelnetOrCommportConnector {
 
     private static final String TIME = "Time";
     private static final String READ_UNTIL = "ReadUntil";
@@ -24,6 +25,10 @@ public class CheckDutCompare extends AbsFunction {
     private static final String STARTKEY = "Startkey";
     private static final String COMMAND = "command";
     private static final String COMPARE = "compare";
+
+    public CheckDutCompare(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -39,11 +44,11 @@ public class CheckDutCompare extends AbsFunction {
             String key = this.config.getString(COMPARE);
             addLog("CONFIG", "compare key: " + key);
             String value = this.analysisBase.getValue(communicate,
-                    startkey, endkey, regex, new TimeS(time), readUntil);
+                    startkey, endkey, regex, new TimeS(time), readUntil, 0);
             if (key != null && !key.isBlank()) {
                 String spec = dataCell.getString(key);
                 setFunctionSpec(spec);
-                if (this.dataCell.getAPImode().equalsIgnoreCase(MyConst.CONFIG.DEBUG) && spec == null) {
+                if (isDebugMode() && spec == null) {
                     this.dataCell.putData(key, value);
                 }
             }
@@ -67,11 +72,9 @@ public class CheckDutCompare extends AbsFunction {
     }
 
     @Override
-    protected void createDefaultConfig(FunctionConfig config) {
+    protected void createConfig(FunctionConfig config) {
         config.setRetry(2);
         config.setTime_out(60);
-        config.put("type", "telnet");
-        config.put("IP", "192.168.1.1");
         config.put(READ_UNTIL, "root@eero-test:/#");
         config.put(COMMAND, "fw_printenv  mac");
         config.put(STARTKEY, "mac=");
@@ -80,9 +83,4 @@ public class CheckDutCompare extends AbsFunction {
         config.put(TIME, 40);
         config.put(COMPARE, "ethernetmac");
     }
-
-    @Override
-    protected void init() {
-    }
-
 }

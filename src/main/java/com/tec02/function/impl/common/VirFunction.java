@@ -6,6 +6,7 @@ package com.tec02.function.impl.common;
 
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,6 +14,10 @@ import javax.swing.JOptionPane;
  * @author Administrator
  */
 public class VirFunction extends AbsFunction{
+
+    public VirFunction(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
 
     @Override
     protected boolean test() {
@@ -29,8 +34,5 @@ public class VirFunction extends AbsFunction{
         config.put("mess", "");
     }
 
-    @Override
-    protected void init() {
-    }
     
 }

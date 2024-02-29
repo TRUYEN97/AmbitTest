@@ -10,11 +10,14 @@
  */
 package com.tec02.view.subUI.FormDetail.TabView;
 
-import com.tec02.common.MyConst;
 import com.tec02.function.IFunctionModel;
-import com.tec02.main.ModeManagement;
+import com.tec02.main.UICellTester;
+import com.tec02.main.dataCell.DataCell;
+import com.tec02.view.managerUI.UICell;
 import com.tec02.view.subUI.FormDetail.AbsTabUI;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 
 /**
@@ -30,6 +33,7 @@ public class TabView extends AbsTabUI {
     public TabView() {
         super("View", 1000);
         initComponents();
+        resetDisplay();
     }
 
     /**
@@ -54,6 +58,7 @@ public class TabView extends AbsTabUI {
         lbPass = new javax.swing.JLabel();
         btTest = new javax.swing.JButton();
         lbModeName = new javax.swing.JLabel();
+        lbShowItemFail = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 153, 153));
 
@@ -126,7 +131,7 @@ public class TabView extends AbsTabUI {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(lbYr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbYr, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -152,7 +157,7 @@ public class TabView extends AbsTabUI {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(lbFail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbFail, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -225,20 +230,27 @@ public class TabView extends AbsTabUI {
         lbModeName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lbModeName.setName("lbModeName"); // NOI18N
 
+        lbShowItemFail.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbShowItemFail.setForeground(new java.awt.Color(204, 0, 0));
+        lbShowItemFail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbShowItemFail.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lbShowItemFail.setName("lbShowItemFail"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lbTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                     .addComponent(lbModeName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbShowItemFail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbTime, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -250,10 +262,12 @@ public class TabView extends AbsTabUI {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbModeName, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(lbShowItemFail)))
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btTest)
                     .addComponent(lbTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -264,7 +278,7 @@ public class TabView extends AbsTabUI {
         if (this.uICell.isTesting()) {
             return;
         }
-        this.uICell.getCellTester().setInput("", 2);
+        this.uICell.getCellTester().setInput("", UICellTester.MODE_DEBUG);
     }//GEN-LAST:event_btTestActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -278,6 +292,7 @@ public class TabView extends AbsTabUI {
     private javax.swing.JLabel lbInput;
     private javax.swing.JLabel lbModeName;
     private javax.swing.JLabel lbPass;
+    private javax.swing.JLabel lbShowItemFail;
     private javax.swing.JLabel lbStatus;
     private javax.swing.JLabel lbTime;
     private javax.swing.JLabel lbYr;
@@ -285,48 +300,100 @@ public class TabView extends AbsTabUI {
 
     @Override
     public void keyEvent(KeyEvent evt) {
+        int a = evt.getKeyChar();
+        switch (a) {
+            case CTRL_Q -> {
+                if (this.uICell.isTesting() && isAccepToStopTest()) {
+                    this.uICell.getCellTester().stop();
+                }
+            }
+            case CTRL_R -> {
+                if (!this.uICell.isTesting()) {
+                    this.uICell.resetFailedConsecutive();
+                    this.lbFail.setText(String.format("%s/%s", this.uICell.getTestFailed(),
+                            this.uICell.getTestFailedConsecutive()));
+                }
+            }
+            case CTRL_S -> {
+                if (!this.uICell.isTesting()) {
+                    resetDisplay();
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void setUICell(UICell uiCell) {
+        super.setUICell(uiCell); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        showYr();
+    }
+
+    private void resetDisplay() {
+        lbStatus.setBackground(new Color(153, 153, 255));
+        lbStatus.setText("<html><center>READY</html>");
+        lbShowItemFail.setText(null);
+        lbTime.setText("00:00");
+    }
+
+    private boolean isAccepToStopTest() {
+        return JOptionPane.showConfirmDialog(null,
+                "Chọn \"Yes\" để dừng test", "Messager",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }
 
     @Override
     public void startTest() {
         super.startTest();
-        this.lbModeName.setText(String.format("%s - %s", 
-                this.dataCell.getTestmode(), 
+        lbShowItemFail.setText(null);
+        this.lbModeName.setText(String.format("%s - %s",
+                this.dataCell.getTestmode(),
                 this.dataCell.getAPImode()));
     }
-    
 
     @Override
     public void endTest() {
         super.endTest(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         lbStatus.setBackground(dataCell.getResultColor());
-        lbStatus.setText(String.format("<html><center>%s<html>",
+        lbStatus.setText(String.format("<html><center>%s</html>",
                 dataCell.getMassage().replaceAll("\r\n", "<br>")));
         lbTime.setText(getTestTime());
+        if (!dataCell.isPass()) {
+            var model = dataCell.getFirtFailItem().getModel();
+            this.lbShowItemFail.setText(String.format("%s - %s/%s",
+                    model.getDescErrorcde(), model.getErrorcode(), model.getError_code()));
+        }
+        showYr();
     }
 
-    @Override
-    public void updateData() {
-        if (!this.isVisible() || !this.uICell.isTesting()) {
-            return;
-        }
+    private void showYr() {
         this.lbInput.setText(String.valueOf(this.uICell.getTestCount()));
         this.lbPass.setText(String.valueOf(this.uICell.getTestPass()));
         this.lbFail.setText(String.format("%s/%s", this.uICell.getTestFailed(),
                 this.uICell.getTestFailedConsecutive()));
         this.lbYr.setText(String.format("%.3f %%", this.uICell.getYR()));
+    }
+
+    @Override
+    public synchronized void updateData() {
+        if (!this.isVisible() || !this.uICell.isTesting()) {
+            return;
+        }
         lbStatus.setBackground(dataCell.getTestColor());
         StringBuilder builder = new StringBuilder("<html>");
-        for (IFunctionModel functionModel : dataCell.getTestingItemFunctions()) {
-            builder.append(String.format("%s<br>", functionModel.getModel().getTest_name()));
+        for (IFunctionModel functionModel : dataCell.getFunctions(DataCell.ALL_ITEM)) {
+            if (!functionModel.isDone()) {
+                builder.append(String.format("%s<br>", functionModel.getModel().getTest_name()));
+            }
         }
-        builder.append("<html>");
+        builder.append("</html>");
         lbStatus.setText(builder.toString());
         lbTime.setText(getTestTime());
     }
 
     @Override
     public void tabSelected(ChangeEvent evt) {
+        showYr();
         updateData();
     }
 

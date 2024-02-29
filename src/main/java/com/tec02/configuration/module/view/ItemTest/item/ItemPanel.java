@@ -138,14 +138,16 @@ public class ItemPanel extends AbsTabElement<ItemTestDto> {
             return;
         }
         for (ItemConfig item : this.modeListTabel.getAllItem()) {
-            if (item.getTest_name().equalsIgnoreCase(itemName)) {
+            if (item.getItemName().equalsIgnoreCase(itemName)) {
                 JOptionPane.showMessageDialog(null, String.format("%s has exists", itemName));
                 return;
             }
         }
         ItemConfig config = new ItemConfig();
+        config.setItemName(itemName);
         config.setTest_name(itemName);
         this.modeListTabel.addItem(config);
+        this.modeListTabel.setSelected(config);
         this.txtItemName.setText(null);
     }
 
@@ -184,9 +186,9 @@ public class ItemPanel extends AbsTabElement<ItemTestDto> {
                 if (key == null || val == null) {
                     continue;
                 }
-                ItemConfig config = MyObjectMapper.convertValue(val, ItemConfig.class);
-                config.setTest_name(key);
-                this.modeListTabel.addItem(config);
+//                ItemConfig config = MyObjectMapper.convertValue(val, ItemConfig.class);
+                val.setItemName(key);
+                this.modeListTabel.addItem(val);
             }
         }
     }
@@ -195,7 +197,7 @@ public class ItemPanel extends AbsTabElement<ItemTestDto> {
     public void update() {
         Map<String, ItemConfig> items = new HashMap<>();
         for (ItemConfig config : modeListTabel.getAllItem()) {
-            items.put(config.getTest_name(), config);
+            items.put(config.getItemName(), config);
         }
         model.setItems(items);
     }

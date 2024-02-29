@@ -95,7 +95,8 @@ public class LoadModeTime {
         if (data.contains(" : ")) {
             int hour = Integer.parseInt(data.substring(0, 2).trim());
             hour = hour < 12 ? hour % 12 : 23 - hour;
-            backgroundUi.setBackground(colors.get(hour));
+            Color color = colors.get(hour);
+            backgroundUi.setBackground(color);
         }
     }
 

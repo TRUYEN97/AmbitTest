@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,10 +31,7 @@ public class ErrorCode extends AbsModule<ErrorCodeModel, InputErrorcode> {
         super.refesh();
         try {
             String dir = model.getDir();
-            if (!new File(dir).exists()) {
-                throw new RuntimeException(String.format("Error code file not exists!\r\n%s", dir));
-            }
-            if (dir != null && !dir.isBlank()) {
+            if (dir != null && !dir.isBlank() && new File(dir).exists()) {
                 String[] elems;
                 ItemErrorCode itemErrorCode;
                 Map<String, ItemErrorCode> itemErrorCodes = new HashMap<>();

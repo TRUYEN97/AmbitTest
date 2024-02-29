@@ -5,9 +5,11 @@
 package com.tec02.view.subUI.SubUI.SmallUI;
 
 import com.tec02.function.IFunctionModel;
+import com.tec02.main.dataCell.DataCell;
 import com.tec02.view.subUI.FormDetail.FormShow;
 import com.tec02.view.subUI.SubUI.AbsSubUI;
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -15,7 +17,7 @@ import java.awt.Color;
  */
 public class SmallUI extends AbsSubUI {
 
-    private static final String DEFAULT_FORM = "<html><center>%s<br>%s<br>%s</html>";
+    private static final String DEFAULT_FORM = "<html><center>%s</html>";
     private final FormShow formShow;
 
     /**
@@ -27,8 +29,8 @@ public class SmallUI extends AbsSubUI {
         super(indexName, 1000);
         initComponents();
         this.formShow = new FormShow(tabDetail);
-        this.lbTime.setToolTipText(indexName);
-        this.lbTime.setText(indexName);
+        this.lbInfo.setToolTipText(indexName);
+        this.lbName.setText(indexName);
     }
 
     /**
@@ -40,15 +42,45 @@ public class SmallUI extends AbsSubUI {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lbInfo = new javax.swing.JLabel();
+        lbName = new javax.swing.JLabel();
         lbTime = new javax.swing.JLabel();
 
+        setBackground(new java.awt.Color(102, 102, 255));
         setLayout(new java.awt.BorderLayout());
+
+        lbInfo.setBackground(new java.awt.Color(102, 102, 255));
+        lbInfo.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        lbInfo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbInfo.setText("0");
+        lbInfo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbInfoMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lbInfoMouseEntered(evt);
+            }
+        });
+        add(lbInfo, java.awt.BorderLayout.CENTER);
+
+        lbName.setBackground(new java.awt.Color(102, 102, 255));
+        lbName.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lbName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbName.setText("XX");
+        lbName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbNameMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lbNameMouseEntered(evt);
+            }
+        });
+        add(lbName, java.awt.BorderLayout.PAGE_START);
 
         lbTime.setBackground(new java.awt.Color(102, 102, 255));
         lbTime.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lbTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbTime.setText("00:00");
-        lbTime.setOpaque(true);
         lbTime.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lbTimeMouseClicked(evt);
@@ -57,18 +89,42 @@ public class SmallUI extends AbsSubUI {
                 lbTimeMouseEntered(evt);
             }
         });
-        add(lbTime, java.awt.BorderLayout.CENTER);
+        add(lbTime, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lbTimeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbTimeMouseClicked
+    private void lbInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbInfoMouseClicked
+        showTab(evt);
+    }//GEN-LAST:event_lbInfoMouseClicked
+
+    private void showTab(MouseEvent evt) {
         // TODO add your handling code here:
         if (evt.getClickCount() > 1) {
             this.formShow.display(name);
         }
-    }//GEN-LAST:event_lbTimeMouseClicked
+    }
 
     private final String LABLEL_NAME_HTML = "<center><u><b><span style=\"font-size: 14px\">%s</span></u></b><br>";
+    private void lbInfoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbInfoMouseEntered
+        // TODO add your handling code here:
+        mouseEnter();
+    }//GEN-LAST:event_lbInfoMouseEntered
+
+    private void lbNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbNameMouseClicked
+        // TODO add your handling code here:
+        showTab(evt);
+    }//GEN-LAST:event_lbNameMouseClicked
+
+    private void lbNameMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbNameMouseEntered
+        // TODO add your handling code here:
+        mouseEnter();
+    }//GEN-LAST:event_lbNameMouseEntered
+
     private void lbTimeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbTimeMouseEntered
+        // TODO add your handling code here:
+        mouseEnter();
+    }//GEN-LAST:event_lbTimeMouseEntered
+
+    private void mouseEnter() {
         // TODO add your handling code here:
         String currentMode = this.uICell.getCellTester().getCurrentModeName();
         StringBuilder messHtml = new StringBuilder("<html>");
@@ -80,7 +136,7 @@ public class SmallUI extends AbsSubUI {
             messHtml.append("<table>");
             messHtml.append(String.format("<tr><td><center><span style=\"font-size: 14px\">Mode: %s</td></span></tr>", currentMode));
             String itemName;
-            for (IFunctionModel functionModel : functionModels) {
+            for (IFunctionModel functionModel : dataCell.getFunctions(DataCell.ALL_ITEM)) {
                 if (functionModel.isTesting()) {
                     itemName = functionModel.getModel().getTest_name();
                     mess.append("   - ").append(itemName).append("\r\n");
@@ -94,14 +150,18 @@ public class SmallUI extends AbsSubUI {
                     text == null ? "Finished!" : text.replaceAll("\r\n", "<br>")));
             mess.append(String.format(" \"%s\"", text));
         }
-        this.lbTime.setToolTipText(messHtml.toString());
+        this.setToolTipText(messHtml.toString());
         this.gui.showSfisText(mess.toString());
-    }//GEN-LAST:event_lbTimeMouseEntered
+    }
+
+    private void lbTimeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbTimeMouseClicked
+        // TODO add your handling code here:
+        showTab(evt);
+    }//GEN-LAST:event_lbTimeMouseClicked
 
     @Override
     public void startTest() {
         super.startTest();
-        this.lbTime.setBackground(uICell.getDataCell().getTestColor());
         if (this.formShow.isVisible()) {
             this.formShow.dispose();
         }
@@ -109,27 +169,25 @@ public class SmallUI extends AbsSubUI {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected javax.swing.JLabel lbInfo;
+    protected javax.swing.JLabel lbName;
     protected javax.swing.JLabel lbTime;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void setText(String txt) {
-        this.lbTime.setText(txt);
-    }
 
     @Override
     public void updateData() {
-        lbTime.setText(String.format(DEFAULT_FORM,
-                getName(), functionModels == null ? 0 : functionModels.size(), getTestTime()));
+        this.setBackground(uICell.getDataCell().getTestColor());
+        this.lbInfo.setText(String.valueOf(dataCell.size()));
+        this.lbTime.setText(getTestTime());
     }
 
     @Override
     protected void showEnd(Color testColor, boolean status) {
         if (!status) {
-            lbTime.setText(String.format(DEFAULT_FORM,
-                    getName(), this.dataCell.getErrorCode(), getTestTime()));
+            this.lbInfo.setText(this.dataCell.getErrorCode());
         }
-        lbTime.setBackground(testColor);
+        setBackground(testColor);
     }
 
 }

@@ -7,6 +7,7 @@ package com.tec02.function.impl.common;
 import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.model.FunctionConstructorModel;
 
 /**
  *
@@ -14,6 +15,10 @@ import com.tec02.function.baseFunction.FunctionConfig;
  */
 public class DutTelnet extends AbsFunction {
 
+    public DutTelnet(FunctionConstructorModel constructorModel) {
+        super(constructorModel);
+    }
+    
     @Override
     protected boolean test() {
         try {
@@ -36,10 +41,6 @@ public class DutTelnet extends AbsFunction {
         config.setRetry(1);
         config.setTime_out(60);
         config.put("IP", "192.168.1.1");
-    }
-
-    @Override
-    protected void init() {
     }
 
 }

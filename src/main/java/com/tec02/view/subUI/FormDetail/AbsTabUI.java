@@ -17,9 +17,11 @@ public abstract class AbsTabUI extends AbsUI {
     protected static final int CTRL_Q = 17;
     protected static final int CTRL_R = 18;
     protected static final int CTRL_W = 23;
+    protected final TabDetail tabDetail;
 
-    public AbsTabUI(String name, int timeUpdate) {
+    public AbsTabUI(TabDetail tabDetail, String name, int timeUpdate) {
         super(name, timeUpdate);
+        this.tabDetail = tabDetail;
     }
 
     public abstract void keyEvent(java.awt.event.KeyEvent evt);

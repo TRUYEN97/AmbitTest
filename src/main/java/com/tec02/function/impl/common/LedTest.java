@@ -4,7 +4,9 @@
  */
 package com.tec02.function.impl.common;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.tec02.Time.WaitTime.AbsTime;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.Impl.Comport.ComPort;
@@ -55,10 +57,8 @@ public class LedTest extends AbsFucnUseTelnetOrCommportConnector {
         ledModelConfig.put("lp5562", ledModel);
         ledModel = new JSONObject();
         ledModel.put(INT_COMMANDS, List.of());
-        ledModel.put(COMMANDS, List.of("i2cset -f -y 0 0x30 0x70 0x00",
-                "i2cset -f -y 0 0x30 0x04 0x00", "i2cset -f -y 0 0x30 0x03 0x00",
-                "i2cset -f -y 0 0x30 0x02 0x00", "i2cset -f -y 0 0x30 0x0e 0x00",
-                "i2cset -f -y 0 0x30 0x04 0xff", "i2cset -f -y 0 0x30 0x07 0xdd"));
+        ledModel.put(COMMANDS, List.of("i2cset -f -y 0 0x30 0x4 0x0",
+                "i2cset -f -y 0 0x30 0x4 0x1", "i2cset -f -y 0 0x30 0x6 0xb1"));
         ledModel.put(END_COMMANDS, List.of());
         ledModel.put(PNS, List.of("830-01122", "830-01102"));
         ledModelConfig.put("ktd2027", ledModel);
@@ -66,38 +66,40 @@ public class LedTest extends AbsFucnUseTelnetOrCommportConnector {
 
     @Override
     protected boolean test() {
-        try ( AbsCommunicate communicate = this.baseFunction.getTelnet()) {
+        try (final AbsCommunicate communicate = this.baseFunction.getTelnet()) {
             String pn = this.dataCell.getString(MBLTPN, config.getString(MBLTPN));
             addLog(PC, "mbltpn: %s", pn);
-            int time = config.getInteger(TIME, 10);
-            JSONObject pnModel = getPnModel(pn, communicate, time);
+            TimeS timer = new TimeS(config.getInteger(TIME, 10));
+            String readUntil = config.getString(READ_UNTIL);
+            JSONObject pnModel = getPnModel(pn, communicate, timer);
             if (pnModel == null) {
                 addLog(CONFIG, "PN model is null!");
                 return false;
             }
-            List<String> initLedCommands = pnModel.getJSONArray(INT_COMMANDS);
-            List<String> ledCommands = pnModel.getJSONArray(COMMANDS);
-            List<String> endLedCommands = pnModel.getJSONArray(END_COMMANDS);
-            String readUntil = config.getString(READ_UNTIL);
-            addLog(CONFIG, "led init commands: %s", initLedCommands);
+            JSONArray initLedCommands = pnModel.getJSONArray(INT_COMMANDS);
+            addLog(CONFIG, "led init-commands: %s", initLedCommands);
+            if (initLedCommands != null && !initLedCommands.isEmpty()
+                    && !sendCommands(initLedCommands, communicate, timer, readUntil)) {
+                return false;
+            }
+            JSONArray ledCommands = pnModel.getJSONArray(COMMANDS);
             addLog(CONFIG, "led commands: %s", ledCommands);
-            addLog(CONFIG, "led end commands: %s", endLedCommands);
-            if (initLedCommands != null
-                    && !sendCommands(initLedCommands, communicate, readUntil, time)) {
+            if (!sendCommands(ledCommands, communicate, timer, readUntil)) {
                 return false;
             }
-            if (!sendCommands(ledCommands, communicate, readUntil, time)) {
+            this.baseFunction.delay(200);
+            Map<String, String> rs = getLedValues();
+            JSONArray endLedCommands = pnModel.getJSONArray(END_COMMANDS);
+            addLog(CONFIG, "led end-commands: %s", endLedCommands);
+            if (endLedCommands != null && !endLedCommands.isEmpty()
+                    && !sendCommands(endLedCommands, communicate, timer, readUntil)) {
                 return false;
             }
-            Map<String, String> rs = getLedValues(communicate, time);
             addLog(CONFIG, "Led values: %s", rs);
-            if (endLedCommands != null
-                    && !sendCommands(endLedCommands, communicate, readUntil, time)) {
-                return false;
-            }
             ValueSubItem subItem;
             for (Map.Entry<String, String> entry : rs.entrySet()) {
                 subItem = createSubItem(ValueSubItem.class, entry.getKey());
+                subItem.setValue(entry.getValue());
                 subItem.runTest(1);
             }
             return isAllSubItemPass();
@@ -108,39 +110,37 @@ public class LedTest extends AbsFucnUseTelnetOrCommportConnector {
         }
     }
 
-    private boolean sendCommands(List<String> ledCommands, final AbsCommunicate communicate, String readUntil, int time) {
+    private boolean sendCommands(JSONArray ledCommands, final AbsCommunicate communicate, AbsTime timer, String readUntil) {
         if (ledCommands == null) {
             return false;
         }
-        for (String ledCommand : ledCommands) {
-            if (!this.baseFunction.sendCommand(communicate, ledCommand)) {
-                return false;
-            }
-            String responce = this.analysisBase.readShowUntil(communicate,
-                    readUntil, new TimeS(time));
-            if (responce == null || responce.endsWith(readUntil)) {
-                return false;
+        for (Object ledCommand : ledCommands) {
+            if (ledCommand instanceof String com) {
+                if (!this.baseFunction.sendCommand(communicate, com)) {
+                    return false;
+                }
+                addLog(communicate.getName(), communicate.readUntil(timer, readUntil));
             }
         }
         return true;
     }
 
-    private JSONObject getPnModel(String pn, final AbsCommunicate communicate, int time) {
-        JSONObject ledModelConfig = this.config.get(LED_MODEL);
+    private JSONObject getPnModel(String pn, final AbsCommunicate communicate, AbsTime timer) {
+        JSONObject ledModelConfig = this.config.getJSONObject(LED_MODEL);
         if (ledModelConfig == null) {
             addLog(CONFIG, "led model is null!");
             return null;
         }
         if (pn == null || pn.isBlank()) {
             if (isDebugMode()) {
-                String ledModel = getLedModel(communicate, time);
+                String ledModel = getLedModel(communicate, timer);
                 addLog(PC, "Led model: %s", ledModel);
                 if (ledModel != null && ledModelConfig.containsKey(ledModel)) {
                     return ledModelConfig.getJSONObject(ledModel);
                 }
             }
         } else {
-            List<String> pns;
+            JSONArray pns;
             for (Object ob : ledModelConfig.values()) {
                 if (ob instanceof JSONObject pnModel) {
                     pns = pnModel.getJSONArray(PNS);
@@ -153,19 +153,19 @@ public class LedTest extends AbsFucnUseTelnetOrCommportConnector {
         return null;
     }
 
-    private Map<String, String> getLedValues(final AbsCommunicate communicate, int time) throws IOException {
+    private Map<String, String> getLedValues() throws IOException {
         String ledResponce;
         Map<String, String> rs = new HashMap<>();
         try (final ComPort comport = this.baseFunction.getComport()) {
             String getLedValueCmd = this.config.getString(LED_VALUE_CMD);
-            if (!comport.insertCommand(getLedValueCmd)) {
+            if (!this.baseFunction.sendCommand(comport, getLedValueCmd)) {
                 return null;
             }
-            ledResponce = this.analysisBase.readShowUntil(communicate, ";",
-                    new TimeS(time));
+            ledResponce = comport.readUntil(new TimeS(1), "\n", ";");
+            addLog(comport.getName(), ledResponce == null ? "" : ledResponce);
         }
         Map<String, String> apis = this.config.get(APIS);
-        addLog(CONFIG, "%s: %s", APIS, apis);
+        addLog(CONFIG, "%s: %s", APIS, apis == null ? null : apis.keySet());
         if (apis == null || apis.isEmpty()) {
             return null;
         }
@@ -180,12 +180,12 @@ public class LedTest extends AbsFucnUseTelnetOrCommportConnector {
     private static final String LED_VALUE_CMD = "getLedValueCmd";
     private static final String PNS = "pns";
 
-    private String getLedModel(final AbsCommunicate communicate, int time) {
+    private String getLedModel(final AbsCommunicate communicate, AbsTime timer) {
         String checkLedModeCmd = this.config.getString(CHECK_LED_MODEL);
-        if (this.baseFunction.sendCommand(communicate, checkLedModeCmd)) {
+        if (!this.baseFunction.sendCommand(communicate, checkLedModeCmd)) {
             return null;
         }
-        String ledModel = this.analysisBase.getValueAtLineNumber(communicate, new TimeS(time), 1);
+        String ledModel = this.analysisBase.getLine(communicate, timer, 1);
         return ledModel;
     }
     private static final String INT_COMMANDS = "initCommands";

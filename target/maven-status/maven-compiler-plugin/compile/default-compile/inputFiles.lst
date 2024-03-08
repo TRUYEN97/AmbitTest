@@ -10,6 +10,7 @@ D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\CheckDut
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\GoldenFile.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\uploadLog\ftp\UpFTP.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\model\itemTest\IItemConfig.java
+D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\module\view\AeServer\AeClientPanel.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\VirFunction.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\module\view\setting\SettingPanel.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\mblt\Usbside.java
@@ -55,6 +56,7 @@ D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\DutTelne
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\module\iml\ItemTest.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\view\UIFactory.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\mblt\SetENV.java
+D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\CheckKingTonIC.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\SaveLocalLog.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\main\AmbitUI.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\FunctionFactory.java
@@ -125,11 +127,13 @@ D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\FixtureA
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\model\itemTest\ModeDto.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\model\socket\SocketDto.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\uploadLog\ftp\UpLogFTP.java
+D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\model\AeServer\AeClientDto.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\model\itemTest\ItemTestDto.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\module\view\dhcp\DhcpPanal.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\module\view\TabPanel.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\module\view\errorcode\ErrorCodePanel.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\view\subUI\FormDetail\showGroup\ItemGroupView.java
+D:\Maven-Project\AmbitTest\src\main\java\com\tec02\common\MyAeClient.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\module\view\Socket\ServerInfoPanel.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\view\subUI\SubUI\SmallUI\SmallUI.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\model\itemTest\ItemLimit.java
@@ -138,3 +142,4 @@ D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\baseFunction\FileBas
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\view\loadModelTime\SubModeTime\DateVnMode.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\ValueSubItem.java
 D:\Maven-Project\AmbitTest\src\main\java\com\tec02\function\impl\common\LedTest.java
+D:\Maven-Project\AmbitTest\src\main\java\com\tec02\configuration\module\iml\AeClient.java

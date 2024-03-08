@@ -4,27 +4,17 @@
  */
 package com.tec02.function.impl.common;
 
-import com.alibaba.fastjson.JSONObject;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.AbsCommunicate;
-import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
  * @author Administrator
  */
 public class CheckDutUsb extends AbsFucnUseTelnetOrCommportConnector {
-
-    private static final String TIME = "Time";
-    private static final String READ_UNTIL = "ReadUntil";
-    private static final String ENDKEY = "endKey";
-    private static final String STARTKEY = "startKey";
-    private static final String COMMAND = "commands";
 
     public CheckDutUsb(FunctionConstructorModel constructorModel) {
         super(constructorModel);
@@ -36,41 +26,36 @@ public class CheckDutUsb extends AbsFucnUseTelnetOrCommportConnector {
             if (communicate == null) {
                 return false;
             }
-            List<String> commands = config.getJsonList(COMMAND);
-            StringBuilder responce = new StringBuilder();
-            String readUntil = config.getString(READ_UNTIL);
-            int time = config.getInteger(TIME, 10);
-            for (String command : commands) {
-                if (!this.baseFunction.sendCommand(communicate, command)) {
-                    return false;
-                }
-                responce.append(this.analysisBase.readShowUntil(
-                        communicate, readUntil, new TimeS(time)));
-            }
-            List<String> apis = config.getJsonList(APIS);
-            ValueSubItem subItem;
-            List<JSONObject> keys = config.get(KEY);
-            if (keys == null || keys.isEmpty()) {
-                addLog(PC, "Keys is null or empty!");
+            String readUntil = "root@eero-test:/#";
+            String responce;
+            String usb_fw = null;
+            String usb_model = null;
+            if (!this.baseFunction.sendCommand(communicate, "tps -r devinfo")) {
                 return false;
             }
-            JSONObject key;
-            for (int i = 0; i < apis.size(); i++) {
-                if (i >= apis.size()) {
-                    key = keys.get(apis.size() - 1);
-                } else {
-                    key = keys.get(i);
+            responce = this.analysisBase.getLine(communicate, new TimeS(10), 1);
+            addLog(communicate.getName(), responce);
+            if (!responce.contains("Could not")) {
+                int index = responce.indexOf("FW");
+                usb_model = responce.substring(0, index);
+                usb_fw = responce.substring(index);
+            } else if (!this.baseFunction.sendCommand(communicate, "rts5452 -r ic_status")) {
+                return false;
+            } else {
+                responce = this.analysisBase.readShowUntil(communicate, readUntil, new TimeS(10));
+                String lines[] = responce.split("\n");
+                if (!responce.contains("Could not") && lines.length >= 2) {
+                    usb_fw = lines[0].substring(lines[0].indexOf("version ") + 8).trim();
+                    usb_model = lines[1].substring(0, lines[1].indexOf(" is running")).trim();
                 }
-                String apiName = apis.get(i);
-                String startkey = key.getString(STARTKEY);
-                addLog(CONFIG, "%s: %s", STARTKEY, startkey);
-                String endkey = key.getString(ENDKEY);
-                addLog(CONFIG, "%s: %s", ENDKEY, endkey);
-                subItem = createSubItem(ValueSubItem.class, apiName);
-                String value = getValue(responce, startkey, endkey);
-                subItem.setValue(value);
-                subItem.runTest(1);
             }
+            ValueSubItem subItem;
+            subItem = createSubItem(ValueSubItem.class, "usb_fw");
+            subItem.setValue(usb_fw);
+            subItem.runTest(1);
+            subItem = createSubItem(ValueSubItem.class, "usb_model");
+            subItem.setValue(usb_model);
+            subItem.runTest(1);
             return isAllSubItemPass();
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,33 +64,11 @@ public class CheckDutUsb extends AbsFucnUseTelnetOrCommportConnector {
         }
     }
 
-    private String getValue(StringBuilder responce, String startkey, String endkey) {
-        for (String line : responce.toString().split("\r\n")) {
-            String value = this.analysisBase.subString(line, startkey, endkey);
-            if (value != null) {
-                return value;
-            }
-        }
-        return null;
-    }
-
-    private static final String KEY = "key";
-    private static final String APIS = "apis";
-
     @Override
     protected void createConfig(FunctionConfig config) {
         config.setTime_out(10);
         config.setRetry(1);
         config.setFailApiName("usb_fw");
-        config.put(READ_UNTIL, "root@eero-test:/#");
-        config.put(TIME, 10);
-        config.put(APIS, List.of("usb_fw", "usb_model"));
-        config.put(COMMAND, List.of("tps -r devinfo", "rts5452 -r ic_status"));
-        config.put(KEY, List.of(
-                Map.of(STARTKEY, "FW version ",
-                        ENDKEY, ""),
-                Map.of(STARTKEY, "",
-                        ENDKEY, " is running from flash bank 0")));
     }
 
 }

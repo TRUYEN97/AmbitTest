@@ -26,12 +26,6 @@ public class Model extends ItemLimit {
     private String test_value = "";
     private String function = "";
 
-    public void setStatus(String status) {
-        this.status = status;
-        if (test_value == null || test_value.isBlank()) {
-            this.test_value = status;
-        }
-    }
 
     public String getTest_value() {
         return test_value == null || test_value.isBlank() ? status : test_value;

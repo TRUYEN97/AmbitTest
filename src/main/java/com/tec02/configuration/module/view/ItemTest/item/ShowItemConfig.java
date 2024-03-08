@@ -4,7 +4,7 @@
  */
 package com.tec02.configuration.module.view.ItemTest.item;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tec02.common.MyObjectMapper;
 import com.tec02.configuration.model.itemTest.ItemConfig;
@@ -75,6 +75,8 @@ public class ShowItemConfig extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         txtApiName = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
+        txtFailApiName = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
         btSave = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 153, 153));
@@ -155,6 +157,11 @@ public class ShowItemConfig extends javax.swing.JPanel {
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Api name");
 
+        txtFailApiName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel10.setText("Fail api name");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -163,19 +170,17 @@ public class ShowItemConfig extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtLowerLimit)
+                    .addComponent(txtLowerLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                     .addComponent(txtUpperLimit, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(cbWaitMulti, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbMulti, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbCheckSpec, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbFailContinue, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbSkipSpecDebug, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbSkipRunDebug, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbAlwaysrun, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(cbWaitMulti, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbMulti, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(cbCheckSpec, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(cbFailContinue, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(cbSkipSpecDebug, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbSkipRunDebug, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(cbAlwaysrun, javax.swing.GroupLayout.Alignment.LEADING)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -191,20 +196,22 @@ public class ShowItemConfig extends javax.swing.JPanel {
                                         .addGap(6, 6, 6)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cbbFunction, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(spnRetry)
                                     .addComponent(spnTimeOut, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(txtItemName, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txtApiName, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                    .addComponent(txtApiName, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtFailApiName, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addGap(6, 6, 6))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(slModerun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(slModerun, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
@@ -234,9 +241,12 @@ public class ShowItemConfig extends javax.swing.JPanel {
                             .addComponent(txtApiName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(txtFailApiName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(slModerun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addComponent(jLabel7)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(cbMulti)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -250,8 +260,8 @@ public class ShowItemConfig extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbSkipRunDebug)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbAlwaysrun)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(cbAlwaysrun)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
@@ -300,7 +310,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btGetDefaultConfig)
@@ -331,6 +341,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
                 return;
             }
             config.setBonus(JSONObject.parseObject(txtAreaConfig.getText()));
+            config.setFailApiName(txtFailApiName.getText());
             config.setModeRun(slModerun.getValue());
             config.setAlwaysRun(cbAlwaysrun.isSelected());
             config.setCheck_spec(cbCheckSpec.isSelected());
@@ -358,6 +369,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
             if (config == null) {
                 return;
             }
+            txtFailApiName.setText(config.getFailApiName());
             cbSkipSpecDebug.setSelected(config.isDebugCancellCheckSpec());
             cbSkipRunDebug.setSelected(config.isDebugCancellRun());
             slModerun.setValue(config.getModeRun());
@@ -408,6 +420,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cbbFunction;
     private javax.swing.JComboBox<String> cbbLimitType;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -423,6 +436,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
     private javax.swing.JSpinner spnTimeOut;
     private javax.swing.JTextField txtApiName;
     private javax.swing.JTextArea txtAreaConfig;
+    private javax.swing.JTextField txtFailApiName;
     private javax.swing.JTextField txtItemName;
     private javax.swing.JTextField txtLowerLimit;
     private javax.swing.JTextField txtUpperLimit;

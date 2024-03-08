@@ -5,7 +5,7 @@
 package com.tec02.configuration.module.iml.Socket;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tec02.communication.socket.Unicast.Client.Client;
+import com.tec02.communication.socket.Unicast.Client.SocketClient;
 import com.tec02.communication.socket.Unicast.Server.ClientHandler;
 import com.tec02.communication.socket.Unicast.commons.Interface.IObjectClientReceiver;
 import com.tec02.communication.socket.Unicast.commons.Interface.IObjectServerReceiver;
@@ -49,7 +49,7 @@ public class Receiver implements IObjectServerReceiver, IObjectClientReceiver {
     }
 
     @Override
-    public void receiver(Client client, String data) {
+    public void receiver(SocketClient client, String data) {
         if (data == null) {
             return;
         }

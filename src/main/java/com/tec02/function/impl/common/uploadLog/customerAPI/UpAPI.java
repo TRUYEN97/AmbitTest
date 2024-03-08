@@ -13,6 +13,7 @@ import com.tec02.function.impl.common.uploadLog.CreateJsonApi;
 import com.tec02.function.impl.common.uploadLog.CreateTxt;
 import com.tec02.function.impl.common.uploadLog.ZipFile;
 import com.tec02.function.model.FunctionConstructorModel;
+import com.tec02.main.ErrorLog;
 import com.tec02.main.dataCell.DataCell;
 import java.util.List;
 
@@ -35,46 +36,50 @@ public class UpAPI extends AbsFunction {
 
     @Override
     protected boolean test() {
-        List<String> prefixElem = this.config.getJsonList("LocalPrefix");
-        List<String> jsonElem = this.config.getJsonList("LocaljsonName");
-        List<String> txtElem = this.config.getJsonList("LocalTxtName");
-        String prefix = this.fileBaseFunction.createName(prefixElem);
-        String jsonName = this.fileBaseFunction.createName(jsonElem);
-        String jsonPath = String.format("%s/%s.json", prefix, jsonName);
-        String txtPath = String.format("%s/%s.txt", prefix, this.fileBaseFunction.createName(txtElem));
-        String zipPath = txtPath != null ? txtPath.replaceAll(".txt", ".zip") : null;
-        Cmd cmd = new Cmd();
-        String command = this.config.getString("Command");
-        if (retry > 0) {
-            ConfigurationManagement.getInstance().getItemTestConfig().execute();
-            var limits = ConfigurationManagement.getInstance().getItemTestConfig().getModel().getLimits();
-            for (AbsFunction itemFunction : dataCell.getFunctions(DataCell.ALL_ITEM)) {
-                if (itemFunction.isDone() && (limits.containsKey(itemFunction.getConfig().getTest_name())
-                        || limits.containsKey(itemFunction.getBaseItem()))) {
-                    itemFunction.updateConfig();
-                    itemFunction.checkResult();
-                }
-            }
-        }
-        this.dataCell.updateResultTest();
-        if (isCreateJsonOk(jsonPath)
-                && isCreateTxtOk(txtPath)
-                && isCreateZipOk(zipPath, txtPath)) {
-            String spec = config.getString("Spec");
-            int time = this.config.getInteger("Time", 10);
-            addLog(PC, "Waiting for API reponse about %s S", time);
-            for (int i = 0; i < 3; i++) {
-                if (this.baseFunction.sendCommand(cmd, command + jsonName)) {
-                    String response = cmd.readAll(new TimeS(time));
-                    addLog("Cmd", response);
-                    if (response.trim().endsWith(spec)) {
-                        return true;
+        try {
+            List<String> prefixElem = this.config.getJsonList("LocalPrefix");
+            List<String> jsonElem = this.config.getJsonList("LocaljsonName");
+            List<String> txtElem = this.config.getJsonList("LocalTxtName");
+            String prefix = this.fileBaseFunction.createName(prefixElem);
+            String jsonName = this.fileBaseFunction.createName(jsonElem);
+            String jsonPath = String.format("%s/%s.json", prefix, jsonName);
+            String txtPath = String.format("%s/%s.txt", prefix, this.fileBaseFunction.createName(txtElem));
+            String zipPath = txtPath != null ? txtPath.replaceAll(".txt", ".zip") : null;
+            String command = this.config.getString("Command");
+            if (retry > 0) {
+                ConfigurationManagement.getInstance().getItemTestConfig().execute();
+                for (AbsFunction itemFunction : dataCell.getFunctions(DataCell.ALL_ITEM)) {
+                    if (itemFunction.isDone() && itemFunction.updateLimit()) {
+                        itemFunction.checkResult();
                     }
                 }
             }
+            this.dataCell.updateResultTest();
+            if (isCreateJsonOk(jsonPath)
+                    && isCreateTxtOk(txtPath)
+                    && isCreateZipOk(zipPath, txtPath)) {
+                String spec = config.getString("Spec");
+                int time = this.config.getInteger("Time", 10);
+                addLog(PC, "Waiting for API reponse about %s S", time);
+                try ( Cmd cmd = new Cmd()) {
+                    for (int i = 0; i < 3; i++) {
+                        if (this.baseFunction.sendCommand(cmd,
+                                String.format("%s%s", command, jsonName))) {
+                            String response = cmd.readAll(new TimeS(time));
+                            addLog("Cmd", response);
+                            if (response.trim().endsWith(spec)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorLog.addError(this, e.getMessage());
+            return false;
         }
-
-        return false;
     }
 
     private boolean isCreateZipOk(String zipPath, String txtPath) {
@@ -99,6 +104,7 @@ public class UpAPI extends AbsFunction {
     private boolean isCreateJsonOk(String jsonPath) {
         try {
             this.jsonApi.setPath(jsonPath);
+            this.jsonApi.setGetAll(false);
             return this.jsonApi.test();
         } finally {
             addLog("---------------------------------------------------------------");

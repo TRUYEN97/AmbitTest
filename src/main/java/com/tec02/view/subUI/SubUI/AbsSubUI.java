@@ -28,9 +28,9 @@ public abstract class AbsSubUI extends AbsUI {
         this.setBorder(new LineBorder(Color.BLACK, 2));
         this.tabDetail = new TabDetail(this);
         this.timeS = new TimeS();
-        this.tabDetail.addTabView("View", new TabView());
-        this.tabDetail.addTabView("Item", new TabItem());
-        this.tabDetail.addTabView("Groups", new ShowGroupItem());
+        this.tabDetail.addTabView("View", new TabView(this.tabDetail));
+        this.tabDetail.addTabView("Item", new TabItem(this.tabDetail));
+        this.tabDetail.addTabView("Groups", new ShowGroupItem(this.tabDetail));
     }
     
 

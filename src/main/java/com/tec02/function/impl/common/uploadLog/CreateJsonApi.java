@@ -25,10 +25,15 @@ public class CreateJsonApi extends AbsBaseFunction {
 
     private final FileBaseFunction fileBaseFunction;
     private String path;
+    private boolean getAll = true;
 
     public CreateJsonApi(FunctionConstructorModel constructorModel) {
         super(constructorModel);
         this.fileBaseFunction = new FileBaseFunction(constructorModel);
+    }
+
+    public void setGetAll(boolean getAll) {
+        this.getAll = getAll;
     }
 
     public boolean test() {
@@ -90,22 +95,31 @@ public class CreateJsonApi extends AbsBaseFunction {
             return null;
         }
         List<AbsFunction> itemTestDatas = this.dataCell.getFunctions(DataCell.ALL_ITEM);
+        int required;
         for (AbsFunction absFunction : itemTestDatas) {
             String itemName = absFunction.getConfig().getTest_name();
             if (itemName == null || !absFunction.isDone()) {
                 continue;
             }
-            addLog("PC", "Item name: %s", itemName);
             itemTest = absFunction.getData(testKeys, isUseLimitErrorCode);
-            if (!followLimit || (checkLimitContain(limits.keySet(), absFunction))) {
-                if (itemTest != null) {
+            if (!followLimit) {
+                if (itemTest == null) {
+                    addLog("PC", "ItemTest: %s = null", itemName);
+                } else {
                     addLog("PC", "Add to test json: %s", itemName);
                     tests.add(itemTest);
-                } else if (limits.get(itemName).getRequired() == 1 && statusTest) {
+                }
+            } else if (checkLimitContain(limits.keySet(), absFunction)) {
+                required = limits.get(itemName).getRequired();
+                if (itemTest != null) {
+                    if (!getAll && required == 2 && absFunction.isCancelled()) {
+                        continue;
+                    }
+                    addLog("PC", "Add to test json: %s", itemName);
+                    tests.add(itemTest);
+                } else if (required == 1 && statusTest) {
                     addLog("PC", "Missing \"%s\" item test!", itemName);
                     return null;
-                } else {
-                    addLog("PC", "ItemTest: %s = null", itemName);
                 }
             }
         }

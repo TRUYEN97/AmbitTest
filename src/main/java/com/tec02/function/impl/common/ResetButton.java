@@ -5,26 +5,26 @@
 package com.tec02.function.impl.common;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
-import com.tec02.communication.Communicate.AbsCommunicate;
+import com.tec02.communication.Communicate.Impl.Comport.ComPort;
+import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
-import java.util.List;
 
 /**
  *
  * @author Administrator
  */
 public class ResetButton extends AbsFucnUseTelnetOrCommportConnector {
-    
+
     public ResetButton(FunctionConstructorModel constructorModel) {
         super(constructorModel);
     }
-    
+
     public ResetButton(FunctionConstructorModel constructorModel, int functionType) {
         super(constructorModel, functionType);
     }
-    
+
     @Override
     protected void createConfig(FunctionConfig config) {
         config.setTime_out(20);
@@ -35,7 +35,7 @@ public class ResetButton extends AbsFucnUseTelnetOrCommportConnector {
         config.put(SPEC, "RESET PUSH BUTTON EVENT DETECTED");
         config.put(TIME, 10);
     }
-    
+
     @Override
     protected boolean test() {
         String startPushCmd = this.config.getString(START_PUSH_CMDS);
@@ -43,12 +43,12 @@ public class ResetButton extends AbsFucnUseTelnetOrCommportConnector {
         String readUntils = this.config.getString(READ_UNTIL);
         String spec = this.config.getString(SPEC);
         int time = this.config.getInteger(TIME, 10);
-        try ( AbsCommunicate comport = this.baseFunction.getComport();  AbsCommunicate telent = this.baseFunction.getTelnet()) {
-            try {
-                if (this.baseFunction.sendcommad(comport, startPushCmd, readUntils, time)) {
+        try ( ComPort comport = this.baseFunction.getComport()) {
+            try ( Telnet telent = this.baseFunction.getTelnet()) {
+                if (!this.baseFunction.sendcommad(comport, startPushCmd, readUntils, time)) {
                     return false;
                 }
-                if (this.analysisBase.isResponseContainKeyAndShow(telent,
+                if (!this.analysisBase.isResponseContainKeyAndShow(telent,
                         spec, spec, new TimeS(time))) {
                     return false;
                 }
@@ -68,5 +68,5 @@ public class ResetButton extends AbsFucnUseTelnetOrCommportConnector {
     private static final String READ_UNTIL = "readUntil";
     private static final String END_PUSH_CMDS = "endPushCmds";
     private static final String START_PUSH_CMDS = "startPushCmds";
-    
+
 }

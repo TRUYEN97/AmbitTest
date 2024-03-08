@@ -12,8 +12,6 @@ import com.tec02.common.MyObjectMapper;
 import com.tec02.common.PcInformation;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.function.AbsFunction;
-import com.tec02.function.IFunctionModel;
-import com.tec02.function.baseFunction.Model;
 import com.tec02.main.Core;
 import com.tec02.main.ModeManagement;
 import com.tec02.view.managerUI.UICell;
@@ -22,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.NonNull;
 
 /**
  *
@@ -159,6 +156,10 @@ public class DataCell {
             return "Ready";
         }
         if (isPass()) {
+            if(getAPImode().equalsIgnoreCase(MyConst.CONFIG.DEBUG)){
+                builder.append(MyConst.CONFIG.DEBUG.toUpperCase());
+                builder.append(" ");
+            }
             builder.append("PASS\r\n");
         } else {
             var fail = getFirtFailItem().getModel();
@@ -185,7 +186,7 @@ public class DataCell {
         return failedFunctions.get(0).getModel().getErrorcode();
     }
 
-    private boolean isFailed(AbsFunction itemFunction) {
+    public boolean isFailed(AbsFunction itemFunction) {
         return itemFunction.isDone() && !itemFunction.isPass();
     }
 

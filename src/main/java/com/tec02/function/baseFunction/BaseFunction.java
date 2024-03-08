@@ -6,6 +6,7 @@ package com.tec02.function.baseFunction;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.common.MyConst;
+import com.tec02.common.PcInformation;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.AbsStreamReadable;
 import com.tec02.communication.Communicate.ISender;
@@ -25,6 +26,8 @@ import java.io.IOException;
 public class BaseFunction extends AbsBaseFunction {
 
     private final AnalysisBase analysisBase;
+    private static final String PING_LINUX = "ping -c 2 %s";
+    private static final String PING_WINDOWS = "ping %s -n 1";
 
     public BaseFunction(FunctionConstructorModel constructorModel) {
         super(constructorModel);
@@ -65,26 +68,23 @@ public class BaseFunction extends AbsBaseFunction {
         if (streamReadable == null) {
             telnet = new Telnet();
         } else {
-            addLog("PC", "Read input: " + streamReadable.getClass().getSimpleName());
+            addLog("PC", "Read input: " + streamReadable.getName());
             telnet = new Telnet(streamReadable);
         }
-        String readUntil = this.config.get("ReadUntil");
-        readUntil = readUntil == null ? "root@eero-test:/#" : readUntil;
-        addLog("PC", "ReadUntil: %s", readUntil);
         addLog("PC", "Connect to ip: %s", ip);
         addLog("PC", "Port is: %s", port);
         telnet.setDebug(true);
-        if (!pingTo(ip, 120)) {
+        if (!BaseFunction.this.pingTo(ip, 120, false, true)) {
             addLog("PC", "Ping to \"%s\" failed!", ip);
             addLog("PC", "Telnet to IP: \"%s\" - Port: %s failed!", ip, port);
             return null;
         }
-        if (!telnet.connect(ip, port)) {
+        if (!telnet.connect(ip, port) && !sendCommand(telnet, "\r\n")) {
             addLog("PC", "Telnet to IP: \"%s\" - Port: %s failed!", ip, port);
             return null;
         }
         addLog("PC", "Telnet to IP: \"%s\" - Port: %s ok!", ip, port);
-        String response = telnet.readUntil(new TimeS(10), readUntil);
+        String response = telnet.readUntil(new TimeS(5), "root@eero-test:/#");
         addLog("Telnet", response);
         if (response == null) {
             addLog("PC", "Telnet did not respond!");
@@ -172,12 +172,10 @@ public class BaseFunction extends AbsBaseFunction {
 
     public boolean sendcommad(final AbsCommunicate comport, String startPushCmd, String readUntils, int time) {
         if (!this.sendCommand(comport, startPushCmd)) {
-            return true;
+            return false;
         }
-        if (this.analysisBase.isResponseContainKeyAndShow(comport,
-                readUntils, readUntils, new TimeS(time))) {
-        }
-        return false;
+        return this.analysisBase.isResponseContainKeyAndShow(comport,
+                readUntils, readUntils, new TimeS(time));
     }
 
     private boolean sendRebootDUT(int waitTime, String ip) {
@@ -207,7 +205,10 @@ public class BaseFunction extends AbsBaseFunction {
     }
 
     public boolean insertCommand(final ISender sender, String command) {
-        String name = sender.getClass().getSimpleName();
+        if (sender == null) {
+            return false;
+        }
+        String name = sender.getName();
         addLog(name, "insert command: " + command);
         if (command == null || !sender.insertCommand(command)) {
             addLog(name, "insert command \" %s \" failed!", command);
@@ -217,7 +218,10 @@ public class BaseFunction extends AbsBaseFunction {
     }
 
     public boolean sendCommand(final ISender sender, String command) {
-        String name = sender.getClass().getSimpleName();
+        if (sender == null) {
+            return false;
+        }
+        String name = sender.getName();
         addLog(name, "Send command: " + command);
         if (command == null || !sender.sendCommand(command)) {
             addLog(name, "send command \" %s \" failed!", command);
@@ -226,14 +230,15 @@ public class BaseFunction extends AbsBaseFunction {
         return true;
     }
 
-    public boolean ubuntuPingTo(final AbsCommunicate communicate, String ip, int time) {
-        return ubuntuPingTo(communicate, ip, time, true);
+    public boolean dutPing(String targetIp, int time) {
+        return this.dutPing(getIp(), targetIp, time, true);
     }
 
-    public boolean ubuntuPingTo(final AbsCommunicate communicate, String ip, int time, boolean checkPing) {
-        if (communicate == null) {
-            return false;
-        }
+    public boolean dutPing(String ip, String targetIp, int time) {
+        return this.dutPing(ip, targetIp, time, true);
+    }
+
+    public boolean dutPing(String ip, String targetIp, int time, boolean checkPing) {
         if (ip == null) {
             addLog(ERROR, "IP == null ");
             return false;
@@ -242,34 +247,56 @@ public class BaseFunction extends AbsBaseFunction {
             addLog(ERROR, "Ping time out <= 0: %s", time);
             return false;
         }
-        addLog(communicate.getName(), "Ping to IP: %s - %s S", ip, time);
-        boolean pingRs;
-        TimeS timeS = new TimeS(time);
-        while (timeS.onTime()) {
-            if (!this.sendCommand(communicate, String.format("ping -c 2 %s", ip))) {
+        try (final Telnet telnet = new Telnet()) {
+            if (!telnet.connect(ip, 23)) {
+                addLog("PC", "Telnet to IP: \"%s\" - Port: %s failed!", ip, 23);
                 return false;
             }
-            pingRs = this.analysisBase.isResponseContainKeyAndShow(communicate,
-                    "ttl=", "root@eero-test:/#", timeS);
-            if (checkPing) {
-                if (pingRs) {
-                    return true;
+            String readUntil = "root@eero-test:/#";
+            telnet.readUntil(new TimeS(5), readUntil);
+            String name = telnet.getName();
+            addLog(name, "Ping to IP: %s - %s S", targetIp, time);
+            boolean pingRs;
+            TimeS timeS = new TimeS(time);
+            try {
+                String command = String.format(PING_LINUX, ip);
+                for (int i = 1; i == 1 || timeS.onTime(); i++) {
+                    addLog(name, "------------------------------------ " + i);
+                    try {
+                        if (!this.sendCommand(telnet, command)) {
+                            return false;
+                        }
+                        String repsonce = telnet.readUntil(readUntil);
+                        addLog(telnet.getName(), repsonce);
+                        pingRs = repsonce.contains("ttl=");
+                        if (checkPing) {
+                            if (pingRs) {
+                                return true;
+                            }
+                        } else {
+                            if (!pingRs) {
+                                return false;
+                            }
+                        }
+                    } finally {
+                        addLog(name, "------------------------------------");
+                    }
                 }
-            } else {
-                if (!pingRs) {
-                    return false;
-                }
+            } finally {
+                addLog(PC, "ping time: %.3f S", timeS.getTime());
             }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
         return !checkPing;
     }
 
     public boolean pingTo(String ip, int times) {
-        return pingTo(ip, times, !this.dhcpDto.isOn(), true);
+        return BaseFunction.this.pingTo(ip, times, !this.dhcpDto.isOn(), true);
     }
 
     public boolean pingTo(String ip, int times, boolean checkPing) {
-        return pingTo(ip, times, !this.dhcpDto.isOn(), checkPing);
+        return BaseFunction.this.pingTo(ip, times, !this.dhcpDto.isOn(), checkPing);
     }
 
     public boolean pingTo(String ip, int time, boolean arp_d, boolean checkPing) {
@@ -282,38 +309,46 @@ public class BaseFunction extends AbsBaseFunction {
             return false;
         }
         addLog(PC, "Ping to IP: %s - %s S", ip, time);
-        Cmd cmd = new Cmd();
         String arp = "arp -d";
-        String command = String.format("ping %s -n 1", ip);
         TimeS timer = new TimeS(time);
-        try {
-            for (int i = 1; timer.onTime(); i++) {
-                addLog(CMD, "------------------------------------ " + i);
-                try {
-                    if (arp_d && sendCommand(cmd, arp)) {
-                        addLog(CMD, cmd.readAll().trim());
-                    }
-                    if (sendCommand(cmd, command)) {
-                        String response = cmd.readAll();
-                        addLog(CMD, response.trim());
-                        if (checkPing) {
-                            if (response.contains("TTL=")) {
-                                return true;
+        try ( Cmd cmd = new Cmd()) {
+            try {
+                String command;
+                if (cmd.isWindowsOs()) {
+                    command = String.format(PING_WINDOWS, ip);
+                } else {
+                    command = String.format(PING_LINUX, ip);
+                }
+                for (int i = 1; timer.onTime(); i++) {
+                    addLog(CMD, "------------------------------------ " + i);
+                    try {
+                        if (arp_d && sendCommand(cmd, arp)) {
+                            addLog(CMD, cmd.readAll().trim());
+                        }
+                        if (sendCommand(cmd, command)) {
+                            String response = cmd.readAll().trim();
+                            addLog(CMD, response);
+                            if (checkPing) {
+                                if (response.contains("TTL=") || response.contains("ttl=")) {
+                                    return true;
+                                }
+                            } else {
+                                if (!response.contains("TTL=") || response.contains("ttl=")) {
+                                    return false;
+                                }
                             }
                         } else {
-                            if (!response.contains("TTL=")) {
-                                return false;
-                            }
+                            break;
                         }
-                    } else {
-                        break;
+                    } finally {
+                        addLog(CMD, "------------------------------------");
                     }
-                } finally {
-                    addLog(CMD, "------------------------------------");
                 }
+            } finally {
+                addLog("PC", "ping time: %.3f S", timer.getTime());
             }
-        } finally {
-            addLog("PC", "ping time: %.3f S", timer.getTime());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
         return !checkPing;
     }

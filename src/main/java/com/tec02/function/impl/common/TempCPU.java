@@ -30,7 +30,7 @@ public class TempCPU extends AbsFucnUseTelnetOrCommportConnector {
                 return false;
             }
             addLog(CONFIG, commands);
-            try (AbsCommunicate communicate = this.baseFunction.getTelnetOrComportConnector()) {
+            try ( AbsCommunicate communicate = this.baseFunction.getTelnetOrComportConnector()) {
                 if (communicate == null) {
                     return false;
                 }
@@ -64,7 +64,7 @@ public class TempCPU extends AbsFucnUseTelnetOrCommportConnector {
             String startkey = getKey(i, startKeys);
             String endkey = getKey(i, endKeys);
             String regex = getKey(i, Regexs);
-            String value = this.analysisBase.getValue(telnet, startkey, endkey, regex, new TimeS(time), readUntil, 0);
+            String value = this.analysisBase.getValue(telnet, startkey, endkey, regex, new TimeS(time), readUntil);
             if (!this.analysisBase.isNumber(value)) {
                 addLog("ERROR", String.format("value is not number! value: %s", value));
                 return null;

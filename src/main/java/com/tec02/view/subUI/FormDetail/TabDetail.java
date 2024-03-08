@@ -116,7 +116,7 @@ public class TabDetail extends JPanel {
             tabElements.get(item).endTest();
         }
     }
-
+    
     public void setSelectedIndex(int index) {
         if (index < tabDetail.getTabCount()) {
             tabDetail.setSelectedIndex(index);

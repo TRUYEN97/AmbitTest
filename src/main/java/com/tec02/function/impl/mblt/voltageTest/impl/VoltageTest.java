@@ -28,8 +28,8 @@ public class VoltageTest extends AbsVoltage {
     }
 
     private boolean checkVol(String tpItemNames, String vol) {
-        ValueSubItem voltagePonit = (ValueSubItem) createSubItem(
-                "VoltagePonit", tpItemNames);
+        ValueSubItem voltagePonit = createSubItem( ValueSubItem.class
+                , tpItemNames);
         voltagePonit.setValue(vol);
         voltagePonit.runTest(1);
         return voltagePonit.isPass();

@@ -4,8 +4,8 @@
  */
 package com.tec02.configuration.module.iml.Socket;
 
-import com.tec02.communication.socket.Unicast.Client.Client;
-import com.tec02.communication.socket.Unicast.Server.Server;
+import com.tec02.communication.socket.Unicast.Client.SocketClient;
+import com.tec02.communication.socket.Unicast.Server.SocketServer;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.configuration.model.socket.SocketClientDto;
 import com.tec02.configuration.model.socket.SocketDto;
@@ -21,10 +21,10 @@ import java.util.Map;
 public class AmbitSocket extends Thread {
 
     private final SocketDto socketDto;
-    private final Map<String, Client> Clients;
+    private final Map<String, SocketClient> Clients;
     private final Gui gui;
     private final Receiver receiver;
-    private Server server;
+    private SocketServer server;
 
     public AmbitSocket() {
         this.socketDto = ConfigurationManagement.getInstance().getSocketConfig().getModel();
@@ -37,7 +37,7 @@ public class AmbitSocket extends Thread {
     public void run() {
         if (socketDto.getServer().isFlag() && (server == null || !server.isAlive())) {
             try {
-                this.server = new Server(socketDto.getServer().getPort(), new Receiver());
+                this.server = new SocketServer(socketDto.getServer().getPort(), new Receiver());
                 this.server.start();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -46,7 +46,7 @@ public class AmbitSocket extends Thread {
         for (Map.Entry<String, SocketClientDto> entry : this.socketDto.getClients().entrySet()) {
             String key = entry.getKey();
             SocketClientDto clientDto = entry.getValue();
-            Client client = new Client(clientDto.getHost(),
+            SocketClient client = new SocketClient(clientDto.getHost(),
                     clientDto.getPort(),
                     this.receiver);
             if (clientDto.isFlag()) {
@@ -79,9 +79,9 @@ public class AmbitSocket extends Thread {
                 }
             }
             builder.append("<br>Server:<br>");
-            for (Map.Entry<String, Client> entry : Clients.entrySet()) {
+            for (Map.Entry<String, SocketClient> entry : Clients.entrySet()) {
                 String key = entry.getKey();
-                Client val = entry.getValue();
+                SocketClient val = entry.getValue();
                 if (val.isConnect()) {
                     rs = true;
                 }
@@ -110,9 +110,9 @@ public class AmbitSocket extends Thread {
 
     private class ClientRunner extends Thread {
 
-        private final Client client;
+        private final SocketClient client;
 
-        public ClientRunner(Client client) {
+        public ClientRunner(SocketClient client) {
             this.client = client;
         }
 

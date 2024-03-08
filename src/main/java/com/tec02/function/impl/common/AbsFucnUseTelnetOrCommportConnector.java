@@ -31,7 +31,7 @@ public abstract class AbsFucnUseTelnetOrCommportConnector extends AbsFunction {
     protected void createDefaultConfig(FunctionConfig config) {
         config.put(TYPE, "!comport");
         config.put(BAUDRATE, 115200);
-        config.put(COMPORT1, 1);
+        config.put(COMPORT1, 4);
         config.put(IP, "192.168.1.1");
         config.put(NON_DHCP, false);
         createConfig(config);

@@ -26,6 +26,11 @@ public class AnalysisResult {
     }
 
     public void checkResult(boolean status) {
+        String stt = this.model.getStatus();
+        if (stt != null && stt.equalsIgnoreCase(MyConst.MODEL.CANCELLED)) {
+            setCancelled();
+            return;
+        }
         String value = this.model.getTest_value();
         if (!status) {
             setSimpleErrorcode();
@@ -56,6 +61,13 @@ public class AnalysisResult {
                 setSimpleErrorcode();
             }
         }
+    }
+
+    private void setCancelled() {
+        this.model.setDescErrorcde("");
+        this.model.setError_code("");
+        this.model.setErrorcode("");
+        this.model.setStatus(MyConst.MODEL.CANCELLED);
     }
 
     private void setPass() {
@@ -116,6 +128,10 @@ public class AnalysisResult {
     }
 
     private boolean getMatch(String result, String configSpec) {
+        if (result == null) {
+            return false;
+        }
+        result = result.trim();
         String[] limits = configSpec.trim().split("\\|");
         if (limits != null && limits.length > 0) {
             for (String spec : limits) {
@@ -133,9 +149,8 @@ public class AnalysisResult {
             return null;
         }
         try {
-            return Double.parseDouble(value);
+            return Double.valueOf(value);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -176,7 +191,10 @@ public class AnalysisResult {
     }
 
     private static boolean aGreatThanB(Double a, Double b) {
-        return Double.max(a, b) == a;
+        if (a == null) {
+            return false;
+        }
+        return a.compareTo(b) >= 1;
     }
 
     private boolean isSpecAvailable() {

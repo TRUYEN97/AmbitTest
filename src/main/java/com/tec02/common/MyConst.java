@@ -35,6 +35,8 @@ public final class MyConst {
 
     public final class MODEL extends SFIS {
 
+        public static final String TESTING = "testing";
+        public static final String CANCELLED = "cancelled";
         public static final String PASS = "passed";
         public static final String FAIL = "failed";
         public static final String POSITION = "position";

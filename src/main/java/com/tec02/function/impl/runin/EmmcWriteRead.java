@@ -50,18 +50,14 @@ public class EmmcWriteRead extends AbsFucnUseTelnetOrCommportConnector {
 
     private boolean runSubItems(List<String> items, String response, List<String> blocks, List<String> KeyWords) {
         int itemsSize = items.size();
-        boolean rs = true;
         for (int i = 0; i < itemsSize; i++) {
             String item = items.get(i);
             addLog("PC", item);
             EmmcSpeed mmc_speed = createSubItem(EmmcSpeed.class, item);
             mmc_speed.setData(response, blocks.get(i), KeyWords.get(i));
             mmc_speed.runTest(1);
-            if (!mmc_speed.isPass()) {
-                rs = false;
-            }
         }
-        return rs;
+        return isAllSubItemPass();
     }
     
 

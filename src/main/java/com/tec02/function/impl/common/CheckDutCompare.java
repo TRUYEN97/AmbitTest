@@ -5,9 +5,7 @@
 package com.tec02.function.impl.common;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
-import com.tec02.common.MyConst;
 import com.tec02.communication.Communicate.AbsCommunicate;
-import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
@@ -44,7 +42,7 @@ public class CheckDutCompare extends AbsFucnUseTelnetOrCommportConnector {
             String key = this.config.getString(COMPARE);
             addLog("CONFIG", "compare key: " + key);
             String value = this.analysisBase.getValue(communicate,
-                    startkey, endkey, regex, new TimeS(time), readUntil, 0);
+                    startkey, endkey, regex, new TimeS(time), readUntil);
             if (key != null && !key.isBlank()) {
                 String spec = dataCell.getString(key);
                 setFunctionSpec(spec);

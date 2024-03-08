@@ -13,6 +13,7 @@ import com.tec02.function.impl.common.CheckTime;
 import com.tec02.function.impl.runin.PowerSwitchFunc;
 import com.tec02.function.impl.common.CheckDutCompare;
 import com.tec02.function.impl.common.CheckDutUsb;
+import com.tec02.function.impl.common.CheckKingTonIC;
 import com.tec02.function.impl.common.CheckProduct;
 import com.tec02.function.impl.common.CheckTestConditions;
 import com.tec02.function.impl.common.DeltaValue;
@@ -137,6 +138,7 @@ public class FunctionFactory {
         addFunctionClass(SetENV_MAC.class);
         addFunctionClass(ResetButton.class);
         addFunctionClass(IperfSpeedTest.class);
+        addFunctionClass(CheckKingTonIC.class);
     }
 
     @NonNull

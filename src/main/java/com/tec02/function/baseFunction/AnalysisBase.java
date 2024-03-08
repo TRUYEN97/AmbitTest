@@ -8,6 +8,7 @@ import com.tec02.Time.WaitTime.AbsTime;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.IReadable;
+import com.tec02.communication.Communicate.Impl.Cmd.Cmd;
 import com.tec02.function.AbsBaseFunction;
 import com.tec02.function.model.FunctionConstructorModel;
 import java.util.ArrayList;
@@ -26,34 +27,45 @@ public class AnalysisBase extends AbsBaseFunction {
         super(constructorModel);
     }
 
-    public String getValue(IReadable readable, String regex, AbsTime time, String readUntil, int begin) {
-        return getValue(readable, null, null, regex, time, readUntil, 0);
+    public String getValue(IReadable readable, String regex, AbsTime time, String readUntil) {
+        return getValue(readable, null, null, regex, time, readUntil);
     }
 
-    public String getValue(IReadable readable, String startkey, String endkey, AbsTime time, String readUntil, int begin) {
-        return getValue(readable, startkey, endkey, null, time, readUntil, 0);
+    public String getValue(IReadable readable, String startkey, String endkey, AbsTime time, String readUntil) {
+        return getValue(readable, startkey, endkey, null, time, readUntil);
     }
 
-    public String getValue(IReadable readable, String startkey, String endkey, String readUntil, int begin) {
-        return getValue(readable, startkey, endkey, null, null, readUntil, 0);
+    public String getValue(IReadable readable, String startkey, String endkey, String readUntil) {
+        return getValue(readable, startkey, endkey, null, null, readUntil);
     }
 
-    public String getValueAtLineNumber(AbsCommunicate communicate, AbsTime timer, int i) {
-        return getValue(communicate, null, timer, null, i);
-    }
-
-    public String getValue(IReadable readable, String startkey, String endkey, String regex, AbsTime time, String readUntil, int begin) {
+    public String getLine(AbsCommunicate communicate, AbsTime timer, int i) {
         String line;
-        String name = readable.getClass().getSimpleName();
+        for (int j = 0; timer.onTime(); j++) {
+            line = communicate.readUntil(timer, "\n");
+            if (j == i) {
+                return line;
+            }
+        }
+        return null;
+    }
+
+    public String getValue(IReadable readable, String startkey, String endkey,
+            String regex, AbsTime time, String readUntil) {
+        String line;
+        String name = readable.getName();
         String value = null;
         try {
             if (time != null) {
                 time.update();
             }
             while (time == null || time.onTime()) {
-                line = getLine(time, readable);
-                addLog(name, line);
+                line = AnalysisBase.this.getLine(time, readable);
+                addLog(name, line == null ? "" : line);
                 if (line == null) {
+                    if (readable instanceof Cmd) {
+                        return null;
+                    }
                     continue;
                 }
                 if (regex != null && !regex.isBlank()) {
@@ -199,20 +211,20 @@ public class AnalysisBase extends AbsBaseFunction {
             addLog("Config", "readable == null !!");
             return null;
         }
-        if (readUntil == null) {
-            addLog("Config", "spec == null !!");
+        if (time == null) {
+            addLog("Config", "timer == null !!");
             return null;
         }
         addLog("Config", "Time: %s", time.getSpec());
         addLog("Config", "ReadUntil: %s", readUntil);
-        String readableName = readable.getClass().getSimpleName();
+        String readableName = readable.getName();
         StringBuilder respose = new StringBuilder();
         time.update();
         while (time.onTime()) {
             String line = readable.readUntil(time, "\n", readUntil);
             addLog(readableName, line == null ? "" : line);
             respose.append(line).append("\r\n");
-            if (line != null && line.contains(readUntil)) {
+            if (readUntil != null && respose.toString().contains(readUntil)) {
                 break;
             }
         }
@@ -265,6 +277,9 @@ public class AnalysisBase extends AbsBaseFunction {
     }
 
     public String findGroup(String line, String regex) {
+        if (line == null || regex == null) {
+            return null;
+        }
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(line);
         if (matcher.find()) {

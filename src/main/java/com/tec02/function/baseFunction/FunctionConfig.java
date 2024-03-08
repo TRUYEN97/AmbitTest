@@ -4,12 +4,11 @@
  */
 package com.tec02.function.baseFunction;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.tec02.configuration.model.itemTest.IItemConfig;
 import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.configuration.model.itemTest.ItemLimit;
-import com.tec02.function.AbsFunction;
 import com.tec02.function.FunctionFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +150,30 @@ public class FunctionConfig extends ItemLimit implements IItemConfig {
 
     public void put(String key, Object val) {
         getBonus().put(key, val);
+    }
+
+    public JSONObject getJSONObject(String key) {
+        return getJSONObject(key, null);
+    }
+
+    public JSONArray getJSONArray(String key) {
+        return getJSONArray(key, null);
+    }
+
+    public JSONObject getJSONObject(String key, JSONObject defaulVal) {
+        JSONObject value = getBonus().getJSONObject(key);
+        if (value == null) {
+            return defaulVal;
+        }
+        return value;
+    }
+
+    public JSONArray getJSONArray(String key, JSONArray defaulVal) {
+        JSONArray value = getBonus().getJSONArray(key);
+        if (value == null) {
+            return defaulVal;
+        }
+        return value;
     }
 
     public <T> List<T> getJsonList(String key) {

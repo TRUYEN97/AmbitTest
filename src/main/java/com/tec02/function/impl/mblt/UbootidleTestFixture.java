@@ -49,7 +49,7 @@ public class UbootidleTestFixture extends AbsSendRetryCommand {
                 return false;
             }
             String value = this.analysisBase.getValue(fixture,
-                    startKey, endKey, regex, new TimeS(1), null, 0);
+                    startKey, endKey, regex, new TimeS(1), null);
             if (this.analysisBase.isNumber(value)) {
                 addLog(CONFIG, "ratio: %s", ratio);
                 double finalValue = Double.parseDouble(value) / ratio;

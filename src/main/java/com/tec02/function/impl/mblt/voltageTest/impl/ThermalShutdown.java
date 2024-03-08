@@ -63,13 +63,13 @@ public class ThermalShutdown extends AbsVoltage {
                 return false;
             }
             try ( ComPort fixture = this.fixtureAction.getComport()) {
-                if (!sendFixtureCommand(fixture, initCommands, 1000)) {
+                if (!sendFixtureCommand(fixture, initCommands, 500)) {
                     return false;
                 }
                 if (!this.getVoltageValue(fixture, commands, readUntils)) {
                     return false;
                 }
-                if (!sendFixtureCommand(fixture, endCommands, 0)) {
+                if (!sendFixtureCommand(fixture, endCommands, 1000)) {
                     return false;
                 }
             }

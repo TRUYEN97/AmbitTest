@@ -15,6 +15,7 @@ import com.tec02.main.UICellTester;
 import com.tec02.main.dataCell.DataCell;
 import com.tec02.view.managerUI.UICell;
 import com.tec02.view.subUI.FormDetail.AbsTabUI;
+import com.tec02.view.subUI.FormDetail.TabDetail;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
@@ -29,9 +30,10 @@ public class TabView extends AbsTabUI {
     /**
      * Creates new form PanelTabView
      *
+     * @param tabDetail
      */
-    public TabView() {
-        super("View", 1000);
+    public TabView(TabDetail tabDetail) {
+        super(tabDetail, "View", 1000);
         initComponents();
         resetDisplay();
     }

@@ -42,7 +42,7 @@ public class ItemFunctionFactory {
             constructorModel = FunctionConstructorModel.builder().build();
         }
         AbsFunction absFunction = getFunction(functionName, constructorModel);
-        absFunction.updateConfig();
+        absFunction.updateConfigAndResetModel();
         if (uICell != null && uICell.getDataCell() != null) {
             uICell.getDataCell().addItemFunction(absFunction);
         }

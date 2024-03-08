@@ -18,6 +18,7 @@ import com.tec02.main.ModeManagement;
 import com.tec02.main.UICellTester;
 import com.tec02.main.modeFlow.ModeFlow;
 import com.tec02.view.subUI.FormDetail.AbsTabUI;
+import com.tec02.view.subUI.FormDetail.TabDetail;
 import com.tec02.view.subUI.FormDetail.TabItem.ShowLog.ShowLog;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -52,9 +53,10 @@ public class TabItem extends AbsTabUI {
     /**
      * Creates new form TagLog
      *
+     * @param tabDetail
      */
-    public TabItem() {
-        super("Item", 1000);
+    public TabItem(TabDetail tabDetail) {
+        super(tabDetail, "Item", 1000);
         initComponents();
         this.itemFinish = new ArrayList<>();
         this.itemLogs = new HashMap<>();

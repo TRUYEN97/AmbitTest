@@ -27,7 +27,7 @@ import java.util.concurrent.Future;
  * @author Administrator
  */
 public class UICellTester {
-    
+
     public static final int MODE_DEBUG_ITEM = 3;
     public static final int MODE_DEBUG = 2;
     public static final int MODE_ROOT = 1;
@@ -42,7 +42,7 @@ public class UICellTester {
     private Future rootFuture;
     private String input;
     private boolean stopTest;
-    
+
     public UICellTester(UICell uICell) {
         this.uICell = uICell;
         this.modeManagement = ModeManagement.getInsatace();
@@ -53,7 +53,7 @@ public class UICellTester {
         this.logger = new Logger(String.format("log/CellTester/%s", uICell.getName()));
         this.stopTest = false;
     }
-    
+
     public void setInput(String input, int moderun) {
         if (isTesting() || input == null) {
             return;
@@ -105,7 +105,7 @@ public class UICellTester {
             }
         });
     }
-    
+
     public void runDebugItem(List<ItemConfig> allItem) {
         if (isTesting() || allItem == null || allItem.isEmpty()) {
             return;
@@ -129,7 +129,7 @@ public class UICellTester {
             }
         });
     }
-    
+
     private boolean taskHasFailed() {
         List<Mark> hasDones = new ArrayList<>();
         try {
@@ -147,7 +147,7 @@ public class UICellTester {
             marks.removeAll(hasDones);
         }
     }
-    
+
     private boolean run(Integer begin, List<ItemConfig> items, boolean alwaysRun, int modeRun) throws InterruptedException, ExecutionException {
         Future currFt;
         AbsFunction function;
@@ -159,10 +159,14 @@ public class UICellTester {
             if (stopTest) {
                 break;
             }
-            if (!testRs && !alwaysRun && !itemConfig.isAlwaysRun()) {
-                continue;
+            if (itemConfig.isWait_multi_done() && !waitForMultidone(50)) {
+                testRs = false;
             }
-            if (modeRun > itemConfig.getModeRun()) {
+            if (!uICell.getDataCell().getFailedFunctions().isEmpty()) {
+                testRs = false;
+            }
+            if ((!testRs && !alwaysRun && !itemConfig.isAlwaysRun())
+                    || modeRun > itemConfig.getModeRun()) {
                 continue;
             }
             function = this.functionFactory.getFunction(
@@ -170,33 +174,31 @@ public class UICellTester {
                     itemConfig.getTest_name(), begin, true);
             if (function == null) {
                 uICell.getDataCell().addFailedItemFunction(new AbsFunction(null) {
-                    
+
                     @Override
                     protected boolean test() {
                         return false;
                     }
+
                     @Override
                     protected void createDefaultConfig(FunctionConfig config) {
                         config.setTest_name(itemConfig.getTest_name());
                     }
                 });
-                break;
-            }
-            if (function.getConfig().isWait_multi_done()) {
-                waitForMultidone(50);
-            }
-            currFt = this.poolRun.submit(function);
-            this.marks.add(new Mark(currFt, function));
-            if (!function.getConfig().isMulti()) {
-                currFt.get();
-                if (!function.isPass()) {
-                    testRs = false;
+            } else {
+                currFt = this.poolRun.submit(function);
+                this.marks.add(new Mark(currFt, function));
+                if (!function.getConfig().isMulti()) {
+                    currFt.get();
+                    if (!function.isPass()) {
+                        testRs = false;
+                    }
                 }
             }
         }
-        return taskHasFailed();
+        return taskHasFailed() && testRs;
     }
-    
+
     private boolean waitForMultidone(int delay) {
         boolean rs = true;
         delay = delay < 50 ? 50 : delay;
@@ -214,21 +216,21 @@ public class UICellTester {
         }
         return rs;
     }
-    
+
     public String getCurrentModeName() {
         if (isTesting()) {
             return this.uICell.getDataCell().get(MyConst.MODEL.MODE_NAME);
         }
         return this.modeManagement.getCurrentModeName();
     }
-    
+
     public String getInput() {
         if (!isTesting()) {
             input = null;
         }
         return input.toUpperCase();
     }
-    
+
     public void stop() {
         if (!isTesting()) {
             return;
@@ -247,12 +249,12 @@ public class UICellTester {
         });
         this.stopThread.start();
     }
-    
+
     public boolean isTesting() {
         return this.rootFuture != null && !this.rootFuture.isDone()
                 || (stopThread != null && stopThread.isAlive());
     }
-    
+
     private void saveLocalLog() {
         try {
             this.uICell.getDataCell().updateResultTest();
@@ -267,17 +269,17 @@ public class UICellTester {
             ErrorLog.addError(e.getLocalizedMessage());
         }
     }
-    
+
     private class Mark {
-        
+
         private final Future future;
         private final AbsFunction function;
-        
+
         public Mark(Future future, AbsFunction function) {
             this.future = future;
             this.function = function;
         }
-        
+
     }
-    
+
 }

@@ -7,6 +7,7 @@ package com.tec02.function.impl.common;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.Impl.Cmd.Cmd;
+import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.model.FunctionConstructorModel;
@@ -38,48 +39,52 @@ public class UserspaceSpeedtestSpeed extends AbsFunction {
         config.put(START_KEY, "NSS UDP Receive Test Rate = ");
         config.put(END_KEY, "");
         config.put(STOP_AT, "udpst.c:main(): Test running\r\nudpst.c:main(): Test running");
-        config.put(PC_IP, "192.168.1.20");
         config.put("IP", "192.168.1.1");
         config.put(RX, true);
-        config.put(TIME, 15);
+        config.put(TIME, 10);
     }
 
     @Override
     protected boolean test() {
-        try ( AbsCommunicate telnet = this.baseFunction.getTelnet()) {
+        try ( Telnet telnet = this.baseFunction.getTelnet()) {
             String pcCommand = this.config.getString(PC_COMMAND);
             String dutCommand = this.config.getString(DUT_COMMAND);
             String readUntil = this.config.getString(READ_UNTIL);
             String startKey = this.config.getString(START_KEY);
             String endKey = this.config.getString(END_KEY);
             String stopAt = this.config.getString(STOP_AT);
-            String ip = this.config.getString(PC_IP);
             boolean isRX = this.config.get(RX, true);
-            int time = this.config.getInteger(TIME, 15);
-            if (!this.baseFunction.ubuntuPingTo(telnet, ip, 1)) {
-                return false;
-            }
-            Cmd cmd = new Cmd();
-            if (!this.baseFunction.sendCommand(cmd, pcCommand)) {
-                return false;
-            }
-            if (!this.baseFunction.sendCommand(telnet, dutCommand)) {
-                return false;
-            }
-            if (!this.analysisBase.isResponseContainKeyAndShow(cmd,
-                    stopAt, stopAt, new TimeS(time))) {
-                return false;
-            }
-            if (!telnet.sendCtrl_C()) {
-                return false;
-            }
+            TimeS timer = new TimeS(this.config.getInteger(TIME, 10));
             String value;
-            if (isRX) {
-                value = this.analysisBase.getValue(telnet, startKey, endKey, readUntil, 0);
-            } else {
-                value = this.analysisBase.getValue(cmd, startKey, endKey, null, 0);
+            try ( Cmd cmd = new Cmd()) {
+                cmd.setDebug(true);
+                if (!this.baseFunction.sendCommand(cmd, pcCommand)) {
+                    return false;
+                }
+                this.baseFunction.delay(500);
+                if (!this.baseFunction.sendCommand(telnet, dutCommand)) {
+                    return false;
+                }
+                this.analysisBase.readShowUntil(telnet, stopAt, timer);
+                if (!telnet.sendCtrl_C()) {
+                    return false;
+                }
+                String responce = telnet.readUntil(readUntil);
+                addLog(telnet.getName(), responce);
+                if (!isRX) {
+                    responce = cmd.readAll();
+                    addLog(CMD, responce);
+                }
+                if (responce.contains(startKey)) {
+                    String subString = analysisBase.subString(responce, startKey, endKey);
+                    value = this.analysisBase.findGroup(subString, "\\d+(\\.\\d+)?");
+                } else {
+                    return false;
+                }
             }
-            setResult(convetToInt(value));
+            int finalValue = convetToInt(value);
+            addLog(PC, "Value: %s Mbps", finalValue);
+            setResult(finalValue);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +94,6 @@ public class UserspaceSpeedtestSpeed extends AbsFunction {
     }
     private static final String TIME = "time";
     private static final String RX = "isRX";
-    private static final String PC_IP = "pc_ip";
     private static final String STOP_AT = "stopAt";
     private static final String END_KEY = "endKey";
     private static final String START_KEY = "startKey";

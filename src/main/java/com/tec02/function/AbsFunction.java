@@ -11,6 +11,7 @@ import com.tec02.common.MyConst;
 import com.tec02.common.MyObjectMapper;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.configuration.model.errorCode.ItemErrorCode;
+import com.tec02.configuration.model.itemTest.ItemLimit;
 import com.tec02.function.baseFunction.AnalysisBase;
 import com.tec02.function.baseFunction.AnalysisResult;
 import com.tec02.function.baseFunction.BaseFunction;
@@ -169,8 +170,8 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         return (T) absFunction;
     }
 
-    protected AbsFunction createElementFunction(Class<? extends AbsFunction> functionClass) {
-        return createElementFunction(functionClass.getSimpleName());
+    protected <T extends AbsFunction> T createElementFunction(Class<T> functionClass) {
+        return (T) createElementFunction(functionClass.getSimpleName());
     }
 
     protected AbsFunction createElementFunction(String functionName) {
@@ -220,6 +221,15 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         return getClass().getSimpleName();
     }
 
+    public void setCancel() {
+        this.model.setStatus(MyConst.MODEL.CANCELLED);
+    }
+
+    public boolean isCancelled() {
+        String status = this.model.getStatus();
+        return status != null && status.equalsIgnoreCase(MyConst.MODEL.CANCELLED);
+    }
+
     @Override
     public boolean isWaiting() {
         return statusCode == 0;
@@ -241,7 +251,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     }
 
     public void setConfig(FunctionConfig config) {
-        MyObjectMapper.update(config, this.config);
+        MyObjectMapper.copy(config, this.config);
         MyObjectMapper.update(this.config, this.model);
         this.model.reset();
     }
@@ -277,6 +287,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
                 resultTest = false;
                 model.reset();
                 subItems.clear();
+                model.setStatus(MyConst.MODEL.TESTING);
                 if (retry > 0) {
                     addLog("-------------------------------------------");
                     addLog(PC, "----------------- retry %s ---------------", retry);
@@ -285,6 +296,9 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
                     if (this.config.isDebugCancellRun()
                             && isDebugMode()) {
                         addLog(PC, "Cancellation run in debug mode");
+                        if (config.getRequired() != 1) {
+                            setCancel();
+                        }
                         resultTest = true;
                     } else {
                         resultTest = test();
@@ -294,7 +308,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
                 this.thread.join(timeout);
                 stop();
                 checkResult();
-                if (isPass()) {
+                if (isPass() || isCancelled()) {
                     break;
                 }
             }
@@ -309,6 +323,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
             threadPool.shutdown();
         }
     }
+    public static final String TESTING = "Testing";
 
     public void stopNow() {
         this.stop = true;
@@ -339,25 +354,25 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
 
     private void end() {
         this.statusCode = 2;
-        if (functionType == SIMPLE_FUNCTION && !isPass() && subItems.isEmpty()) {
-            String failApi = this.config.getFailApiName();
-            if (failApi != null && !failApi.isBlank()
-                    && !failApi.equalsIgnoreCase(this.config.getTest_name())) {
-                // addd default failed API item 
-                AbsFunction defaulApiItem = createSubItem("VirFunction", failApi);
-                defaulApiItem.runTest(1);
-            }
-        }
         for (AbsFunction function : subItems) {
             this.dataCell.addItemFunction(function);
             if (!function.isPass()) {
                 this.dataCell.addFailedItemFunction(function);
             }
         }
-        subItems.clear();
-        if (!isPass()) {
+        if (functionType == SIMPLE_FUNCTION && !isPass()) {
+            if (subItems.isEmpty()) {
+                String failApi = this.config.getFailApiName();
+                if (failApi != null && !failApi.isBlank()
+                        && !failApi.equalsIgnoreCase(this.config.getTest_name())) {
+                    // addd default failed API item 
+                    AbsFunction defaulApiItem = createSubItem("VirFunction", failApi);
+                    defaulApiItem.runTest(1);
+                }
+            }
             this.dataCell.addFailedItemFunction(this);
         }
+        subItems.clear();
         this.model.setFinishtime(System.currentTimeMillis());
     }
 
@@ -399,8 +414,8 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         }
         return null;
     }
-    
-    protected boolean isDebugMode(){
+
+    protected boolean isDebugMode() {
         return dataCell.getAPImode().equalsIgnoreCase(MyConst.CONFIG.DEBUG);
     }
 
@@ -457,7 +472,32 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         }
     }
 
-    public final void updateConfig() {
+    public final boolean updateLimit() {
+        ItemLimit itemLimit = this.configurationManagement.getItemLimit(limitName);
+        boolean diff = false;
+        if (itemLimit != null) {
+            MyObjectMapper.update(itemLimit, config);
+            if (!this.model.getUpper_limit().equals(itemLimit.getUpper_limit())) {
+                this.model.setUpper_limit(itemLimit.getUpper_limit());
+                diff = true;
+            }
+            if (!this.model.getLower_limit().equals(itemLimit.getLower_limit())) {
+                this.model.setLower_limit(itemLimit.getLower_limit());
+                diff = true;
+            }
+            if (this.model.getRequired() != itemLimit.getRequired()) {
+                this.model.setRequired(itemLimit.getRequired());
+                diff = true;
+            }
+            if (!this.model.getLimit_type().equals(itemLimit.getLimit_type())) {
+                this.model.setLimit_type(itemLimit.getLimit_type());
+                diff = true;
+            }
+        }
+        return diff;
+    }
+
+    public final void updateConfigAndResetModel() {
         FunctionConfig cf = this.configurationManagement.getFunctionConfig(configName, limitName);
         if (cf != null) {
             cf.setTest_name(limitName);
@@ -471,5 +511,4 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
             JOptionPane.showMessageDialog(null, String.format("Missing error code: %s", limitName));
         }
     }
-
 }

@@ -5,12 +5,11 @@
 package com.tec02.view.subUI.FormDetail.showGroup;
 
 import com.tec02.Jmodel.Component.MyListTabel;
-import com.tec02.common.MyConst;
 import com.tec02.configuration.model.itemTest.ItemConfig;
-import com.tec02.configuration.module.view.TabPanel;
 import com.tec02.main.ModeManagement;
 import com.tec02.main.modeFlow.ModeFlow;
 import com.tec02.view.subUI.FormDetail.AbsTabUI;
+import com.tec02.view.subUI.FormDetail.TabDetail;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
@@ -26,9 +25,10 @@ public class ShowGroupItem extends AbsTabUI {
 
     /**
      * Creates new form ShowGroupItem
+     * @param tabDetail
      */
-    public ShowGroupItem() {
-        super("Group", -1);
+    public ShowGroupItem(TabDetail tabDetail) {
+        super(tabDetail, "Group", -1);
         initComponents();
         this.listTabel = new MyListTabel(listITemSelected);
         this.tabGroups.removeAll();
@@ -166,6 +166,9 @@ public class ShowGroupItem extends AbsTabUI {
     private void btTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTestActionPerformed
         // TODO add your handling code here:
         this.uICell.getCellTester().runDebugItem(this.listTabel.getAllItem());
+        if(tabDetail != null){
+            tabDetail.setSelectedIndex(0);
+        }
     }//GEN-LAST:event_btTestActionPerformed
 
     @Override

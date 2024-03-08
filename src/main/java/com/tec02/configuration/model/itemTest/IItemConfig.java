@@ -4,7 +4,8 @@
  */
 package com.tec02.configuration.model.itemTest;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+
 
 /**
  *

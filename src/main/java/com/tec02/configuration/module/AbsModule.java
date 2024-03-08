@@ -4,7 +4,7 @@
  */
 package com.tec02.configuration.module;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.tec02.common.MyObjectMapper;
 import com.tec02.configuration.Iexecute;
 import lombok.NonNull;

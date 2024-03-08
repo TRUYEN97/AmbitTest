@@ -22,7 +22,7 @@ public class OpenShort extends AbsSendRetryCommand {
 
     public OpenShort(FunctionConstructorModel constructorModel) {
         super(constructorModel);
-        this.currentTestFixture = (UbootidleTestFixture) createElementFunction(UbootidleTestFixture.class);
+        this.currentTestFixture = createElementFunction(UbootidleTestFixture.class);
     }
 
     @Override
@@ -38,13 +38,18 @@ public class OpenShort extends AbsSendRetryCommand {
 
     @Override
     protected boolean testfunc() {
+        String md = this.dataCell.getString("model");
+        if(md != null && md.equalsIgnoreCase("REVERT")){
+            setCancel();
+            return true;
+        }
         String dutCom;
         int dutBaud;
         dutCom = this.config.getString("DutCom");
         dutBaud = this.config.getInteger("DutBaudRate", 115200);
-        try ( ComPort dut = this.baseFunction.getComport(dutCom, dutBaud)) {
+        try ( ComPort comport = this.baseFunction.getComport(dutCom, dutBaud)) {
             try {
-                if (dut == null) {
+                if (comport == null) {
                     return false;
                 }
                 String keyWord = this.config.getString("keyword");
@@ -55,19 +60,18 @@ public class OpenShort extends AbsSendRetryCommand {
                 String line;
                 timer.update();
                 while (timer.onTime()) {
-                    line = dut.readLine(new TimeMs(500));
-                    addLog(DUT, line == null ? "" : line);
+                    line = comport.readLine(new TimeMs(500));
+                    addLog(COMPORT, line == null ? "" : line);
                     if (line != null && line.trim().endsWith(keyWord)) {
-                        dut.insertCommand("reset");
                         this.currentTestFixture.testfunc();
                         return true;
                     }
-                    dut.insertCommand("reboot");
+                    comport.insertCommand("reboot");
                 }
                 return false;
             } finally {
                 addLog("PC", "Reset DUT - %s", 
-                        dut.insertCommand("reset") && dut.insertCommand("reboot"));
+                        comport.insertCommand("reset") && comport.insertCommand("reboot"));
             }
         } catch (Exception e) {
             e.printStackTrace();

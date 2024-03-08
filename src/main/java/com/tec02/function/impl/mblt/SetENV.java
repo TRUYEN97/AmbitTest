@@ -78,7 +78,7 @@ public class SetENV extends AbsFucnUseTelnetOrCommportConnector {
         config.setDebugCancellRun(true);
         config.put(COMMAND, "");
         config.put(READ_UNTIL, "root@eero-test:/#");
-        config.put(SPEC, "");
+        config.put(SPEC, "root@eero-test:/#");
         config.put(TIME, 5);
     }
 

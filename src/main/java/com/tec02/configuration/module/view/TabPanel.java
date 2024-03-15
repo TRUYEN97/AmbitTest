@@ -4,6 +4,8 @@
  */
 package com.tec02.configuration.module.view;
 
+import com.tec02.Jmodel.IAction;
+import com.tec02.configuration.module.IRefeshAndUpdate;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +16,10 @@ import javax.swing.JTabbedPane;
  * @author Administrator
  * @param <V> view
  */
-public class TabPanel<V extends AbsTabElement> extends javax.swing.JPanel {
+public class TabPanel<V extends AbsElementTab> extends javax.swing.JPanel implements IRefeshAndUpdate {
 
     private final Map<String, V> tabElements;
+    private IAction<java.awt.event.KeyEvent> actionKeyPressed;
 
     /**
      * Creates new form TabPanel
@@ -29,8 +32,35 @@ public class TabPanel<V extends AbsTabElement> extends javax.swing.JPanel {
         this.tabElements = new HashMap<>();
     }
 
+    public void setActionKeyPressed(IAction<KeyEvent> actionKeyPressed) {
+        this.actionKeyPressed = actionKeyPressed;
+    }
+
     public TabPanel() {
         this(JTabbedPane.TOP);
+    }
+
+    public String deleteTab(String tabName) {
+        for (int i = 0; i < tabPanel.getTabCount(); i++) {
+            if (tabPanel.getTitleAt(i).equals(tabName)) {
+                this.tabPanel.removeTabAt(i);
+                this.tabElements.remove(tabName);
+                refesh();
+                return tabName;
+            }
+        }
+        return null;
+    }
+
+    public String deleteTab(int index) {
+        if (index >= 0 && index < tabPanel.getTabCount()) {
+            String title = tabPanel.getTitleAt(index);
+            this.tabPanel.removeTabAt(index);
+            this.tabElements.remove(title);
+            refesh();
+            return title;
+        }
+        return null;
     }
 
     public void addTab(String name, V component) {
@@ -40,12 +70,19 @@ public class TabPanel<V extends AbsTabElement> extends javax.swing.JPanel {
         }
         for (V value : tabElements.values()) {
             value.setCurremtTabPanel(this);
-            value.tabUpdate();
         }
         int index = this.tabPanel.getTabCount() - 1;
         if (index >= 0) {
             this.tabPanel.setSelectedIndex(index);
         }
+    }
+
+    public String deleteTabSelected() {
+        return deleteTab(tabPanel.getSelectedIndex());
+    }
+
+    public int getTabSelectedIndex() {
+        return tabPanel.getSelectedIndex();
     }
 
     public V getTab(String name) {
@@ -84,15 +121,10 @@ public class TabPanel<V extends AbsTabElement> extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tabPanelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabPanelKeyPressed
-        if (evt.getKeyCode() != KeyEvent.VK_DELETE) {
+        if (this.actionKeyPressed == null) {
             return;
         }
-        int index = this.tabPanel.getSelectedIndex();
-        this.tabElements.remove(this.tabPanel.getTitleAt(index));
-        this.tabPanel.removeTabAt(index);
-        for (V value : tabElements.values()) {
-            value.tabUpdate();
-        }
+        this.actionKeyPressed.action(evt);
     }//GEN-LAST:event_tabPanelKeyPressed
 
     public void showTab(String tabName) {
@@ -130,6 +162,31 @@ public class TabPanel<V extends AbsTabElement> extends javax.swing.JPanel {
             if (tabPanel.getTitleAt(i).equals(tabName)) {
                 tabPanel.setSelectedIndex(i);
             }
+        }
+    }
+
+    public void setSelectedTab(V tab) {
+        if (tab == null) {
+            return;
+        }
+        for (int i = 0; i < tabPanel.getTabCount(); i++) {
+            if (tabPanel.getTitleAt(i).equals(tab.tabName)) {
+                tabPanel.setSelectedIndex(i);
+            }
+        }
+    }
+
+    @Override
+    public void refesh() {
+        for (V tabElement : tabElements.values()) {
+            tabElement.refesh();
+        }
+    }
+
+    @Override
+    public void update() {
+        for (V tabElement : tabElements.values()) {
+            tabElement.update();
         }
     }
 }

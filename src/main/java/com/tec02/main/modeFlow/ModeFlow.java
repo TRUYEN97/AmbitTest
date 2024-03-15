@@ -8,11 +8,13 @@ import com.tec02.configuration.model.itemTest.ItemGroupDto;
 import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.model.itemTest.ModeDto;
 import com.tec02.configuration.model.itemTest.ItemConfig;
+import com.tec02.main.ErrorLog;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.swing.JOptionPane;
 import lombok.NonNull;
 
 /**
@@ -45,7 +47,7 @@ public class ModeFlow {
     }
 
     public String getAPIMode() {
-        return modeDto.getMode();
+        return modeDto.getApiModeName();
     }
 
     public int getLoop() {
@@ -81,6 +83,15 @@ public class ModeFlow {
     }
 
     private List<ItemConfig> scanItemIn(ItemGroupDto itemGroupDto, Set<String> hasGroupsScan) {
+        List<ItemConfig> itemConfigs = getItemConfigs(itemGroupDto, hasGroupsScan);
+        List<ItemConfig> result = new ArrayList<>();
+        for (int i = 0; i < itemGroupDto.getLoop(); i++) {
+            result.addAll(itemConfigs);
+        }
+        return result;
+    }
+
+    private List<ItemConfig> getItemConfigs(ItemGroupDto itemGroupDto, Set<String> hasGroupsScan) {
         List<ItemConfig> itemConfigs = new ArrayList<>();
         if (itemGroupDto == null) {
             return itemConfigs;
@@ -89,25 +100,25 @@ public class ModeFlow {
         int modeRun = itemGroupDto.getModeRun();
         for (String name : itemGroupDto.getItems()) {
             if (name.startsWith("*G-")) {
-                name = name.replaceFirst("\\*G-", "");
+                name = name.replaceFirst("\\*G\\-", "");
                 if (!hasGroupsScan.contains(name) && this.itemTestDto.getGroups().containsKey(name)) {
                     hasGroupsScan.add(name);
                     itemConfigs.addAll(scanItemIn(getGroup(name), hasGroupsScan));
                     hasGroupsScan.remove(name);
                 }
             } else if ((itemConfig = (ItemConfig) this.itemTestDto.getItems().get(name)) != null) {
-                itemConfig.setItemName(itemConfig.getTest_name());
+                itemConfig.setItemName(name);
                 if (itemConfig.getModeRun() > modeRun) {
                     itemConfig.setModeRun(modeRun);
                 }
                 itemConfigs.add(itemConfig);
+            } else {
+                String mess = String.format("Missing item: %s", name);
+                JOptionPane.showMessageDialog(null, mess);
+                ErrorLog.addError(this, mess);
             }
         }
-        List<ItemConfig> result = new ArrayList<>();
-        for (int i = 0; i < itemGroupDto.getLoop(); i++) {
-            result.addAll(itemConfigs);
-        }
-        return result;
+        return itemConfigs;
     }
 
     public boolean nextToPassFlow() {
@@ -154,7 +165,7 @@ public class ModeFlow {
     }
 
     public boolean isCoreGroup() {
-        if(this.itemGroupDto == null){
+        if (this.itemGroupDto == null) {
             return false;
         }
         return this.itemGroupDto.isCoreGroup();

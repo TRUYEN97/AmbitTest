@@ -204,7 +204,7 @@ public class TabItem extends AbsTabUI {
                         itemConfig = itemConfigs.get(i);
                         this.myTable.addRow(Map.of(STT_COULMN, i,
                                 ITEM_COULMN, itemConfig,
-                                DEBUG_ABLE, itemConfig.getModeRun() > 2));
+                                DEBUG_ABLE, itemConfig.getModeRun() > 1));
                     }
                 }
             }

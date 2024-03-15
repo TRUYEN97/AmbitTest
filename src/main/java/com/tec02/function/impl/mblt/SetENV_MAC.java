@@ -5,7 +5,6 @@
 package com.tec02.function.impl.mblt;
 
 import com.tec02.function.baseFunction.FunctionConfig;
-import com.tec02.function.impl.mblt.SetENV;
 import com.tec02.function.model.FunctionConstructorModel;
 
 /**
@@ -27,7 +26,7 @@ public class SetENV_MAC extends SetENV {
         String replace = config.getString(REPLACE);
         addLog(CONFIG, "%s: %s", REPLACE, replace);
         StringBuilder builder = new StringBuilder(command);
-        int startIndex = builder.length() - 1 < 0 ? 0 : builder.length();
+        int startIndex = builder.length() - 1 < 0 ? 0 : builder.length()-1;
         builder.replace(startIndex, startIndex + replace.length(), replace);
         return builder.toString();
     }

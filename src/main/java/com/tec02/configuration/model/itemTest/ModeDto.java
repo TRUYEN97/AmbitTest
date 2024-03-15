@@ -16,12 +16,13 @@ import lombok.Setter;
 public class ModeDto {
 
     private String password;
-    private String mode;
+    private String modeName;
+    private String apiModeName;
     private Integer loop = 1;
     private String group;
 
     public Integer getLoop() {
-        if(loop == null || loop < 1){
+        if (loop == null || loop < 1) {
             return 1;
         }
         return loop;

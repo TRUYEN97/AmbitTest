@@ -55,6 +55,7 @@ import com.tec02.function.model.FunctionConstructorModel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JOptionPane;
 import lombok.NonNull;
 
 /**
@@ -174,9 +175,10 @@ public class FunctionFactory {
     public synchronized AbsFunction getFunction(String functionName, FunctionConstructorModel constructorModdel) {
         if (functionName == null
                 || !this.functions.containsKey(functionName.toLowerCase())) {
-            throw new RuntimeException(
+             JOptionPane.showMessageDialog(null,
                     String.format("Func: \"%s\", function not exists!",
                             functionName));
+             return null;
         }
         try {
             return this.functions.get(functionName.toLowerCase())

@@ -6,16 +6,13 @@ package com.tec02.function.baseFunction;
 
 import com.tec02.Time.WaitTime.AbsTime;
 import com.tec02.Time.WaitTime.Class.TimeS;
+import com.tec02.common.Common;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.IReadable;
 import com.tec02.communication.Communicate.Impl.Cmd.Cmd;
 import com.tec02.function.AbsBaseFunction;
 import com.tec02.function.model.FunctionConstructorModel;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -60,7 +57,7 @@ public class AnalysisBase extends AbsBaseFunction {
                 time.update();
             }
             while (time == null || time.onTime()) {
-                line = AnalysisBase.this.getLine(time, readable);
+                line = this.getLine(time, readable);
                 addLog(name, line == null ? "" : line);
                 if (line == null) {
                     if (readable instanceof Cmd) {
@@ -69,9 +66,9 @@ public class AnalysisBase extends AbsBaseFunction {
                     continue;
                 }
                 if (regex != null && !regex.isBlank()) {
-                    value = findGroup(line, regex);
+                    value = Common.findGroup(line, regex);
                 } else {
-                    value = subString(line, startkey, endkey);
+                    value = Common.subString(line, startkey, endkey);
                 }
                 if (value != null || (readUntil != null && line.contains(readUntil))) {
                     break;
@@ -96,7 +93,7 @@ public class AnalysisBase extends AbsBaseFunction {
 
     }
 
-    private static String getLine(AbsTime time, IReadable readable) {
+    private String getLine(AbsTime time, IReadable readable) {
         return time == null ? readable.readLine() : readable.readLine(time);
     }
 
@@ -275,46 +272,5 @@ public class AnalysisBase extends AbsBaseFunction {
             return false;
         }
     }
-
-    public String findGroup(String line, String regex) {
-        if (line == null || regex == null) {
-            return null;
-        }
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(line);
-        if (matcher.find()) {
-            return matcher.group();
-        }
-        return null;
-    }
-
-    public List<String> findGroups(String line, String regex) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(line);
-        return matcher.results().map((t) -> t.group()).collect(Collectors.toList());
-    }
-
-    public String subString(String line, String startkey, String endkey) {
-        if (!stringAvailable(startkey) && !stringAvailable(endkey)) {
-            return line.trim();
-        } else if (stringAvailable(startkey) && line.contains(startkey)
-                && !stringAvailable(endkey)) {
-            int index = line.indexOf(startkey) + startkey.length();
-            return line.substring(index).trim();
-        } else if (stringAvailable(endkey) && line.contains(endkey)
-                && !stringAvailable(startkey)) {
-            int index = line.indexOf(endkey);
-            return line.substring(0, index).trim();
-        } else if (stringAvailable(startkey) && line.contains(startkey)
-                && stringAvailable(endkey) && line.contains(endkey)) {
-            int start = line.indexOf(startkey) + startkey.length();
-            int end = line.lastIndexOf(endkey);
-            return line.substring(start, end).trim();
-        }
-        return null;
-    }
-
-    public boolean stringAvailable(String str) {
-        return str != null && !str.isBlank();
-    }
+    
 }

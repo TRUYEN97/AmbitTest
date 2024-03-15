@@ -4,8 +4,8 @@
  */
 package com.tec02.function.impl.runin;
 
-import com.alibaba.fastjson.JSONObject;
 import com.tec02.Time.WaitTime.Class.TimeS;
+import com.tec02.common.Common;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
@@ -83,7 +83,7 @@ public class EmmcBadBlock extends AbsFucnUseTelnetOrCommportConnector {
         }
         String startkey = config.getString(STARTKEY);
         String endkey = config.getString(ENDKEY);
-        return this.analysisBase.subString(result, startkey, endkey);
+        return Common.subString(result, startkey, endkey);
     }
     private static final String ENDKEY = "Endkey";
     private static final String STARTKEY = "Startkey";

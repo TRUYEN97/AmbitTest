@@ -1,313 +1,517 @@
 ===================================================================
-Start at = 2024-01-31 10:20:01
-End test at = 2024-01-31 10:20:27
+Start at = 2024-03-14 08:56:05
+End test at = 2024-03-14 08:56:06
 Status = failed
 Version = 1.0.0
-Error code = 1.3
-Local error code = 39.3.0
-Error description = WPS_OK
-Test time = 26.482 s
+Error code = 1.11
+Local error code = 14.1.0
+Error description = FIXTURE_CLOSE
+Test time = 0.389 s
 Station = RUNIN-7586
-Location = A1
+Location = 
 HHSN = 
 DEVICESN = null
 ===================================================================
 //////////////////////////- ID[0] -//////////////////////////
------------------- ITEM[wps_ok] - FUNCTION[PowerSwitchFunc] - TIMEOUT[30 S] ------------------
-2024-01-31 10:20:01.041:   [CONFIG] host: 192.168.1.10
-2024-01-31 10:20:01.041:   [CONFIG] user: admin
-2024-01-31 10:20:01.041:   [CONFIG] passWord: 1234
-2024-01-31 10:20:01.041:   [CONFIG] Times: 1
-2024-01-31 10:20:01.042:   [CONFIG] index of switch: 1
-2024-01-31 10:20:01.052:   [CONFIG] Delay time: [5, 5]
-2024-01-31 10:20:01.056:   cycle Times: 1 - 1
-2024-01-31 10:20:22.339:   [POWER_SWITCH] http://192.168.1.10/outlet?1=OFF
-2024-01-31 10:20:22.339:   [POWER_SWITCH] Exception: Connect to 192.168.1.10:80 [/192.168.1.10] failed: Connection timed out: connect
-2024-01-31 10:20:27.347:   ***************************************************
-2024-01-31 10:20:27.347:   [RESULT] Item name: "wps_ok"
-2024-01-31 10:20:27.347:   [RESULT] Item type: "BOOL"
-2024-01-31 10:20:27.347:   [RESULT] Upper limit: ""
-2024-01-31 10:20:27.347:   [RESULT] Lower limit: ""
-2024-01-31 10:20:27.347:   [RESULT] Value: "failed"
-2024-01-31 10:20:27.347:   [RESULT] Status: "failed"
-2024-01-31 10:20:27.347:   [RESULT] Error description: "WPS_OK"
-2024-01-31 10:20:27.348:   [RESULT] Errorcode: "39.3.0"
-2024-01-31 10:20:27.348:   [RESULT] Custormer errorcode: "1.3"
-2024-01-31 10:20:27.348:   ***************************************************
--------------------------- TIME[26.308 s] - STATUS[FAILED] --------------------------
+------------------ ITEM[CheckTime_3] - FUNCTION[CheckTime] - TIMEOUT[100 S] ------------------
+2024-03-14 08:56:05.803:   [CONFIG] time zone: Coordinated Universal Time
+2024-03-14 08:56:05.803:   [CONFIG] wedURl: http://10.90.100.15:8000/auth/login//
+2024-03-14 08:56:05.813:   [Cmd] Send command: date 2024-03-14
+2024-03-14 08:56:05.839:   [Cmd] Send command: time 08:56:05.000
+2024-03-14 08:56:05.859:   [PC] This time: 2024-03-14 08:56:05.859 - 1710406565859 ms
+2024-03-14 08:56:05.859:   [PC] spec time: 2024-03-14 08:56:05.000 - 1710406565000 ms
+2024-03-14 08:56:05.859:   [PC] delta time: 900000 ms
+2024-03-14 08:56:05.859:   ***************************************************
+2024-03-14 08:56:05.859:   [RESULT] Item name: "CheckTime_3"
+2024-03-14 08:56:05.860:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:05.860:   [RESULT] Upper limit: ""
+2024-03-14 08:56:05.860:   [RESULT] Lower limit: ""
+2024-03-14 08:56:05.860:   [RESULT] Value: "passed"
+2024-03-14 08:56:05.860:   [RESULT] Status: "passed"
+2024-03-14 08:56:05.860:   [RESULT] Error description: ""
+2024-03-14 08:56:05.860:   [RESULT] Errorcode: ""
+2024-03-14 08:56:05.860:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:05.860:   ***************************************************
+-------------------------- TIME[0.062 s] - STATUS[PASSED] --------------------------
 //////////////////////////////////////////////////////////////
 //////////////////////////- ID[1] -//////////////////////////
------------------- ITEM[UpLogFTP] - FUNCTION[UpLogFTP] - TIMEOUT[2147483647 S] ------------------
-2024-01-31 10:20:27.353:   [CONFIG] Dir elements: [data/Trieste, Text, pnname, station_type, start_day, station_name, status]
-2024-01-31 10:20:27.354:   [CONFIG] Dir elements: [data/Trieste, json, pnname, station_type, start_day, station_name, status]
-2024-01-31 10:20:27.354:   [CONFIG] Name elements: [Log/TestLog]
-2024-01-31 10:20:27.354:   [CONFIG] Name elements: [mlbsn, sn, position, status, error_details, errorcode, mode, finish_time]
-2024-01-31 10:20:27.354:   [CONFIG] Follow limit: false
-2024-01-31 10:20:27.354:   [CONFIG] Use the limit errorcode: false
-2024-01-31 10:20:27.354:   [PC] Root: mo = null
-2024-01-31 10:20:27.354:   [PC] -----------------------------------------
-2024-01-31 10:20:27.354:   [PC] Root: sn =
-2024-01-31 10:20:27.354:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: error_details = WPS_OK
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: status = failed
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: finish_time = 2024-01-31 10:20:27
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: test_software_version = 1.0.0
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: start_time = 2024-01-31 10:20:01
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: station_type = RUNIN
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: error_code = 39.3.0
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: errorcode = 39.3.0
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: errorDes = null
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: serial = null
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: mode = debug
-2024-01-31 10:20:27.355:   [PC] -----------------------------------------
-2024-01-31 10:20:27.355:   [PC] Root: station_name = RUNIN-7586
-2024-01-31 10:20:27.356:   [PC] -----------------------------------------
-2024-01-31 10:20:27.356:   [PC] Root: position = A1
-2024-01-31 10:20:27.356:   [PC] -----------------------------------------
-2024-01-31 10:20:27.356:   [PC] Root: cycle_time = 26351
-2024-01-31 10:20:27.356:   [PC] -----------------------------------------
-2024-01-31 10:20:27.356:   [PC] Root: cyctime_final = null
-2024-01-31 10:20:27.356:   [PC] -----------------------------------------
-2024-01-31 10:20:27.356:   [PC] Item name: wps_ok
-2024-01-31 10:20:27.362:   [PC] ItemTest: wps_ok
-2024-01-31 10:20:27.373:   [PC] Save data in: Log/TestLog/json/mlbsn__A1_failed_error_details_errorcode_debug_finish_time.json ok
-2024-01-31 10:20:27.373:   [PC] Connect to ftp!!
-2024-01-31 10:20:27.373:   [Config] User: oper
-2024-01-31 10:20:27.373:   [Config] PassWord: mfg-oper
-2024-01-31 10:20:27.373:   [Config] Host: 10.90.100.168
-2024-01-31 10:20:27.373:   [Config] Port: 21
-2024-01-31 10:20:27.423:   [PC] Connect to ftp ok!!
-2024-01-31 10:20:27.423:   [Config] Local: Log\TestLog\json\mlbsn__A1_failed_error_details_errorcode_debug_finish_time.json
-2024-01-31 10:20:27.423:   [Config] Ftp: data/Trieste/json/pnname/RUNIN/start_day/RUNIN-7586/failed/mlbsn__A1_failed_error_details_errorcode_debug_finish_time.json
-2024-01-31 10:20:27.435:   [PC] Up file to FTP faied!
-2024-01-31 10:20:27.436:   ________________________________________________________
-2024-01-31 10:20:27.436:   ***************************************************
-2024-01-31 10:20:27.436:   [RESULT] Item name: "UpLogFTP"
-2024-01-31 10:20:27.436:   [RESULT] Item type: "BOOL"
-2024-01-31 10:20:27.436:   [RESULT] Upper limit: ""
-2024-01-31 10:20:27.436:   [RESULT] Lower limit: ""
-2024-01-31 10:20:27.436:   [RESULT] Value: "failed"
-2024-01-31 10:20:27.436:   [RESULT] Status: "failed"
-2024-01-31 10:20:27.436:   [RESULT] Error description: "UPLOGFTP"
-2024-01-31 10:20:27.436:   [RESULT] Errorcode: "UP.FTP"
-2024-01-31 10:20:27.436:   [RESULT] Custormer errorcode: ""
-2024-01-31 10:20:27.436:   ***************************************************
-2024-01-31 10:20:27.436:   -------------------------------------------
-2024-01-31 10:20:27.436:   [PC] ----------------- retry 1 ---------------
-2024-01-31 10:20:27.437:   [CONFIG] Dir elements: [data/Trieste, Text, pnname, station_type, start_day, station_name, status]
-2024-01-31 10:20:27.437:   [CONFIG] Dir elements: [data/Trieste, json, pnname, station_type, start_day, station_name, status]
-2024-01-31 10:20:27.437:   [CONFIG] Name elements: [Log/TestLog]
-2024-01-31 10:20:27.437:   [CONFIG] Name elements: [mlbsn, sn, position, status, error_details, errorcode, mode, finish_time]
-2024-01-31 10:20:27.437:   [CONFIG] Follow limit: false
-2024-01-31 10:20:27.437:   [CONFIG] Use the limit errorcode: false
-2024-01-31 10:20:27.437:   [PC] Root: mo = null
-2024-01-31 10:20:27.437:   [PC] -----------------------------------------
-2024-01-31 10:20:27.437:   [PC] Root: sn =
-2024-01-31 10:20:27.437:   [PC] -----------------------------------------
-2024-01-31 10:20:27.437:   [PC] Root: error_details = WPS_OK
-2024-01-31 10:20:27.437:   [PC] -----------------------------------------
-2024-01-31 10:20:27.437:   [PC] Root: status = failed
-2024-01-31 10:20:27.437:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: finish_time = 2024-01-31 10:20:27
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: test_software_version = 1.0.0
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: start_time = 2024-01-31 10:20:01
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: station_type = RUNIN
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: error_code = 39.3.0
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: errorcode = 39.3.0
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: errorDes = null
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: serial = null
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: mode = debug
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: station_name = RUNIN-7586
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: position = A1
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.438:   [PC] Root: cycle_time = 26351
-2024-01-31 10:20:27.438:   [PC] -----------------------------------------
-2024-01-31 10:20:27.439:   [PC] Root: cyctime_final = null
-2024-01-31 10:20:27.439:   [PC] -----------------------------------------
-2024-01-31 10:20:27.439:   [PC] Item name: wps_ok
-2024-01-31 10:20:27.440:   [PC] ItemTest: wps_ok
-2024-01-31 10:20:27.442:   [PC] Save data in: Log/TestLog/json/mlbsn__A1_failed_WPS_OK_39.3.0_debug_2024-01-31-10-20-27.json ok
-2024-01-31 10:20:27.442:   [PC] Connect to ftp!!
-2024-01-31 10:20:27.442:   [Config] User: oper
-2024-01-31 10:20:27.442:   [Config] PassWord: mfg-oper
-2024-01-31 10:20:27.442:   [Config] Host: 10.90.100.168
-2024-01-31 10:20:27.442:   [Config] Port: 21
-2024-01-31 10:20:27.445:   [PC] Connect to ftp ok!!
-2024-01-31 10:20:27.445:   [Config] Local: Log\TestLog\json\mlbsn__A1_failed_WPS_OK_39.3.0_debug_2024-01-31-10-20-27.json
-2024-01-31 10:20:27.445:   [Config] Ftp: data/Trieste/json/pnname/RUNIN/start_day/RUNIN-7586/failed/mlbsn__A1_failed_WPS_OK_39.3.0_debug_2024-01-31-10-20-27.json
-2024-01-31 10:20:27.453:   [PC] Up file to FTP done!
-2024-01-31 10:20:27.454:   ________________________________________________________
-2024-01-31 10:20:27.454:   Save file txt!
-2024-01-31 10:20:27.454:   [DIR] Log/TestLog/text/mlbsn__A1_failed_WPS_OK_39.3.0_debug_2024-01-31-10-20-27.txt
-2024-01-31 10:20:27.460:   [PC] - add item: wps_ok
-2024-01-31 10:20:27.461:   [PC] - add item: UpLogFTP
-2024-01-31 10:20:27.461:   [PC] Save file txt at "Log/TestLog/text/mlbsn__A1_failed_WPS_OK_39.3.0_debug_2024-01-31-10-20-27.txt"
-2024-01-31 10:20:27.461:   [PC] Connect to ftp!!
-2024-01-31 10:20:27.461:   [Config] User: oper
-2024-01-31 10:20:27.461:   [Config] PassWord: mfg-oper
-2024-01-31 10:20:27.461:   [Config] Host: 10.90.100.168
-2024-01-31 10:20:27.461:   [Config] Port: 21
-2024-01-31 10:20:27.464:   [PC] Connect to ftp ok!!
-2024-01-31 10:20:27.464:   [Config] Local: Log\TestLog\text\mlbsn__A1_failed_WPS_OK_39.3.0_debug_2024-01-31-10-20-27.txt
-2024-01-31 10:20:27.464:   [Config] Ftp: data/Trieste/Text/pnname/RUNIN/start_day/RUNIN-7586/failed/mlbsn__A1_failed_WPS_OK_39.3.0_debug_2024-01-31-10-20-27.txt
-2024-01-31 10:20:27.481:   [PC] Up file to FTP done!
-2024-01-31 10:20:27.481:   ________________________________________________________
-2024-01-31 10:20:27.481:   ***************************************************
-2024-01-31 10:20:27.481:   [RESULT] Item name: "UpLogFTP"
-2024-01-31 10:20:27.481:   [RESULT] Item type: "BOOL"
-2024-01-31 10:20:27.481:   [RESULT] Upper limit: ""
-2024-01-31 10:20:27.481:   [RESULT] Lower limit: ""
-2024-01-31 10:20:27.481:   [RESULT] Value: "data/Trieste/Text/pnname/RUNIN/start_day/RUNIN-7586/failed/mlbsn__A1_failed_WPS_OK_39.3.0_debug_2024-01-31-10-20-27.txt"
-2024-01-31 10:20:27.481:   [RESULT] Status: "passed"
-2024-01-31 10:20:27.481:   [RESULT] Error description: ""
-2024-01-31 10:20:27.481:   [RESULT] Errorcode: ""
-2024-01-31 10:20:27.481:   [RESULT] Custormer errorcode: ""
-2024-01-31 10:20:27.481:   ***************************************************
--------------------------- TIME[0.128 s] - STATUS[PASSED] --------------------------
+------------------ ITEM[CheckTime_4] - FUNCTION[CheckTime] - TIMEOUT[100 S] ------------------
+2024-03-14 08:56:05.864:   [CONFIG] time zone: Coordinated Universal Time
+2024-03-14 08:56:05.865:   [CONFIG] wedURl: http://10.90.100.15:8000/auth/login//
+2024-03-14 08:56:05.867:   [Cmd] Send command: date 2024-03-14
+2024-03-14 08:56:05.887:   [Cmd] Send command: time 08:56:05.000
+2024-03-14 08:56:05.905:   [PC] This time: 2024-03-14 08:56:05.905 - 1710406565905 ms
+2024-03-14 08:56:05.905:   [PC] spec time: 2024-03-14 08:56:05.000 - 1710406565000 ms
+2024-03-14 08:56:05.905:   [PC] delta time: 900000 ms
+2024-03-14 08:56:05.906:   ***************************************************
+2024-03-14 08:56:05.906:   [RESULT] Item name: "CheckTime_4"
+2024-03-14 08:56:05.906:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:05.906:   [RESULT] Upper limit: ""
+2024-03-14 08:56:05.906:   [RESULT] Lower limit: ""
+2024-03-14 08:56:05.906:   [RESULT] Value: "passed"
+2024-03-14 08:56:05.906:   [RESULT] Status: "passed"
+2024-03-14 08:56:05.906:   [RESULT] Error description: ""
+2024-03-14 08:56:05.906:   [RESULT] Errorcode: ""
+2024-03-14 08:56:05.906:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:05.906:   ***************************************************
+-------------------------- TIME[0.042 s] - STATUS[PASSED] --------------------------
 //////////////////////////////////////////////////////////////
 //////////////////////////- ID[2] -//////////////////////////
+------------------ ITEM[nodeproperty_mac_3] - FUNCTION[GetSfisAndCompareSpec] - TIMEOUT[60 S] ------------------
+2024-03-14 08:56:05.911:   [CONFIG] key: ethernetmac
+2024-03-14 08:56:05.911:   [PC] Value: null
+2024-03-14 08:56:05.911:   ***************************************************
+2024-03-14 08:56:05.911:   [RESULT] Item name: "nodeproperty_mac_3"
+2024-03-14 08:56:05.911:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:05.911:   [RESULT] Upper limit: ""
+2024-03-14 08:56:05.911:   [RESULT] Lower limit: ""
+2024-03-14 08:56:05.911:   [RESULT] Value: "null"
+2024-03-14 08:56:05.911:   [RESULT] Status: "passed"
+2024-03-14 08:56:05.911:   [RESULT] Error description: ""
+2024-03-14 08:56:05.911:   [RESULT] Errorcode: ""
+2024-03-14 08:56:05.912:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:05.912:   ***************************************************
+-------------------------- TIME[0.002 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[3] -//////////////////////////
+------------------ ITEM[nodeproperty_unit_part_number_3] - FUNCTION[GetSfisAndCompareSpec] - TIMEOUT[60 S] ------------------
+2024-03-14 08:56:05.915:   [CONFIG] key: pnname
+2024-03-14 08:56:05.915:   [PC] Value: null
+2024-03-14 08:56:05.915:   ***************************************************
+2024-03-14 08:56:05.915:   [RESULT] Item name: "nodeproperty_unit_part_number_3"
+2024-03-14 08:56:05.915:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:05.915:   [RESULT] Upper limit: ""
+2024-03-14 08:56:05.915:   [RESULT] Lower limit: ""
+2024-03-14 08:56:05.916:   [RESULT] Value: "null"
+2024-03-14 08:56:05.916:   [RESULT] Status: "passed"
+2024-03-14 08:56:05.916:   [RESULT] Error description: ""
+2024-03-14 08:56:05.916:   [RESULT] Errorcode: ""
+2024-03-14 08:56:05.916:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:05.916:   ***************************************************
+-------------------------- TIME[0.001 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[4] -//////////////////////////
+------------------ ITEM[CheckTime_5] - FUNCTION[CheckTime] - TIMEOUT[100 S] ------------------
+2024-03-14 08:56:05.919:   [CONFIG] time zone: Coordinated Universal Time
+2024-03-14 08:56:05.919:   [CONFIG] wedURl: http://10.90.100.15:8000/auth/login//
+2024-03-14 08:56:05.921:   [Cmd] Send command: date 2024-03-14
+2024-03-14 08:56:05.937:   [Cmd] Send command: time 08:56:05.000
+2024-03-14 08:56:05.954:   [PC] This time: 2024-03-14 08:56:05.954 - 1710406565954 ms
+2024-03-14 08:56:05.955:   [PC] spec time: 2024-03-14 08:56:05.000 - 1710406565000 ms
+2024-03-14 08:56:05.955:   [PC] delta time: 900000 ms
+2024-03-14 08:56:05.955:   ***************************************************
+2024-03-14 08:56:05.955:   [RESULT] Item name: "CheckTime_5"
+2024-03-14 08:56:05.955:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:05.955:   [RESULT] Upper limit: ""
+2024-03-14 08:56:05.955:   [RESULT] Lower limit: ""
+2024-03-14 08:56:05.955:   [RESULT] Value: "passed"
+2024-03-14 08:56:05.955:   [RESULT] Status: "passed"
+2024-03-14 08:56:05.955:   [RESULT] Error description: ""
+2024-03-14 08:56:05.955:   [RESULT] Errorcode: ""
+2024-03-14 08:56:05.955:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:05.955:   ***************************************************
+-------------------------- TIME[0.037 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[5] -//////////////////////////
+------------------ ITEM[nodeproperty_mac_4] - FUNCTION[GetSfisAndCompareSpec] - TIMEOUT[60 S] ------------------
+2024-03-14 08:56:05.959:   [CONFIG] key: ethernetmac
+2024-03-14 08:56:05.959:   [PC] Value: null
+2024-03-14 08:56:05.959:   ***************************************************
+2024-03-14 08:56:05.959:   [RESULT] Item name: "nodeproperty_mac_4"
+2024-03-14 08:56:05.959:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:05.959:   [RESULT] Upper limit: ""
+2024-03-14 08:56:05.959:   [RESULT] Lower limit: ""
+2024-03-14 08:56:05.959:   [RESULT] Value: "null"
+2024-03-14 08:56:05.959:   [RESULT] Status: "passed"
+2024-03-14 08:56:05.959:   [RESULT] Error description: ""
+2024-03-14 08:56:05.959:   [RESULT] Errorcode: ""
+2024-03-14 08:56:05.959:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:05.960:   ***************************************************
+-------------------------- TIME[0.001 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[6] -//////////////////////////
+------------------ ITEM[nodeproperty_unit_part_number_4] - FUNCTION[GetSfisAndCompareSpec] - TIMEOUT[60 S] ------------------
+2024-03-14 08:56:05.962:   [CONFIG] key: pnname
+2024-03-14 08:56:05.962:   [PC] Value: null
+2024-03-14 08:56:05.963:   ***************************************************
+2024-03-14 08:56:05.963:   [RESULT] Item name: "nodeproperty_unit_part_number_4"
+2024-03-14 08:56:05.963:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:05.963:   [RESULT] Upper limit: ""
+2024-03-14 08:56:05.963:   [RESULT] Lower limit: ""
+2024-03-14 08:56:05.963:   [RESULT] Value: "null"
+2024-03-14 08:56:05.963:   [RESULT] Status: "passed"
+2024-03-14 08:56:05.963:   [RESULT] Error description: ""
+2024-03-14 08:56:05.963:   [RESULT] Errorcode: ""
+2024-03-14 08:56:05.963:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:05.963:   ***************************************************
+-------------------------- TIME[0.001 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[7] -//////////////////////////
+------------------ ITEM[CheckTime_6] - FUNCTION[CheckTime] - TIMEOUT[100 S] ------------------
+2024-03-14 08:56:05.966:   [CONFIG] time zone: Coordinated Universal Time
+2024-03-14 08:56:05.966:   [CONFIG] wedURl: http://10.90.100.15:8000/auth/login//
+2024-03-14 08:56:05.968:   [Cmd] Send command: date 2024-03-14
+2024-03-14 08:56:05.984:   [Cmd] Send command: time 08:56:05.000
+2024-03-14 08:56:06.001:   [PC] This time: 2024-03-14 08:56:06.001 - 1710406566001 ms
+2024-03-14 08:56:06.001:   [PC] spec time: 2024-03-14 08:56:05.000 - 1710406565000 ms
+2024-03-14 08:56:06.002:   [PC] delta time: 900000 ms
+2024-03-14 08:56:06.002:   ***************************************************
+2024-03-14 08:56:06.002:   [RESULT] Item name: "CheckTime_6"
+2024-03-14 08:56:06.002:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:06.002:   [RESULT] Upper limit: ""
+2024-03-14 08:56:06.002:   [RESULT] Lower limit: ""
+2024-03-14 08:56:06.002:   [RESULT] Value: "passed"
+2024-03-14 08:56:06.002:   [RESULT] Status: "passed"
+2024-03-14 08:56:06.002:   [RESULT] Error description: ""
+2024-03-14 08:56:06.002:   [RESULT] Errorcode: ""
+2024-03-14 08:56:06.003:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:06.003:   ***************************************************
+-------------------------- TIME[0.038 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[8] -//////////////////////////
+------------------ ITEM[nodeproperty_mac_5] - FUNCTION[GetSfisAndCompareSpec] - TIMEOUT[60 S] ------------------
+2024-03-14 08:56:06.006:   [CONFIG] key: ethernetmac
+2024-03-14 08:56:06.006:   [PC] Value: null
+2024-03-14 08:56:06.006:   ***************************************************
+2024-03-14 08:56:06.006:   [RESULT] Item name: "nodeproperty_mac_5"
+2024-03-14 08:56:06.006:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:06.006:   [RESULT] Upper limit: ""
+2024-03-14 08:56:06.006:   [RESULT] Lower limit: ""
+2024-03-14 08:56:06.006:   [RESULT] Value: "null"
+2024-03-14 08:56:06.006:   [RESULT] Status: "passed"
+2024-03-14 08:56:06.006:   [RESULT] Error description: ""
+2024-03-14 08:56:06.006:   [RESULT] Errorcode: ""
+2024-03-14 08:56:06.006:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:06.006:   ***************************************************
+-------------------------- TIME[0.002 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[9] -//////////////////////////
+------------------ ITEM[nodeproperty_unit_part_number_5] - FUNCTION[GetSfisAndCompareSpec] - TIMEOUT[60 S] ------------------
+2024-03-14 08:56:06.009:   [CONFIG] key: pnname
+2024-03-14 08:56:06.009:   [PC] Value: null
+2024-03-14 08:56:06.009:   ***************************************************
+2024-03-14 08:56:06.009:   [RESULT] Item name: "nodeproperty_unit_part_number_5"
+2024-03-14 08:56:06.009:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:06.010:   [RESULT] Upper limit: ""
+2024-03-14 08:56:06.010:   [RESULT] Lower limit: ""
+2024-03-14 08:56:06.010:   [RESULT] Value: "null"
+2024-03-14 08:56:06.010:   [RESULT] Status: "passed"
+2024-03-14 08:56:06.010:   [RESULT] Error description: ""
+2024-03-14 08:56:06.010:   [RESULT] Errorcode: ""
+2024-03-14 08:56:06.010:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:06.010:   ***************************************************
+-------------------------- TIME[0.001 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[10] -//////////////////////////
+------------------ ITEM[nodeproperty_mac_6] - FUNCTION[GetSfisAndCompareSpec] - TIMEOUT[60 S] ------------------
+2024-03-14 08:56:06.012:   [CONFIG] key: ethernetmac
+2024-03-14 08:56:06.013:   [PC] Value: null
+2024-03-14 08:56:06.013:   ***************************************************
+2024-03-14 08:56:06.013:   [RESULT] Item name: "nodeproperty_mac_6"
+2024-03-14 08:56:06.013:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:06.013:   [RESULT] Upper limit: ""
+2024-03-14 08:56:06.013:   [RESULT] Lower limit: ""
+2024-03-14 08:56:06.013:   [RESULT] Value: "null"
+2024-03-14 08:56:06.013:   [RESULT] Status: "passed"
+2024-03-14 08:56:06.013:   [RESULT] Error description: ""
+2024-03-14 08:56:06.013:   [RESULT] Errorcode: ""
+2024-03-14 08:56:06.013:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:06.013:   ***************************************************
+-------------------------- TIME[0.001 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[11] -//////////////////////////
+------------------ ITEM[nodeproperty_unit_part_number_6] - FUNCTION[GetSfisAndCompareSpec] - TIMEOUT[60 S] ------------------
+2024-03-14 08:56:06.016:   [CONFIG] key: pnname
+2024-03-14 08:56:06.016:   [PC] Value: null
+2024-03-14 08:56:06.016:   ***************************************************
+2024-03-14 08:56:06.016:   [RESULT] Item name: "nodeproperty_unit_part_number_6"
+2024-03-14 08:56:06.016:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:06.016:   [RESULT] Upper limit: ""
+2024-03-14 08:56:06.016:   [RESULT] Lower limit: ""
+2024-03-14 08:56:06.016:   [RESULT] Value: "null"
+2024-03-14 08:56:06.016:   [RESULT] Status: "passed"
+2024-03-14 08:56:06.016:   [RESULT] Error description: ""
+2024-03-14 08:56:06.016:   [RESULT] Errorcode: ""
+2024-03-14 08:56:06.016:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:06.016:   ***************************************************
+-------------------------- TIME[0.001 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[12] -//////////////////////////
+------------------ ITEM[fixture_close] - FUNCTION[FixtureAction] - TIMEOUT[20 S] ------------------
+2024-03-14 08:56:06.020:   [ComPort] Connect to: COM5
+2024-03-14 08:56:06.020:   [ComPort] BaudRate is: 115200
+2024-03-14 08:56:06.026:   [ComPort] Connect COM5 failed
+2024-03-14 08:56:06.026:   ***************************************************
+2024-03-14 08:56:06.027:   [RESULT] Item name: "fixture_close"
+2024-03-14 08:56:06.027:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:06.027:   [RESULT] Upper limit: ""
+2024-03-14 08:56:06.027:   [RESULT] Lower limit: ""
+2024-03-14 08:56:06.027:   [RESULT] Value: "failed"
+2024-03-14 08:56:06.027:   [RESULT] Status: "failed"
+2024-03-14 08:56:06.027:   [RESULT] Error description: "FIXTURE_CLOSE"
+2024-03-14 08:56:06.027:   [RESULT] Errorcode: "14.1.0"
+2024-03-14 08:56:06.027:   [RESULT] Custormer errorcode: "1.11"
+2024-03-14 08:56:06.027:   ***************************************************
+-------------------------- TIME[0.008 s] - STATUS[FAILED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[13] -//////////////////////////
+------------------ ITEM[UpLogFTP] - FUNCTION[UpLogFTP] - TIMEOUT[2147483647 S] ------------------
+2024-03-14 08:56:06.031:   [CONFIG] Dir elements: [data/Trieste, Text, pnname, station_type, start_day, station_name, status]
+2024-03-14 08:56:06.031:   [CONFIG] Dir elements: [data/Trieste, json, pnname, station_type, start_day, station_name, status]
+2024-03-14 08:56:06.031:   [CONFIG] Name elements: [Log/TestLog]
+2024-03-14 08:56:06.032:   [CONFIG] Name elements: [mlbsn, sn, position, status, error_details, errorcode, mode, finish_time]
+2024-03-14 08:56:06.032:   [CONFIG] Follow limit: false
+2024-03-14 08:56:06.032:   [CONFIG] Use the limit errorcode: false
+2024-03-14 08:56:06.032:   [PC] Root: mo = null
+2024-03-14 08:56:06.032:   [PC] -----------------------------------------
+2024-03-14 08:56:06.032:   [PC] Root: sn =
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: error_details = FIXTURE_CLOSE
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: status = failed
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: finish_time = 2024-03-14 08:56:06
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: test_software_version = 1.0.0
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: start_time = 2024-03-14 08:56:05
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: station_type = MBLT
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: error_code = 14.1.0
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: errorcode = 14.1.0
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: errorDes = null
+2024-03-14 08:56:06.033:   [PC] -----------------------------------------
+2024-03-14 08:56:06.033:   [PC] Root: serial = null
+2024-03-14 08:56:06.034:   [PC] -----------------------------------------
+2024-03-14 08:56:06.034:   [PC] Root: mode = debug
+2024-03-14 08:56:06.034:   [PC] -----------------------------------------
+2024-03-14 08:56:06.034:   [PC] Root: station_name = RUNIN-7586
+2024-03-14 08:56:06.034:   [PC] -----------------------------------------
+2024-03-14 08:56:06.034:   [PC] Root: position =
+2024-03-14 08:56:06.034:   [PC] -----------------------------------------
+2024-03-14 08:56:06.034:   [PC] Root: cycle_time = 254
+2024-03-14 08:56:06.034:   [PC] -----------------------------------------
+2024-03-14 08:56:06.034:   [PC] Root: cyctime_final = null
+2024-03-14 08:56:06.034:   [PC] -----------------------------------------
+2024-03-14 08:56:06.048:   [PC] items: [CheckTime_3, CheckTime_4, nodeproperty_mac_3, nodeproperty_unit_part_number_3, CheckTime_5, nodeproperty_mac_4, nodeproperty_unit_part_number_4, CheckTime_6, nodeproperty_mac_5, nodeproperty_unit_part_number_5, nodeproperty_mac_6, nodeproperty_unit_part_number_6, fixture_close]
+2024-03-14 08:56:06.064:   [PC] Save data in: Log/TestLog/json/mlbsn___failed_error_details_errorcode_debug_finish_time.json ok
+2024-03-14 08:56:06.064:   [PC] Connect to ftp!!
+2024-03-14 08:56:06.064:   [Config] User: oper
+2024-03-14 08:56:06.064:   [Config] PassWord: mfg-oper
+2024-03-14 08:56:06.064:   [Config] Host: 10.90.100.168
+2024-03-14 08:56:06.064:   [Config] Port: 21
+2024-03-14 08:56:06.076:   [PC] Connect to ftp ok!!
+2024-03-14 08:56:06.076:   [Config] Local: Log\TestLog\json\mlbsn___failed_error_details_errorcode_debug_finish_time.json
+2024-03-14 08:56:06.076:   [Config] Ftp: data/Trieste/json/pnname/MBLT/start_day/RUNIN-7586/failed/mlbsn___failed_error_details_errorcode_debug_finish_time.json
+2024-03-14 08:56:06.087:   [PC] Up file to FTP faied!
+2024-03-14 08:56:06.087:   ________________________________________________________
+2024-03-14 08:56:06.087:   ***************************************************
+2024-03-14 08:56:06.087:   [RESULT] Item name: "UpLogFTP"
+2024-03-14 08:56:06.088:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:06.088:   [RESULT] Upper limit: ""
+2024-03-14 08:56:06.088:   [RESULT] Lower limit: ""
+2024-03-14 08:56:06.088:   [RESULT] Value: "failed"
+2024-03-14 08:56:06.088:   [RESULT] Status: "failed"
+2024-03-14 08:56:06.088:   [RESULT] Error description: "UPLOGFTP"
+2024-03-14 08:56:06.088:   [RESULT] Errorcode: "UP.FTP"
+2024-03-14 08:56:06.088:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:06.088:   ***************************************************
+2024-03-14 08:56:06.088:   -------------------------------------------
+2024-03-14 08:56:06.088:   [PC] ----------------- retry 1 ---------------
+2024-03-14 08:56:06.088:   [CONFIG] Dir elements: [data/Trieste, Text, pnname, station_type, start_day, station_name, status]
+2024-03-14 08:56:06.088:   [CONFIG] Dir elements: [data/Trieste, json, pnname, station_type, start_day, station_name, status]
+2024-03-14 08:56:06.088:   [CONFIG] Name elements: [Log/TestLog]
+2024-03-14 08:56:06.088:   [CONFIG] Name elements: [mlbsn, sn, position, status, error_details, errorcode, mode, finish_time]
+2024-03-14 08:56:06.088:   [CONFIG] Follow limit: false
+2024-03-14 08:56:06.088:   [CONFIG] Use the limit errorcode: false
+2024-03-14 08:56:06.089:   [PC] Root: mo = null
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: sn =
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: error_details = FIXTURE_CLOSE
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: status = failed
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: finish_time = 2024-03-14 08:56:06
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: test_software_version = 1.0.0
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: start_time = 2024-03-14 08:56:05
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: station_type = MBLT
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: error_code = 14.1.0
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: errorcode = 14.1.0
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: errorDes = null
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: serial = null
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: mode = debug
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: station_name = RUNIN-7586
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: position =
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.089:   [PC] Root: cycle_time = 254
+2024-03-14 08:56:06.089:   [PC] -----------------------------------------
+2024-03-14 08:56:06.090:   [PC] Root: cyctime_final = null
+2024-03-14 08:56:06.090:   [PC] -----------------------------------------
+2024-03-14 08:56:06.099:   [PC] items: [CheckTime_3, CheckTime_4, nodeproperty_mac_3, nodeproperty_unit_part_number_3, CheckTime_5, nodeproperty_mac_4, nodeproperty_unit_part_number_4, CheckTime_6, nodeproperty_mac_5, nodeproperty_unit_part_number_5, nodeproperty_mac_6, nodeproperty_unit_part_number_6, fixture_close]
+2024-03-14 08:56:06.101:   [PC] Save data in: Log/TestLog/json/mlbsn___failed_FIXTURE_CLOSE_14.1.0_debug_2024-03-14-08-56-06.json ok
+2024-03-14 08:56:06.101:   [PC] Connect to ftp!!
+2024-03-14 08:56:06.101:   [Config] User: oper
+2024-03-14 08:56:06.101:   [Config] PassWord: mfg-oper
+2024-03-14 08:56:06.101:   [Config] Host: 10.90.100.168
+2024-03-14 08:56:06.101:   [Config] Port: 21
+2024-03-14 08:56:06.104:   [PC] Connect to ftp ok!!
+2024-03-14 08:56:06.104:   [Config] Local: Log\TestLog\json\mlbsn___failed_FIXTURE_CLOSE_14.1.0_debug_2024-03-14-08-56-06.json
+2024-03-14 08:56:06.104:   [Config] Ftp: data/Trieste/json/pnname/MBLT/start_day/RUNIN-7586/failed/mlbsn___failed_FIXTURE_CLOSE_14.1.0_debug_2024-03-14-08-56-06.json
+2024-03-14 08:56:06.112:   [PC] Up file to FTP done!
+2024-03-14 08:56:06.112:   ________________________________________________________
+2024-03-14 08:56:06.112:   Save file txt!
+2024-03-14 08:56:06.112:   [DIR] Log/TestLog/text/mlbsn___failed_FIXTURE_CLOSE_14.1.0_debug_2024-03-14-08-56-06.txt
+2024-03-14 08:56:06.119:   [PC] Item logs: "[CheckTime_3, CheckTime_4, nodeproperty_mac_3, nodeproperty_unit_part_number_3, CheckTime_5, nodeproperty_mac_4, nodeproperty_unit_part_number_4, CheckTime_6, nodeproperty_mac_5, nodeproperty_unit_part_number_5, nodeproperty_mac_6, nodeproperty_unit_part_number_6, fixture_close, UpLogFTP]"
+2024-03-14 08:56:06.119:   [PC] Save file txt at "Log/TestLog/text/mlbsn___failed_FIXTURE_CLOSE_14.1.0_debug_2024-03-14-08-56-06.txt"
+2024-03-14 08:56:06.119:   [PC] Connect to ftp!!
+2024-03-14 08:56:06.119:   [Config] User: oper
+2024-03-14 08:56:06.119:   [Config] PassWord: mfg-oper
+2024-03-14 08:56:06.119:   [Config] Host: 10.90.100.168
+2024-03-14 08:56:06.119:   [Config] Port: 21
+2024-03-14 08:56:06.121:   [PC] Connect to ftp ok!!
+2024-03-14 08:56:06.122:   [Config] Local: Log\TestLog\text\mlbsn___failed_FIXTURE_CLOSE_14.1.0_debug_2024-03-14-08-56-06.txt
+2024-03-14 08:56:06.122:   [Config] Ftp: data/Trieste/Text/pnname/MBLT/start_day/RUNIN-7586/failed/mlbsn___failed_FIXTURE_CLOSE_14.1.0_debug_2024-03-14-08-56-06.txt
+2024-03-14 08:56:06.164:   [PC] Up file to FTP done!
+2024-03-14 08:56:06.164:   ________________________________________________________
+2024-03-14 08:56:06.164:   ***************************************************
+2024-03-14 08:56:06.164:   [RESULT] Item name: "UpLogFTP"
+2024-03-14 08:56:06.164:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:06.165:   [RESULT] Upper limit: ""
+2024-03-14 08:56:06.165:   [RESULT] Lower limit: ""
+2024-03-14 08:56:06.165:   [RESULT] Value: "data/Trieste/Text/pnname/MBLT/start_day/RUNIN-7586/failed/mlbsn___failed_FIXTURE_CLOSE_14.1.0_debug_2024-03-14-08-56-06.txt"
+2024-03-14 08:56:06.165:   [RESULT] Status: "passed"
+2024-03-14 08:56:06.165:   [RESULT] Error description: ""
+2024-03-14 08:56:06.165:   [RESULT] Errorcode: ""
+2024-03-14 08:56:06.165:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:06.165:   ***************************************************
+-------------------------- TIME[0.134 s] - STATUS[PASSED] --------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////- ID[14] -//////////////////////////
 ------------------ ITEM[upTeAPI] - FUNCTION[UpTeAPI] - TIMEOUT[2147483647 S] ------------------
-2024-01-31 10:20:27.485:   [CONFIG] Name elements: [UploadApi/log]
-2024-01-31 10:20:27.485:   [CONFIG] Name elements: [mlbsn, station_name, mode]
-2024-01-31 10:20:27.485:   [CONFIG] Name elements: [mlbsn, station_name, mode, {serial}]
-2024-01-31 10:20:27.485:   [CONFIG] Follow limit: false
-2024-01-31 10:20:27.485:   [CONFIG] Use the limit errorcode: false
-2024-01-31 10:20:27.485:   [PC] Root: error_details = WPS_OK
-2024-01-31 10:20:27.485:   [PC] -----------------------------------------
-2024-01-31 10:20:27.485:   [PC] Root: status = failed
-2024-01-31 10:20:27.485:   [PC] -----------------------------------------
-2024-01-31 10:20:27.485:   [PC] Root: finish_time = 2024-01-31 10:20:27
-2024-01-31 10:20:27.485:   [PC] -----------------------------------------
-2024-01-31 10:20:27.485:   [PC] Root: test_software_version = 1.0.0
-2024-01-31 10:20:27.485:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: start_time = 2024-01-31 10:20:01
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: onSfis = off
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: error_code = 39.3.0
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: mlbsn = null
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: sn =
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: mode = debug
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: station = RUNIN
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: position = A1
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: product = Trieste
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: line = MP
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: pcname = RUNIN-7586
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: pnname = null
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: ethernetmac = null
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Root: mo = null
-2024-01-31 10:20:27.486:   [PC] -----------------------------------------
-2024-01-31 10:20:27.486:   [PC] Item name: wps_ok
-2024-01-31 10:20:27.487:   [PC] ItemTest: wps_ok
-2024-01-31 10:20:27.488:   [PC] Item name: UpLogFTP
-2024-01-31 10:20:27.488:   [PC] ItemTest: UpLogFTP
-2024-01-31 10:20:27.489:   [PC] Save data in: UploadApi/log/mlbsn_RUNIN-7586_debug.json ok
-2024-01-31 10:20:27.489:   ---------------------------------------------------------------
-2024-01-31 10:20:27.489:   Save file txt!
-2024-01-31 10:20:27.490:   [DIR] UploadApi/log/mlbsn_RUNIN-7586_debug_serial.txt
-2024-01-31 10:20:27.491:   [PC] - add item: wps_ok
-2024-01-31 10:20:27.491:   [PC] - add item: UpLogFTP
-2024-01-31 10:20:27.492:   [PC] - add item: upTeAPI
-2024-01-31 10:20:27.492:   [PC] Save file txt at "UploadApi/log/mlbsn_RUNIN-7586_debug_serial.txt"
-2024-01-31 10:20:27.492:   ---------------------------------------------------------------
-2024-01-31 10:20:27.492:   [Cmd] Send command: cd UploadApi && java -jar UploadLogAPI.jar 10.90.100.168 "log/mlbsn_RUNIN-7586_debug.json" "log/mlbsn_RUNIN-7586_debug_serial.txt"
-2024-01-31 10:20:27.497:   [PC] Waiting for API reponse about 10 S
-2024-01-31 10:20:28.469:   [CMD] {"result":false,"message":"sn and mblsn is empty!","data":null}
-2024-01-31 10:20:28.469:   ***************************************************
-2024-01-31 10:20:28.470:   [RESULT] Item name: "upTeAPI"
-2024-01-31 10:20:28.470:   [RESULT] Item type: "BOOL"
-2024-01-31 10:20:28.470:   [RESULT] Upper limit: ""
-2024-01-31 10:20:28.470:   [RESULT] Lower limit: ""
-2024-01-31 10:20:28.470:   [RESULT] Value: "failed"
-2024-01-31 10:20:28.470:   [RESULT] Status: "failed"
-2024-01-31 10:20:28.470:   [RESULT] Error description: "UPTEAPI"
-2024-01-31 10:20:28.470:   [RESULT] Errorcode: "UPTEAPI"
-2024-01-31 10:20:28.470:   [RESULT] Custormer errorcode: ""
-2024-01-31 10:20:28.470:   ***************************************************
-2024-01-31 10:20:28.470:   -------------------------------------------
-2024-01-31 10:20:28.470:   [PC] ----------------- retry 1 ---------------
-2024-01-31 10:20:28.470:   [CONFIG] Name elements: [UploadApi/log]
-2024-01-31 10:20:28.470:   [CONFIG] Name elements: [mlbsn, station_name, mode]
-2024-01-31 10:20:28.470:   [CONFIG] Name elements: [mlbsn, station_name, mode, {serial}]
-2024-01-31 10:20:28.470:   [CONFIG] Follow limit: false
-2024-01-31 10:20:28.470:   [CONFIG] Use the limit errorcode: false
-2024-01-31 10:20:28.471:   [PC] Root: error_details = WPS_OK
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: status = failed
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: finish_time = 2024-01-31 10:20:27
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: test_software_version = 1.0.0
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: start_time = 2024-01-31 10:20:01
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: onSfis = off
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: error_code = 39.3.0
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: mlbsn = null
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: sn =
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: mode = debug
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: station = RUNIN
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: position = A1
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: product = Trieste
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: line = MP
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: pcname = RUNIN-7586
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.471:   [PC] Root: pnname = null
-2024-01-31 10:20:28.471:   [PC] -----------------------------------------
-2024-01-31 10:20:28.472:   [PC] Root: ethernetmac = null
-2024-01-31 10:20:28.472:   [PC] -----------------------------------------
-2024-01-31 10:20:28.472:   [PC] Root: mo = null
-2024-01-31 10:20:28.472:   [PC] -----------------------------------------
-2024-01-31 10:20:28.472:   [PC] Item name: wps_ok
-2024-01-31 10:20:28.473:   [PC] ItemTest: wps_ok
-2024-01-31 10:20:28.473:   [PC] Item name: UpLogFTP
-2024-01-31 10:20:28.474:   [PC] ItemTest: UpLogFTP
-2024-01-31 10:20:28.475:   [PC] Save data in: UploadApi/log/mlbsn_RUNIN-7586_debug.json ok
-2024-01-31 10:20:28.475:   ---------------------------------------------------------------
-2024-01-31 10:20:28.475:   Save file txt!
-2024-01-31 10:20:28.475:   [DIR] UploadApi/log/mlbsn_RUNIN-7586_debug_serial.txt
-2024-01-31 10:20:28.476:   [PC] - add item: wps_ok
-2024-01-31 10:20:28.477:   [PC] - add item: UpLogFTP
-2024-01-31 10:20:28.477:   [PC] - add item: upTeAPI
--------------------------- TIME[0.993 s] - STATUS[] --------------------------
+2024-03-14 08:56:06.167:   [CONFIG] Name elements: [UploadApi/log]
+2024-03-14 08:56:06.167:   [CONFIG] Name elements: [mlbsn, station_name, mode]
+2024-03-14 08:56:06.167:   [CONFIG] Name elements: [mlbsn, station_name, mode, {serial}]
+2024-03-14 08:56:06.167:   [CONFIG] Follow limit: false
+2024-03-14 08:56:06.167:   [CONFIG] Use the limit errorcode: false
+2024-03-14 08:56:06.167:   [PC] Root: error_details = FIXTURE_CLOSE
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: status = failed
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: finish_time = 2024-03-14 08:56:06
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: test_software_version = 1.0.0
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: start_time = 2024-03-14 08:56:05
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: onSfis = off
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: error_code = 14.1.0
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: mlbsn = null
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: sn =
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: mode = debug
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: station = MBLT
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: position =
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: product = Trieste
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: line = MP
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: pcname = RUNIN-7586
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: pnname = null
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: ethernetmac = null
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.168:   [PC] Root: mo = null
+2024-03-14 08:56:06.168:   [PC] -----------------------------------------
+2024-03-14 08:56:06.176:   [PC] items: [CheckTime_3, CheckTime_4, nodeproperty_mac_3, nodeproperty_unit_part_number_3, CheckTime_5, nodeproperty_mac_4, nodeproperty_unit_part_number_4, CheckTime_6, nodeproperty_mac_5, nodeproperty_unit_part_number_5, nodeproperty_mac_6, nodeproperty_unit_part_number_6, fixture_close, UpLogFTP]
+2024-03-14 08:56:06.178:   [PC] Save data in: UploadApi/log/mlbsn_RUNIN-7586_debug.json ok
+2024-03-14 08:56:06.178:   ---------------------------------------------------------------
+2024-03-14 08:56:06.178:   Save file txt!
+2024-03-14 08:56:06.178:   [DIR] UploadApi/log/mlbsn_RUNIN-7586_debug_serial.txt
+2024-03-14 08:56:06.183:   [PC] Item logs: "[CheckTime_3, CheckTime_4, nodeproperty_mac_3, nodeproperty_unit_part_number_3, CheckTime_5, nodeproperty_mac_4, nodeproperty_unit_part_number_4, CheckTime_6, nodeproperty_mac_5, nodeproperty_unit_part_number_5, nodeproperty_mac_6, nodeproperty_unit_part_number_6, fixture_close, UpLogFTP, upTeAPI]"
+2024-03-14 08:56:06.183:   [PC] Save file txt at "UploadApi/log/mlbsn_RUNIN-7586_debug_serial.txt"
+2024-03-14 08:56:06.183:   ---------------------------------------------------------------
+2024-03-14 08:56:06.184:   [Cmd] Send command: cd UploadApi && java -jar UploadLogAPI.jar 10.90.100.168 "log/mlbsn_RUNIN-7586_debug.json" "log/mlbsn_RUNIN-7586_debug_serial.txt"
+2024-03-14 08:56:06.188:   [PC] Waiting for API reponse about 10 S
+2024-03-14 08:56:06.721:   [CMD] {"result":false,"message":"sn and mblsn is empty!","data":null}
+2024-03-14 08:56:06.722:   ***************************************************
+2024-03-14 08:56:06.722:   [RESULT] Item name: "upTeAPI"
+2024-03-14 08:56:06.722:   [RESULT] Item type: "BOOL"
+2024-03-14 08:56:06.722:   [RESULT] Upper limit: ""
+2024-03-14 08:56:06.722:   [RESULT] Lower limit: ""
+2024-03-14 08:56:06.722:   [RESULT] Value: "failed"
+2024-03-14 08:56:06.722:   [RESULT] Status: "failed"
+2024-03-14 08:56:06.722:   [RESULT] Error description: "UPTEAPI"
+2024-03-14 08:56:06.722:   [RESULT] Errorcode: "UPTEAPI"
+2024-03-14 08:56:06.722:   [RESULT] Custormer errorcode: ""
+2024-03-14 08:56:06.722:   ***************************************************
+2024-03-14 08:56:06.722:   -------------------------------------------
+2024-03-14 08:56:06.722:   [PC] ----------------- retry 1 ---------------
+2024-03-14 08:56:06.722:   [CONFIG] Name elements: [UploadApi/log]
+2024-03-14 08:56:06.722:   [CONFIG] Name elements: [mlbsn, station_name, mode]
+2024-03-14 08:56:06.722:   [CONFIG] Name elements: [mlbsn, station_name, mode, {serial}]
+2024-03-14 08:56:06.722:   [CONFIG] Follow limit: false
+2024-03-14 08:56:06.722:   [CONFIG] Use the limit errorcode: false
+2024-03-14 08:56:06.722:   [PC] Root: error_details = FIXTURE_CLOSE
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: status = failed
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: finish_time = 2024-03-14 08:56:06
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: test_software_version = 1.0.0
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: start_time = 2024-03-14 08:56:05
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: onSfis = off
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: error_code = 14.1.0
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: mlbsn = null
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: sn =
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: mode = debug
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: station = MBLT
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: position =
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: product = Trieste
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: line = MP
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: pcname = RUNIN-7586
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: pnname = null
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: ethernetmac = null
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.722:   [PC] Root: mo = null
+2024-03-14 08:56:06.722:   [PC] -----------------------------------------
+2024-03-14 08:56:06.729:   [PC] items: [CheckTime_3, CheckTime_4, nodeproperty_mac_3, nodeproperty_unit_part_number_3, CheckTime_5, nodeproperty_mac_4, nodeproperty_unit_part_number_4, CheckTime_6, nodeproperty_mac_5, nodeproperty_unit_part_number_5, nodeproperty_mac_6, nodeproperty_unit_part_number_6, fixture_close, UpLogFTP]
+2024-03-14 08:56:06.731:   [PC] Save data in: UploadApi/log/mlbsn_RUNIN-7586_debug.json ok
+2024-03-14 08:56:06.731:   ---------------------------------------------------------------
+2024-03-14 08:56:06.731:   Save file txt!
+2024-03-14 08:56:06.731:   [DIR] UploadApi/log/mlbsn_RUNIN-7586_debug_serial.txt
+-------------------------- TIME[0.568 s] - STATUS[TESTING] --------------------------
 //////////////////////////////////////////////////////////////

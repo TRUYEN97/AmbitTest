@@ -4,6 +4,7 @@
  */
 package com.tec02.configuration.module.view;
 
+import com.tec02.Jmodel.IAction;
 import com.tec02.configuration.module.AbsModuleView;
 import java.awt.event.KeyEvent;
 import javax.swing.JTabbedPane;
@@ -14,7 +15,7 @@ import javax.swing.JTabbedPane;
  * @param <M>
  * @param <V>
  */
-public abstract class AbsHasTabPanel<M, V extends AbsTabElement> extends AbsModuleView<M> {
+public abstract class AbsHasTabPanel<M, V extends AbsElementTab> extends AbsModuleView<M> {
 
     private final TabPanel<V> tabPanel;
 
@@ -28,10 +29,18 @@ public abstract class AbsHasTabPanel<M, V extends AbsTabElement> extends AbsModu
         this.pnTab.add(tabPanel);
     }
 
+    public void setActionKeyPressed(IAction<KeyEvent> actionKeyPressed) {
+        this.tabPanel.setActionKeyPressed(actionKeyPressed);
+    }
+
     protected void addTab(String name) {
         V modePanel = createTabPanel(name);
         modePanel.refesh();
         this.tabPanel.addTab(name, modePanel);
+    }
+
+    public int getTabSelected() {
+        return this.tabPanel.getTabSelectedIndex();
     }
 
     /**
@@ -109,11 +118,11 @@ public abstract class AbsHasTabPanel<M, V extends AbsTabElement> extends AbsModu
     public TabPanel<V> getTabPanel() {
         return tabPanel;
     }
-    
-    public void clear(){
+
+    public void clear() {
         this.tabPanel.clearAllTab();
     }
-    
+
     private void addTab() {
         String name = txtGroupName.getText();
         txtGroupName.setText(null);
@@ -132,5 +141,9 @@ public abstract class AbsHasTabPanel<M, V extends AbsTabElement> extends AbsModu
     // End of variables declaration//GEN-END:variables
 
     protected abstract V createTabPanel(String name);
+
+    public String deleteTabSelected() {
+        return this.tabPanel.deleteTabSelected();
+    }
 
 }

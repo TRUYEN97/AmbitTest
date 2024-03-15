@@ -5,7 +5,7 @@
 package com.tec02.function.impl.common;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
-import com.tec02.communication.Communicate.AbsCommunicate;
+import com.tec02.common.Common;
 import com.tec02.communication.Communicate.Impl.Cmd.Cmd;
 import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
 import com.tec02.function.baseFunction.FunctionConfig;
@@ -51,7 +51,7 @@ public class IperfSpeedTest extends AbsFucnUseTelnetOrCommportConnector {
                 while ((line = cmd.readLine()) != null) {
                     addLog(telnet.getName(), line);
                     if (line.contains("[SUM]") && line.contains("receiver")) {
-                        value = this.analysisBase.subString(line, "MBytes   ", " Mbits/sec");
+                        value = Common.subString(line, "MBytes   ", " Mbits/sec");
                         break;
                     }
                 }

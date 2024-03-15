@@ -4,6 +4,7 @@
  */
 package com.tec02.configuration.module.view.Socket;
 
+import com.tec02.common.MyConst;
 import com.tec02.configuration.model.socket.SocketClientDto;
 import com.tec02.configuration.model.socket.SocketDto;
 import com.tec02.configuration.module.AbsModuleView;
@@ -39,7 +40,11 @@ public class SocketPanel extends AbsModuleView<SocketDto> {
                 var socketModel = model.getServer();
                 cbFlag.setSelected(socketModel.isFlag());
                 spPort.setValue(socketModel.getPort());
-                for (String name : model.getClients().keySet()) {
+                var clients = model.getClients();
+                if (!clients.containsKey(MyConst.AE_SERVER_NAME)) {
+                    clients.put(MyConst.AE_SERVER_NAME, new SocketClientDto());
+                }
+                for (String name : clients.keySet()) {
                     addTab(name);
                 }
             }
@@ -59,7 +64,7 @@ public class SocketPanel extends AbsModuleView<SocketDto> {
         };
         this.pnTab.add(this.hasTabPanel);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -138,7 +143,6 @@ public class SocketPanel extends AbsModuleView<SocketDto> {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
 
     @Override
     public void refesh() {

@@ -6,6 +6,7 @@ package com.tec02.function;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.tec02.common.Common;
 import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.common.MyConst;
 import com.tec02.common.MyObjectMapper;
@@ -111,36 +112,6 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
                 .build();
     }
 
-    private FunctionConstructorModel checkModel(FunctionConstructorModel constructorModel1) {
-        Model md = new Model();
-        FunctionConfig cf = getDefaultConfig();
-        MyObjectMapper.update(cf, md);
-        if (constructorModel1 == null) {
-            constructorModel1 = FunctionConstructorModel.builder()
-                    .model(md)
-                    .config(cf)
-                    .configName(cf.getTest_name())
-                    .itemName(cf.getTest_name())
-                    .logger(new FunctionLogger(md))
-                    .build();
-        } else {
-            if (constructorModel1.getModel() == null) {
-                constructorModel1.setModel(md);
-            }
-            if (constructorModel1.getConfig() == null) {
-                constructorModel1.setConfig(cf);
-                String name = cf.getTest_name();
-                if (name == null || name.isBlank()) {
-                    cf.setTest_name(constructorModel1.getItemName());
-                }
-            }
-            if (constructorModel1.getLogger() == null) {
-                constructorModel1.setLogger(new FunctionLogger(md));
-            }
-        }
-        return constructorModel1;
-    }
-
     @Override
     public boolean isSubItem() {
         return functionType == SUB_FUNCTION;
@@ -149,6 +120,36 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     @Override
     public boolean isElementFucntion() {
         return functionType == ELEMENT_FUCTION;
+    }
+
+    private FunctionConstructorModel checkModel(FunctionConstructorModel constructorModel1) {
+        Model md = new Model();
+        FunctionConfig cf = getDefaultConfig();
+        if (constructorModel1 == null) {
+            constructorModel1 = FunctionConstructorModel.builder()
+                    .model(md)
+                    .config(cf)
+                    .configName(cf.getTest_name())
+                    .limitName(cf.getTest_name())
+                    .logger(new FunctionLogger(md))
+                    .build();
+        } else {
+            if (constructorModel1.getModel() == null) {
+                constructorModel1.setModel(md);
+            }
+            if (constructorModel1.getConfig() == null) {
+                constructorModel1.setConfig(cf);
+                String lm = constructorModel1.getLimitName();
+                if (lm != null && !lm.isBlank()) {
+                    cf.setTest_name(lm);
+                }
+            }
+            if (constructorModel1.getLogger() == null) {
+                constructorModel1.setLogger(new FunctionLogger(md));
+            }
+        }
+        MyObjectMapper.update(cf, md);
+        return constructorModel1;
     }
 
     protected <T extends AbsFunction> T createSubItem(Class<T> functionClass, String item) {
@@ -161,13 +162,34 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
                         .model(new Model())
                         .uICell(uICell)
                         .logger(logger)
-                        .configName(config.getTest_name())
-                        .itemName(item)
+                        .configName(config.getItemName())
+                        .limitName(item)
                         .begin(begin)
                         .build(), uICell, false);
         absFunction.functionType = SUB_FUNCTION;
         this.subItems.add(absFunction);
         return (T) absFunction;
+    }
+
+    public final void updateConfigAndResetModel() {
+        FunctionConfig cf = this.configurationManagement.getFunctionConfig(configName, limitName);
+        if (cf != null) {
+            cf.setTest_name(limitName);
+            setConfig(cf);
+        }
+        ItemErrorCode err = this.configurationManagement.getErrorcode(limitName);
+        if (err != null) {
+            setErrorCode(err);
+        } else if (functionType != SYSTEM_FUNCTION
+                && this.configurationManagement.getSettingConfig().isShowMissingErrorcode()) {
+            JOptionPane.showMessageDialog(null, String.format("Missing error code: %s", limitName));
+        }
+    }
+
+    public void setConfig(FunctionConfig config) {
+        MyObjectMapper.copy(config, this.config);
+        MyObjectMapper.update(this.config, this.model);
+        this.model.reset();
     }
 
     protected <T extends AbsFunction> T createElementFunction(Class<T> functionClass) {
@@ -250,12 +272,6 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         return statusCode;
     }
 
-    public void setConfig(FunctionConfig config) {
-        MyObjectMapper.copy(config, this.config);
-        MyObjectMapper.update(this.config, this.model);
-        this.model.reset();
-    }
-
     public void setErrorCode(ItemErrorCode errorCode) {
         MyObjectMapper.copy(errorCode, this.errorCode);
     }
@@ -317,6 +333,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
             addLog(ERROR, ex.getLocalizedMessage());
             ErrorLog.addError(this, String.format("%s - %s",
                     uICell.getName(), ex.getLocalizedMessage()));
+            resultTest = false;
             checkResult();
         } finally {
             end();
@@ -353,27 +370,34 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     }
 
     private void end() {
-        this.statusCode = 2;
-        for (AbsFunction function : subItems) {
-            this.dataCell.addItemFunction(function);
-            if (!function.isPass()) {
-                this.dataCell.addFailedItemFunction(function);
-            }
-        }
-        if (functionType == SIMPLE_FUNCTION && !isPass()) {
-            if (subItems.isEmpty()) {
-                String failApi = this.config.getFailApiName();
-                if (failApi != null && !failApi.isBlank()
-                        && !failApi.equalsIgnoreCase(this.config.getTest_name())) {
-                    // addd default failed API item 
-                    AbsFunction defaulApiItem = createSubItem("VirFunction", failApi);
-                    defaulApiItem.runTest(1);
+        try {
+            for (AbsFunction function : subItems) {
+                this.dataCell.addItemFunction(function);
+                if (!function.isPass()) {
+                    this.dataCell.addFailedItemFunction(function);
                 }
             }
-            this.dataCell.addFailedItemFunction(this);
+            if (functionType == SIMPLE_FUNCTION && !isPass()) {
+                if (subItems.isEmpty()) {
+                    String failApi = this.config.getFailApiName();
+                    if (failApi != null && !failApi.isBlank()
+                            && !failApi.equalsIgnoreCase(this.config.getTest_name())) {
+                        // addd default failed API item 
+                        AbsFunction defaulApiItem = createSubItem("VirFunction", failApi);
+                        defaulApiItem.runTest(1);
+                        this.dataCell.addItemFunction(defaulApiItem);
+                        if (!defaulApiItem.isPass()) {
+                            this.dataCell.addFailedItemFunction(defaulApiItem);
+                        }
+                    }
+                }
+                this.dataCell.addFailedItemFunction(this);
+            }
+            subItems.clear();
+            this.model.setFinishtime(System.currentTimeMillis());
+        } finally {
+            this.statusCode = 2;
         }
-        subItems.clear();
-        this.model.setFinishtime(System.currentTimeMillis());
     }
 
     protected void begin() {
@@ -400,19 +424,11 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     }
 
     public String getBaseItem() {
-        String itemName = model.getTest_name();
-        if (itemName.matches(".+_[0-9]+$")) {
-            return itemName.substring(0, itemName.lastIndexOf("_"));
-        }
-        return itemName;
+        return Common.getBaseItem(model.getTest_name());
     }
 
     public Integer getOrderNumberItem() {
-        String itemName = model.getTest_name();
-        if (itemName.matches(".+_[0-9]+$")) {
-            return Integer.getInteger(itemName.substring(itemName.lastIndexOf("_") + 1).trim());
-        }
-        return null;
+        return Common.getOrderNumberItem(model.getTest_name());
     }
 
     protected boolean isDebugMode() {
@@ -497,18 +513,4 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         return diff;
     }
 
-    public final void updateConfigAndResetModel() {
-        FunctionConfig cf = this.configurationManagement.getFunctionConfig(configName, limitName);
-        if (cf != null) {
-            cf.setTest_name(limitName);
-            setConfig(cf);
-        }
-        ItemErrorCode err = this.configurationManagement.getErrorcode(limitName);
-        if (err != null) {
-            setErrorCode(err);
-        } else if (functionType != SYSTEM_FUNCTION
-                && this.configurationManagement.getSettingConfig().isShowMissingErrorcode()) {
-            JOptionPane.showMessageDialog(null, String.format("Missing error code: %s", limitName));
-        }
-    }
 }

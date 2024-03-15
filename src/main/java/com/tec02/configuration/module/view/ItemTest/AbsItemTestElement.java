@@ -4,7 +4,7 @@
  */
 package com.tec02.configuration.module.view.ItemTest;
 
-import com.tec02.configuration.module.view.AbsTabElement;
+import com.tec02.configuration.module.view.AbsElementTab;
 import com.tec02.configuration.module.view.TabPanel;
 
 /**
@@ -12,10 +12,10 @@ import com.tec02.configuration.module.view.TabPanel;
  * @author Administrator
  * @param <M>
  */
-public abstract class AbsItemTestElement<M> extends AbsTabElement<M>{
-    protected final TabPanel<AbsTabElement> tabPanelParent;
+public abstract class AbsItemTestElement<M> extends AbsElementTab<M>{
+    protected final TabPanel<AbsElementTab> tabPanelParent;
 
-    public AbsItemTestElement(TabPanel<AbsTabElement> tabPanel, String tabName, M model) {
+    public AbsItemTestElement(TabPanel<AbsElementTab> tabPanel, String tabName, M model) {
         super(tabName, model);
         this.tabPanelParent = tabPanel;
     }

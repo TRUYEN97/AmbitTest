@@ -13,6 +13,7 @@ import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FileBaseFunction;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.dataCell.DataCell;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class CreateJsonApi extends AbsBaseFunction {
         addLog(CONFIG, String.format("Follow limit: %s", followLimit));
         addLog(CONFIG, String.format("Use the limit errorcode: %s", limitErrorCode));
         root = getRootJson(limitErrorCode);
-        tests = getTestsDataFollowLomit(isPass(root), followLimit, limitErrorCode);
+        tests = getTestsDataFollowLimit(isPass(root), followLimit, limitErrorCode);
         if (tests == null) {
             return false;
         }
@@ -86,7 +87,7 @@ public class CreateJsonApi extends AbsBaseFunction {
         addLog(PC, "-----------------------------------------");
     }
 
-    private JSONArray getTestsDataFollowLomit(boolean statusTest, boolean followLimit, boolean isUseLimitErrorCode) {
+    private JSONArray getTestsDataFollowLimit(boolean statusTest, boolean followLimit, boolean isUseLimitErrorCode) {
         JSONArray tests = new JSONArray();
         JSONObject itemTest;
         List<String> testKeys = config.getJsonList("TestKeys");
@@ -96,33 +97,33 @@ public class CreateJsonApi extends AbsBaseFunction {
         }
         List<AbsFunction> itemTestDatas = this.dataCell.getFunctions(DataCell.ALL_ITEM);
         int required;
+        List<String> itemsAdded = new ArrayList<>();
         for (AbsFunction absFunction : itemTestDatas) {
-            String itemName = absFunction.getConfig().getTest_name();
+            String itemName = absFunction.getModel().getTest_name();
             if (itemName == null || !absFunction.isDone()) {
                 continue;
             }
             itemTest = absFunction.getData(testKeys, isUseLimitErrorCode);
             if (!followLimit) {
-                if (itemTest == null) {
-                    addLog("PC", "ItemTest: %s = null", itemName);
-                } else {
-                    addLog("PC", "Add to test json: %s", itemName);
+                if (itemTest != null) {
                     tests.add(itemTest);
+                    itemsAdded.add(itemName);
                 }
             } else if (checkLimitContain(limits.keySet(), absFunction)) {
-                required = limits.get(itemName).getRequired();
+                required = absFunction.getConfig().getRequired();
                 if (itemTest != null) {
                     if (!getAll && required == 2 && absFunction.isCancelled()) {
                         continue;
                     }
-                    addLog("PC", "Add to test json: %s", itemName);
                     tests.add(itemTest);
+                    itemsAdded.add(itemName);
                 } else if (required == 1 && statusTest) {
                     addLog("PC", "Missing \"%s\" item test!", itemName);
                     return null;
                 }
             }
         }
+        addLog("PC", "items: %s", itemsAdded);
         return tests;
     }
 

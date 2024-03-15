@@ -10,6 +10,8 @@ package com.tec02.common;
  */
 public final class MyConst {
 
+    public static final String AE_SERVER_NAME = "AE server";
+
     public final class CONFIG {
 
         public static final String MATCH = "MATCH";
@@ -46,9 +48,17 @@ public final class MyConst {
         public static final String ERRORDES = "error_details";
         public static final String FINISH_TIME = "finish_time";
         public static final String PRODUCT = "product";
+        public static final String TEST_ITEM = "test_item";
         public static final String STATION = "station";
+        public static final String HHSN = "hhsn";
         public static final String LINE = "line";
         public static final String STATION_NAME = "station_name";
+        public static final String PASS_COUNT = "pass_count";
+        public static final String FAIL_COUNT = "fail_count";
+        public static final String INPUT_COUNT = "input_count";
+        public static final String TEST_YR = "testYR";
+        public static final String TEST_TIME_MIN = "testTimeMin";
+        public static final String TEST_TIME_SEC = "testTimeSec";
         public static final String STATION_TYPE = "station_type";
         public static final String SERIAL = "serial";
         public static final String ON_SFIS = "onSfis";

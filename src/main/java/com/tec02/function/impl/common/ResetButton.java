@@ -45,7 +45,7 @@ public class ResetButton extends AbsFucnUseTelnetOrCommportConnector {
         int time = this.config.getInteger(TIME, 10);
         try ( ComPort comport = this.baseFunction.getComport()) {
             try ( Telnet telent = this.baseFunction.getTelnet()) {
-                if (!this.baseFunction.sendcommad(comport, startPushCmd, readUntils, time)) {
+                if (!this.baseFunction.sendCommand(comport, startPushCmd)) {
                     return false;
                 }
                 if (!this.analysisBase.isResponseContainKeyAndShow(telent,
@@ -53,7 +53,7 @@ public class ResetButton extends AbsFucnUseTelnetOrCommportConnector {
                     return false;
                 }
             } finally {
-                this.baseFunction.sendcommad(comport, endPushCmds, readUntils, time);
+                this.baseFunction.sendCommad(comport, endPushCmds, readUntils, time);
             }
             setResult(spec);
             return true;

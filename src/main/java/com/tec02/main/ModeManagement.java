@@ -10,7 +10,9 @@ import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.model.itemTest.ModeDto;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
@@ -20,20 +22,24 @@ import lombok.NonNull;
  *
  * @author Administrator
  */
-public class ModeManagement {
-
+public final class ModeManagement {
+    
     private static volatile ModeManagement instance;
     private final ConfigurationManagement configurationManagement;
     private ModeDto modeDto;
     private ItemTestDto itemTestDto;
     private String currentModeName;
     private JComboBox<String> comboBox;
-
+    
     private ModeManagement() {
         this.configurationManagement = ConfigurationManagement.getInstance();
         this.itemTestDto = this.configurationManagement.getItemTestConfig().getModel();
+        var modeNames = this.itemTestDto.getConfig().getModes();
+        if (modeNames != null && !modeNames.isEmpty()) {
+            setModeName(modeNames.get(0).getModeName());
+        }
     }
-
+    
     public static ModeManagement getInsatace() {
         ModeManagement ins = ModeManagement.instance;
         if (ins == null) {
@@ -46,26 +52,16 @@ public class ModeManagement {
         }
         return ins;
     }
-
+    
     public List<String> getModeNames() {
-        List<String> modes = new ArrayList<>();
-        for (String itemName : itemTestDto.getApply()) {
-            if (isApplyMode(itemName)) {
-                modes.add(itemName);
-            }
-        }
-        return modes;
+        return itemTestDto.getConfig().getModes().stream().map((t) -> {
+            return t.getModeName();
+        }).collect(Collectors.toList());
     }
-
-    private boolean isApplyMode(String modeName) {
-        return modeName != null
-                && itemTestDto.getApply().contains(modeName)
-                && itemTestDto.getConfig().getModes().containsKey(modeName);
-    }
-
+    
     public boolean setModeName(String modeName) {
         ItemTestDto dto = this.configurationManagement.getItemTestConfig().getModel();
-        if (dto == null || !isApplyMode(modeName)) {
+        if (dto == null) {
             return false;
         }
         ModeDto mDto = dto.getConfig().getMode(modeName);
@@ -84,15 +80,18 @@ public class ModeManagement {
         this.modeDto = dto.getConfig().getMode(modeName);
         return true;
     }
-
+    
     public String getCurrentModeName() {
         return currentModeName;
     }
-
+    
     public synchronized ModeFlow getModeFlow() {
+        if (modeDto == null) {
+            return null;
+        }
         return new ModeFlow(modeDto, itemTestDto, currentModeName);
     }
-
+    
     @NonNull
     public void setComboBox(JComboBox<String> cbbModeTest) {
         this.comboBox = cbbModeTest;
@@ -113,7 +112,7 @@ public class ModeManagement {
             System.exit(0);
         }
     }
-
+    
     private boolean isChosseModeOk() {
         for (String modeName : getModeNames()) {
             this.comboBox.setSelectedItem(modeName);

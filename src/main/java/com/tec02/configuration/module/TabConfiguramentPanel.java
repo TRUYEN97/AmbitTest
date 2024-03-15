@@ -50,7 +50,7 @@ public class TabConfiguramentPanel extends javax.swing.JPanel {
         for (AbsModule module : modules) {
             module.refesh();
             this.pnTab.addTab(module.getName(), module.getView());  
-        }    
+        } 
     }
 
     /**
@@ -96,7 +96,7 @@ public class TabConfiguramentPanel extends javax.swing.JPanel {
                 .addComponent(btRefesh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btUpdate)
-                .addContainerGap(371, Short.MAX_VALUE))
+                .addContainerGap(594, Short.MAX_VALUE))
             .addComponent(pnTab)
         );
         layout.setVerticalGroup(
@@ -107,7 +107,7 @@ public class TabConfiguramentPanel extends javax.swing.JPanel {
                     .addComponent(btRefesh)
                     .addComponent(btUpdate))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnTab, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
+                .addComponent(pnTab, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -118,7 +118,7 @@ public class TabConfiguramentPanel extends javax.swing.JPanel {
 
     private void btUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUpdateActionPerformed
         // TODO add your handling code here:
-        this.management.updateModel();
+        this.management.update();
     }//GEN-LAST:event_btUpdateActionPerformed
 
   

@@ -9,6 +9,7 @@ import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.model.FunctionConstructorModel;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -22,7 +23,7 @@ public class CheckProduct extends AbsFunction {
 
     @Override
     protected boolean test() {
-        List<JSONObject> elems = this.config.getJsonList("elems");
+        List<Map> elems = this.config.getJsonList("elems");
         if (elems == null || elems.isEmpty()) {
             addLog("PC", "Nothing to check!");
             return true;
@@ -30,7 +31,7 @@ public class CheckProduct extends AbsFunction {
         addLog(PC, "key - value - type - target");
         addLog(PC, "......................................");
         ConditionModel md;
-        for (JSONObject elem : elems) {
+        for (Map elem : elems) {
             md = new ConditionModel(elem);
             String key = md.getKey();
             String target = md.getTarget();

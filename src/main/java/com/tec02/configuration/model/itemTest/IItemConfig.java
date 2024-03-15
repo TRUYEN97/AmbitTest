@@ -16,6 +16,10 @@ public interface IItemConfig {
     int getTime_out();
 
     int getRetry();
+    
+    String getTest_name();
+    
+    String getItemName();
 
     boolean isMulti();
 

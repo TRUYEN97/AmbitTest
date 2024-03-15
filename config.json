@@ -9,20 +9,25 @@
     "product" : "Trieste",
     "row" : 1,
     "showMissingErrorocode" : true,
-    "station" : "RUNIN",
+    "station" : "MBLT",
     "view" : "BigUI"
   },
   "Socket" : {
     "clients" : {
+      "AE server" : {
+        "flag" : true,
+        "host" : "10.90.101.236",
+        "port" : 55566
+      },
       "store" : {
         "flag" : true,
         "host" : "127.0.0.1",
         "port" : 5000
       },
       "camera" : {
-        "flag" : false,
+        "flag" : true,
         "host" : "127.0.0.1",
-        "port" : 6026
+        "port" : 60026
       }
     },
     "server" : {
@@ -31,33 +36,32 @@
     }
   },
   "ItemTest" : {
-    "apply" : [ "Production", "Debug" ],
     "config" : {
-      "limit" : "cd python && eero_api_limits_Trieste.py mblt",
-      "modes" : {
-        "Production" : {
-          "group" : "init",
-          "loop" : 1,
-          "mode" : "production",
-          "password" : ""
-        },
-        "Debug" : {
-          "group" : "init-debug",
-          "loop" : 1,
-          "mode" : "debug",
-          "password" : ""
-        }
-      }
+      "limitCmd" : "cd python && eero_api_limits_Trieste.py mblt",
+      "limitDir" : "\\.\\python\\limits.json",
+      "modes" : [ {
+        "apiModeName" : "production",
+        "group" : "init",
+        "loop" : 1,
+        "modeName" : "Production",
+        "password" : ""
+      }, {
+        "apiModeName" : "debug",
+        "group" : "init-debug",
+        "loop" : 1,
+        "modeName" : "Debug",
+        "password" : ""
+      } ]
     },
     "groups" : {
       "init" : {
-        "begin" : -1,
+        "begin" : 1,
         "coreGroup" : false,
         "failColor" : [ 170, 0, 200 ],
         "failedTo" : "",
-        "items" : [ "CheckTime", "gen_node", "CheckProduct", "mac" ],
-        "loop" : 1,
-        "modeRun" : 1,
+        "items" : [ "CheckTime", "gen_node", "nodeproperty_mac", "nodeproperty_unit_part_number" ],
+        "loop" : 3,
+        "modeRun" : 2,
         "passTo" : "pws",
         "testColor" : [ 255, 255, 0 ]
       },
@@ -73,20 +77,20 @@
         "testColor" : [ 255, 255, 0 ]
       },
       "init-debug" : {
-        "begin" : -1,
+        "begin" : 3,
         "coreGroup" : false,
         "failColor" : [ 170, 0, 200 ],
         "failedTo" : "",
-        "items" : [ "CheckTime", "gen_node_debug", "mac" ],
+        "items" : [ "CheckTime", "*G-init", "gen_node_debug", "nodeproperty_mac", "nodeproperty_unit_part_number" ],
         "loop" : 1,
-        "modeRun" : 1,
+        "modeRun" : 2,
         "passTo" : "pws",
         "testColor" : [ 255, 255, 0 ]
       },
       "final" : {
         "begin" : -1,
         "coreGroup" : false,
-        "failColor" : [ 0, 204, 0 ],
+        "failColor" : [ 0, 204, 153 ],
         "failedTo" : "",
         "items" : [ "UpLogFTP", "upTeAPI" ],
         "loop" : 1,
@@ -99,7 +103,7 @@
         "coreGroup" : false,
         "failColor" : [ 255, 0, 0 ],
         "failedTo" : "final",
-        "items" : [ "upAPI" ],
+        "items" : [ "upAPI", "SendToSfis" ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "final",
@@ -120,7 +124,7 @@
         "begin" : -1,
         "coreGroup" : true,
         "failColor" : [ 255, 0, 0 ],
-        "failedTo" : "end",
+        "failedTo" : "final",
         "items" : [ "fixtureOpen" ],
         "loop" : 1,
         "modeRun" : 3,
@@ -129,32 +133,6 @@
       }
     },
     "items" : {
-      "gen_node" : {
-        "alwaysRun" : false,
-        "bonus" : {
-          "data_format" : [ "mlbsn", "ethernetmac", "pnname", "model" ],
-          "send_format_fail" : [ "sn", "pcname", "status", "errorcode" ],
-          "send_final" : false,
-          "MaxLength" : -1,
-          "send_format" : [ "sn", "pcname" ],
-          "url" : "http://10.90.100.20/sfcapi/api/connect"
-        },
-        "check_spec" : true,
-        "debugCancellCheckSpec" : false,
-        "debugCancellRun" : false,
-        "fail_continue" : false,
-        "function" : "SfisFunction",
-        "itemName" : "gen_node",
-        "limit_type" : "BOOL",
-        "lower_limit" : "",
-        "modeRun" : 1,
-        "multi" : false,
-        "retry" : 0,
-        "test_name" : "gen_node",
-        "time_out" : 100,
-        "upper_limit" : "",
-        "wait_multi_done" : true
-      },
       "eth0_speed_valid" : {
         "alwaysRun" : false,
         "bonus" : {
@@ -183,6 +161,33 @@
         "time_out" : 20,
         "upper_limit" : "",
         "wait_multi_done" : false
+      },
+      "gen_node" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "data_format" : [ "mlbsn", "ethernetmac", "pnname", "model" ],
+          "send_format_fail" : [ "sn", "pcname", "status", "errorcode" ],
+          "send_final" : false,
+          "MaxLength" : -1,
+          "send_format" : [ "sn", "pcname" ],
+          "url" : "http://10.90.100.20/sfcapi/api/connect"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "SfisFunction",
+        "itemName" : "gen_node",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 1,
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "gen_node",
+        "time_out" : 100,
+        "upper_limit" : "",
+        "wait_multi_done" : true
       },
       "led_model" : {
         "alwaysRun" : false,
@@ -371,6 +376,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "usb_fw",
         "fail_continue" : false,
         "function" : "CheckDutUsb",
         "itemName" : "CHECK_DUT_USB",
@@ -433,7 +439,7 @@
         "alwaysRun" : false,
         "bonus" : {
           "compare" : "",
-          "Regex" : "[0-9+]",
+          "Regex" : "[0-9]+",
           "IP" : "192.168.1.1",
           "Startkey" : "",
           "Time" : 10,
@@ -455,30 +461,6 @@
         "retry" : 2,
         "test_name" : "nodeproperty_board_register_value",
         "time_out" : 20,
-        "upper_limit" : "",
-        "wait_multi_done" : false
-      },
-      "dut_ping" : {
-        "alwaysRun" : false,
-        "bonus" : {
-          "IP" : "192.168.1.1",
-          "time_ping" : 120,
-          "nonDHCP" : false,
-          "keepPing" : false
-        },
-        "check_spec" : true,
-        "debugCancellCheckSpec" : false,
-        "debugCancellRun" : false,
-        "fail_continue" : false,
-        "function" : "Dutping",
-        "itemName" : "dut_ping",
-        "limit_type" : "BOOL",
-        "lower_limit" : "",
-        "modeRun" : 3,
-        "multi" : false,
-        "retry" : 1,
-        "test_name" : "dut_ping",
-        "time_out" : 140,
         "upper_limit" : "",
         "wait_multi_done" : false
       },
@@ -518,6 +500,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "led_b_r",
         "fail_continue" : false,
         "function" : "LedTest",
         "itemName" : "LED_B",
@@ -528,6 +511,30 @@
         "retry" : 2,
         "test_name" : "LED_B",
         "time_out" : 20,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "dut_ping" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "IP" : "192.168.1.1",
+          "time_ping" : 120,
+          "nonDHCP" : false,
+          "keepPing" : false
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "Dutping",
+        "itemName" : "dut_ping",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 1,
+        "test_name" : "dut_ping",
+        "time_out" : 140,
         "upper_limit" : "",
         "wait_multi_done" : false
       },
@@ -682,6 +689,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "led_r_r",
         "fail_continue" : false,
         "function" : "LedTest",
         "itemName" : "LED_R",
@@ -817,6 +825,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "",
         "fail_continue" : false,
         "function" : "SfisFunction",
         "itemName" : "SendToSfis",
@@ -824,7 +833,7 @@
         "lower_limit" : "",
         "modeRun" : 1,
         "multi" : false,
-        "retry" : 0,
+        "retry" : 1,
         "test_name" : "SendToSfis",
         "time_out" : 100,
         "upper_limit" : "",
@@ -858,36 +867,6 @@
         "multi" : false,
         "retry" : 1,
         "test_name" : "i_tp524_vdd_3v3_openshort",
-        "time_out" : 30,
-        "upper_limit" : "",
-        "wait_multi_done" : false
-      },
-      "i_ubootidle" : {
-        "alwaysRun" : false,
-        "bonus" : {
-          "FixtureWait" : 20,
-          "startKey" : "=",
-          "regex" : "",
-          "endKey" : "",
-          "FixtureBaudRate" : 115200,
-          "FixtureKeys" : [ "IO_OK", "OK" ],
-          "FixtureRetryCmds" : [ ],
-          "FixtureCom" : "COM5",
-          "cmd" : "AT+VBUS_CUR%",
-          "ratio" : 1000
-        },
-        "check_spec" : true,
-        "debugCancellCheckSpec" : false,
-        "debugCancellRun" : false,
-        "fail_continue" : false,
-        "function" : "UbootidleTestFixture",
-        "itemName" : "i_ubootidle",
-        "limit_type" : "BOOL",
-        "lower_limit" : "",
-        "modeRun" : 3,
-        "multi" : false,
-        "retry" : 1,
-        "test_name" : "i_ubootidle",
         "time_out" : 30,
         "upper_limit" : "",
         "wait_multi_done" : false
@@ -928,6 +907,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "led_g_r",
         "fail_continue" : false,
         "function" : "LedTest",
         "itemName" : "LED_G",
@@ -938,6 +918,36 @@
         "retry" : 2,
         "test_name" : "LED_G",
         "time_out" : 20,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "i_ubootidle" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "FixtureWait" : 20,
+          "startKey" : "=",
+          "regex" : "",
+          "endKey" : "",
+          "FixtureBaudRate" : 115200,
+          "FixtureKeys" : [ "IO_OK", "OK" ],
+          "FixtureRetryCmds" : [ ],
+          "FixtureCom" : "COM5",
+          "cmd" : "AT+VBUS_CUR%",
+          "ratio" : 1000
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "UbootidleTestFixture",
+        "itemName" : "i_ubootidle",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 1,
+        "test_name" : "i_ubootidle",
+        "time_out" : 30,
         "upper_limit" : "",
         "wait_multi_done" : false
       },
@@ -971,29 +981,24 @@
         "upper_limit" : "",
         "wait_multi_done" : false
       },
-      "sn_ok" : {
+      "nodeproperty_mac" : {
         "alwaysRun" : false,
         "bonus" : {
-          "compare" : "mlbsn",
-          "IP" : "192.168.1.1",
-          "Startkey" : "serial=",
-          "Time" : 40,
-          "type" : "telnet",
-          "ReadUntil" : "root@eero-test:/#",
-          "command" : "fw_printenv  serial"
+          "key" : "ethernetmac"
         },
         "check_spec" : true,
-        "debugCancellCheckSpec" : true,
+        "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "",
         "fail_continue" : false,
-        "function" : "CheckDutCompare",
-        "itemName" : "sn_ok",
+        "function" : "GetSfisAndCompareSpec",
+        "itemName" : "nodeproperty_mac",
         "limit_type" : "BOOL",
         "lower_limit" : "",
         "modeRun" : 3,
         "multi" : false,
-        "retry" : 2,
-        "test_name" : "sn_ok",
+        "retry" : 0,
+        "test_name" : "nodeproperty_mac",
         "time_out" : 60,
         "upper_limit" : "",
         "wait_multi_done" : false
@@ -1018,6 +1023,33 @@
         "retry" : 1,
         "test_name" : "CheckTestConditions",
         "time_out" : 2147483647,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "sn_ok" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "compare" : "mlbsn",
+          "IP" : "192.168.1.1",
+          "Startkey" : "serial=",
+          "Time" : 40,
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : "fw_printenv  serial"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : true,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "CheckDutCompare",
+        "itemName" : "sn_ok",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 2,
+        "test_name" : "sn_ok",
+        "time_out" : 60,
         "upper_limit" : "",
         "wait_multi_done" : false
       },
@@ -1113,6 +1145,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "led_w_r",
         "fail_continue" : false,
         "function" : "LedTest",
         "itemName" : "LED_W",
@@ -1134,12 +1167,13 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "",
         "fail_continue" : false,
         "function" : "GetSfisAndCompareSpec",
         "itemName" : "mac",
         "limit_type" : "BOOL",
         "lower_limit" : "",
-        "modeRun" : 1,
+        "modeRun" : 3,
         "multi" : false,
         "retry" : 0,
         "test_name" : "mac",
@@ -1258,31 +1292,6 @@
         "upper_limit" : "",
         "wait_multi_done" : false
       },
-      "reboot_soft" : {
-        "alwaysRun" : false,
-        "bonus" : {
-          "times" : 3,
-          "IP" : "192.168.1.1",
-          "pingTimes" : 300,
-          "ReadUntil" : "root@eero-test:/#",
-          "waitTime" : 40
-        },
-        "check_spec" : true,
-        "debugCancellCheckSpec" : false,
-        "debugCancellRun" : false,
-        "fail_continue" : false,
-        "function" : "RebootSoft",
-        "itemName" : "reboot_soft",
-        "limit_type" : "BOOL",
-        "lower_limit" : "",
-        "modeRun" : 3,
-        "multi" : false,
-        "retry" : 1,
-        "test_name" : "reboot_soft",
-        "time_out" : 350,
-        "upper_limit" : "",
-        "wait_multi_done" : false
-      },
       "ReleasePowerSwitchOutlet" : {
         "alwaysRun" : true,
         "bonus" : {
@@ -1309,6 +1318,31 @@
         "upper_limit" : "",
         "wait_multi_done" : false
       },
+      "reboot_soft" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "times" : 3,
+          "IP" : "192.168.1.1",
+          "pingTimes" : 300,
+          "ReadUntil" : "root@eero-test:/#",
+          "waitTime" : 40
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "RebootSoft",
+        "itemName" : "reboot_soft",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 1,
+        "test_name" : "reboot_soft",
+        "time_out" : 350,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
       "VOLTAGE_TEST" : {
         "alwaysRun" : false,
         "bonus" : {
@@ -1324,6 +1358,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "v_tp10_dvdd3.3",
         "fail_continue" : false,
         "function" : "VoltageTest",
         "itemName" : "VOLTAGE_TEST",
@@ -1353,12 +1388,13 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "",
         "fail_continue" : false,
         "function" : "UpAPI",
         "itemName" : "upAPI",
         "limit_type" : "BOOL",
         "lower_limit" : "",
-        "modeRun" : 2,
+        "modeRun" : 1,
         "multi" : false,
         "retry" : 3,
         "test_name" : "upAPI",
@@ -1373,7 +1409,7 @@
             "type" : "equal",
             "message" : "Sản phẩm không phải là: 810-01100!",
             "key" : "pnname",
-            "target" : "810-01100"
+            "target" : "820-01100"
           }, {
             "type" : "equal",
             "message" : "Sản phẩm không phải là hàng Production!",
@@ -1394,12 +1430,13 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "",
         "fail_continue" : false,
         "function" : "CheckProduct",
         "itemName" : "CheckProduct",
         "limit_type" : "BOOL",
         "lower_limit" : "",
-        "modeRun" : 1,
+        "modeRun" : 3,
         "multi" : false,
         "retry" : 0,
         "test_name" : "CheckProduct",
@@ -1435,7 +1472,7 @@
         "multi" : false,
         "retry" : 1,
         "test_name" : "eth1_speed_rx",
-        "time_out" : 30,
+        "time_out" : 20,
         "upper_limit" : "",
         "wait_multi_done" : true
       },
@@ -1448,6 +1485,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "",
         "fail_continue" : false,
         "function" : "CheckTime",
         "itemName" : "CheckTime",
@@ -1717,7 +1755,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
-        "failApiName" : "",
+        "failApiName" : "emmc_speed_read",
         "fail_continue" : false,
         "function" : "EmmcWriteRead",
         "itemName" : "MMC_READ_WRITE_SPEED_TEST",
@@ -1731,29 +1769,25 @@
         "upper_limit" : "",
         "wait_multi_done" : false
       },
-      "wps_ok" : {
+      "nodeproperty_unit_part_number" : {
         "alwaysRun" : false,
         "bonus" : {
-          "password" : "1234",
-          "Command" : [ "off", "on" ],
-          "Times" : 1,
-          "host" : "192.168.1.10",
-          "user" : "admin",
-          "Delay" : [ 5, 5 ]
+          "key" : "pnname"
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "",
         "fail_continue" : false,
-        "function" : "PowerSwitchFunc",
-        "itemName" : "wps_ok",
+        "function" : "GetSfisAndCompareSpec",
+        "itemName" : "nodeproperty_unit_part_number",
         "limit_type" : "BOOL",
         "lower_limit" : "",
         "modeRun" : 3,
         "multi" : false,
         "retry" : 0,
-        "test_name" : "wps_ok",
-        "time_out" : 30,
+        "test_name" : "nodeproperty_unit_part_number",
+        "time_out" : 60,
         "upper_limit" : "",
         "wait_multi_done" : false
       },
@@ -1783,6 +1817,32 @@
         "retry" : 2,
         "test_name" : "mmc_model",
         "time_out" : 20,
+        "upper_limit" : "",
+        "wait_multi_done" : false
+      },
+      "wps_ok" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "password" : "1234",
+          "Command" : [ "off", "on" ],
+          "Times" : 1,
+          "host" : "192.168.1.10",
+          "user" : "admin",
+          "Delay" : [ 5, 5 ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "PowerSwitchFunc",
+        "itemName" : "wps_ok",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 0,
+        "test_name" : "wps_ok",
+        "time_out" : 30,
         "upper_limit" : "",
         "wait_multi_done" : false
       },
@@ -1837,35 +1897,6 @@
         "upper_limit" : "",
         "wait_multi_done" : false
       },
-      "usb_bside" : {
-        "alwaysRun" : false,
-        "bonus" : {
-          "FixtureWait" : 20,
-          "DutWait" : 2,
-          "FixtureBaudRate" : 115200,
-          "FixtureKeys" : [ "OK" ],
-          "FixtureRetryCmds" : [ "AT+CC_BOFF%", "AT+VBUS_BOFF%", "AT+PORTEJECT%", "AT+PORTINSERT%" ],
-          "FixtureCmds" : [ "AT+CC_AOFF%", "AT+VBUS_AOFF%", "AT+CC_BON%", "AT+VBUS_BON%" ],
-          "FixtureCom" : "COM5",
-          "DutBaudRate" : 115200,
-          "DutCom" : "COM4"
-        },
-        "check_spec" : true,
-        "debugCancellCheckSpec" : false,
-        "debugCancellRun" : false,
-        "fail_continue" : false,
-        "function" : "Usbside",
-        "itemName" : "usb_bside",
-        "limit_type" : "BOOL",
-        "lower_limit" : "",
-        "modeRun" : 3,
-        "multi" : false,
-        "retry" : 2,
-        "test_name" : "usb_bside",
-        "time_out" : 20,
-        "upper_limit" : "",
-        "wait_multi_done" : false
-      },
       "LED_OFF" : {
         "alwaysRun" : false,
         "bonus" : {
@@ -1902,6 +1933,7 @@
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
+        "failApiName" : "led_off_r",
         "fail_continue" : false,
         "function" : "LedTest",
         "itemName" : "LED_OFF",
@@ -1944,6 +1976,35 @@
         "time_out" : 15,
         "upper_limit" : "",
         "wait_multi_done" : true
+      },
+      "usb_bside" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "FixtureWait" : 20,
+          "DutWait" : 2,
+          "FixtureBaudRate" : 115200,
+          "FixtureKeys" : [ "OK" ],
+          "FixtureRetryCmds" : [ "AT+CC_BOFF%", "AT+VBUS_BOFF%", "AT+PORTEJECT%", "AT+PORTINSERT%" ],
+          "FixtureCmds" : [ "AT+CC_AOFF%", "AT+VBUS_AOFF%", "AT+CC_BON%", "AT+VBUS_BON%" ],
+          "FixtureCom" : "COM5",
+          "DutBaudRate" : 115200,
+          "DutCom" : "COM4"
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "Usbside",
+        "itemName" : "usb_bside",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 2,
+        "test_name" : "usb_bside",
+        "time_out" : 20,
+        "upper_limit" : "",
+        "wait_multi_done" : false
       },
       "eth0_speed_rx" : {
         "alwaysRun" : false,
@@ -1994,34 +2055,6 @@
         "upper_limit" : "",
         "wait_multi_done" : false
       },
-      "test_image_version" : {
-        "alwaysRun" : false,
-        "bonus" : {
-          "compare" : "",
-          "IP" : "192.168.1.1",
-          "Startkey" : "Ambit test image version:V",
-          "Time" : 40,
-          "type" : "telnet",
-          "ReadUntil" : "root@eero-test:/#",
-          "command" : "fwversion",
-          "Endkey" : ""
-        },
-        "check_spec" : true,
-        "debugCancellCheckSpec" : false,
-        "debugCancellRun" : false,
-        "fail_continue" : false,
-        "function" : "CheckDutCompare",
-        "itemName" : "test_image_version",
-        "limit_type" : "BOOL",
-        "lower_limit" : "",
-        "modeRun" : 3,
-        "multi" : false,
-        "retry" : 2,
-        "test_name" : "test_image_version",
-        "time_out" : 60,
-        "upper_limit" : "",
-        "wait_multi_done" : false
-      },
       "emmc_badblocks" : {
         "alwaysRun" : false,
         "bonus" : {
@@ -2050,9 +2083,36 @@
         "time_out" : 800,
         "upper_limit" : "",
         "wait_multi_done" : false
+      },
+      "test_image_version" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "compare" : "",
+          "IP" : "192.168.1.1",
+          "Startkey" : "Ambit test image version:V",
+          "Time" : 40,
+          "type" : "telnet",
+          "ReadUntil" : "root@eero-test:/#",
+          "command" : "fwversion",
+          "Endkey" : ""
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "fail_continue" : false,
+        "function" : "CheckDutCompare",
+        "itemName" : "test_image_version",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 2,
+        "test_name" : "test_image_version",
+        "time_out" : 60,
+        "upper_limit" : "",
+        "wait_multi_done" : false
       }
-    },
-    "limits" : { }
+    }
   },
   "Dhcp" : {
     "leaseTime" : 604800,

@@ -4,12 +4,11 @@
  */
 package com.tec02.configuration.module.view.ItemTest.group;
 
-import com.tec02.configuration.model.itemTest.ItemGroupDto;
 import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.module.view.AbsHasTabPanel;
-import com.tec02.configuration.module.view.AbsTabElement;
+import com.tec02.configuration.module.view.AbsElementTab;
 import com.tec02.configuration.module.view.TabPanel;
-import java.util.HashMap;
+import java.awt.event.KeyEvent;
 import java.util.Map;
 import javax.swing.JTabbedPane;
 
@@ -17,7 +16,7 @@ import javax.swing.JTabbedPane;
  *
  * @author Administrator
  */
-public class GroupPanel extends AbsTabElement<ItemTestDto> {
+public class GroupPanel extends AbsElementTab<ItemTestDto> {
 
     private final AbsHasTabPanel hasTabPanel;
 
@@ -29,16 +28,12 @@ public class GroupPanel extends AbsTabElement<ItemTestDto> {
     public GroupPanel(String tabName) {
         super(tabName, new ItemTestDto());
         initComponents();
-        hasTabPanel = new AbsHasTabPanel<ItemTestDto, GroupElementPanel>(JTabbedPane.LEFT) {
+        this.hasTabPanel = new AbsHasTabPanel<ItemTestDto, GroupElementPanel>(JTabbedPane.LEFT) {
             @Override
             protected GroupElementPanel createTabPanel(String name) {
-                ItemGroupDto groupDto = model.getGroups().get(name);
-                if (groupDto == null) {
-                    groupDto = new ItemGroupDto();
-                }
-                GroupElementPanel elementPanel =  new GroupElementPanel(name, groupDto);
-                elementPanel.setTabPanelParent(getTabPanelParent());
-                elementPanel.setModelParent(model);
+                GroupElementPanel elementPanel = new GroupElementPanel(name, model);
+                elementPanel.setTabParentPanel(tabParentPanel);
+                elementPanel.setCurremtTabPanel(this.getTabPanel());
                 return elementPanel;
             }
 
@@ -55,19 +50,23 @@ public class GroupPanel extends AbsTabElement<ItemTestDto> {
 
             @Override
             public void update() {
-                Map<String, ItemGroupDto> modes = new HashMap<>();
-                model.setGroups(modes);
                 for (GroupElementPanel modePanel : getTabPanel().getTabElements().values()) {
                     modePanel.update();
-                    modes.put(modePanel.getTabName(), modePanel.getModel());
                 }
             }
         };
+        this.hasTabPanel.setActionKeyPressed((input) -> {
+            if (input instanceof KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_DELETE) {
+                    this.model.getGroups().remove(this.hasTabPanel.deleteTabSelected());
+                }
+            }
+        });
         this.add(this.hasTabPanel);
     }
 
     public TabPanel getTabPanelParent() {
-        return tabPanelParent;
+        return tabParentPanel;
     }
 
     public AbsHasTabPanel getHasTabPanel() {
@@ -98,10 +97,6 @@ public class GroupPanel extends AbsTabElement<ItemTestDto> {
     }
 
     @Override
-    public void tabUpdate() {
-    }
-
-    @Override
     public ItemTestDto getModel() {
         return model;
     }
@@ -116,9 +111,8 @@ public class GroupPanel extends AbsTabElement<ItemTestDto> {
 
     @Override
     public void tabSelected() {
-        for (GroupElementPanel elementPanel : getTabElements().values()) {
-            elementPanel.refesh();
-        }
+        this.hasTabPanel.update();
+        this.hasTabPanel.refesh();
     }
 
 

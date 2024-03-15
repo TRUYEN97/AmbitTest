@@ -5,6 +5,7 @@
 package com.tec02.function.impl.mblt;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
+import com.tec02.common.Common;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
@@ -33,7 +34,7 @@ public class SetENV extends AbsFucnUseTelnetOrCommportConnector {
                 return false;
             }
             String readUntil = config.getString(READ_UNTIL);
-            return this.analysisBase.isResponseContainKeyAndShow(communicate, 
+            return this.analysisBase.isResponseContainKeyAndShow(communicate,
                     config.getString(SPEC, readUntil), readUntil,
                     new TimeS(config.getInteger(TIME, 10)));
         } catch (Exception e) {
@@ -54,9 +55,9 @@ public class SetENV extends AbsFucnUseTelnetOrCommportConnector {
         }
         String key;
         String value;
-        List<String> groups = this.analysisBase.findGroups(command, "\\{\\w+\\}");
+        List<String> groups = Common.findGroups(command, "\\{\\w+\\}");
         for (String group : groups) {
-            key = group.replaceFirst("\\{|\\}", "");
+            key = group.replaceAll("\\{", "").replaceAll("\\}", "");
             if (key.isBlank()) {
                 continue;
             }
@@ -65,7 +66,9 @@ public class SetENV extends AbsFucnUseTelnetOrCommportConnector {
             if (value == null) {
                 return null;
             }
-            command = command.replaceAll(group, value);
+            command = command.replaceAll(group.replaceAll("\\{", "\\\\{")
+                    .replaceAll("\\}", "\\\\}"),
+                     value);
         }
         return command;
     }

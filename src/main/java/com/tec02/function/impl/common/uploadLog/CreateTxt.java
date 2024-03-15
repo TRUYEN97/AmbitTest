@@ -14,6 +14,8 @@ import com.tec02.main.dataCell.DataCell;
 import com.tec02.mylogger.MyLogger;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -44,13 +46,15 @@ public class CreateTxt extends AbsBaseFunction {
             loger.clear();
             createInfo(loger);
             int id = 0;
+            List<String> itemLogs = new ArrayList<>();
             for (AbsFunction dataBox : this.dataCell.getFunctions(DataCell.JUST_PARENT_ITEM)) {
                 loger.add(String.format("//////////////////////////- ID[%s] -//////////////////////////\r\n", id++));
-                addLog(PC, " - add item log: " + dataBox.getModel().getTest_name());
+                itemLogs.add(dataBox.getModel().getTest_name());
                 String log = dataBox.getLogger().getLog();
                 loger.add(log == null ? "\r\n" : log);
                 loger.add("\r\n//////////////////////////////////////////////////////////////\r\n");
             }
+            addLog(PC, "Item logs: \"%s\"", itemLogs);
             addLog(PC, "Save file txt at \"%s\"", logPath);
             return true;
         } catch (Exception e) {
@@ -72,7 +76,7 @@ public class CreateTxt extends AbsBaseFunction {
             loger.add(String.format("Local error code = %s\r\n", this.dataCell.getString(MyConst.MODEL.ERRORCODE)));
             loger.add(String.format("Error description = %s\r\n", this.dataCell.getString(MyConst.MODEL.ERRORDES)));
         }
-        loger.add(String.format("Test time = %.3f s\r\n", this.dataCell.getCycleTestTime()/1000.0));
+        loger.add(String.format("Test time = %.3f s\r\n", this.dataCell.getCycleTestTime() / 1000.0));
         loger.add(String.format("Station = %s\r\n", this.dataCell.getString(MyConst.MODEL.PCNAME)));
         loger.add(String.format("Location = %s\r\n", this.dataCell.getString(MyConst.MODEL.POSITION)));
         loger.add(String.format("HHSN = %s\r\n", this.dataCell.getString(MyConst.SFIS.SN)));

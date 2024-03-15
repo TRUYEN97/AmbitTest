@@ -6,7 +6,6 @@ package com.tec02.view.managerUI;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.main.Core;
-import com.tec02.main.ItemFunciton.ItemFunctionFactory;
 import com.tec02.main.ModeManagement;
 import com.tec02.main.UICellTester;
 import com.tec02.main.dataCell.DataCell;

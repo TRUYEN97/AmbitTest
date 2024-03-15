@@ -39,7 +39,7 @@ public class OpenShort extends AbsSendRetryCommand {
     @Override
     protected boolean testfunc() {
         String md = this.dataCell.getString("model");
-        if(md != null && md.equalsIgnoreCase("REVERT")){
+        if (md != null && md.equalsIgnoreCase("REVERT")) {
             setCancel();
             return true;
         }
@@ -70,8 +70,8 @@ public class OpenShort extends AbsSendRetryCommand {
                 }
                 return false;
             } finally {
-                addLog("PC", "Reset DUT - %s", 
-                        comport.insertCommand("reset") && comport.insertCommand("reboot"));
+                comport.insertCommand("reset");
+                comport.insertCommand("reboot");
             }
         } catch (Exception e) {
             e.printStackTrace();

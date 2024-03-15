@@ -6,7 +6,7 @@ package com.tec02.configuration.module.view.ItemTest.config;
 
 import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.model.itemTest.ModeDto;
-import com.tec02.configuration.module.view.AbsTabElement;
+import com.tec02.configuration.module.view.AbsElementTab;
 import com.tec02.configuration.module.view.ItemTest.AbsItemTestElement;
 import com.tec02.configuration.module.view.ItemTest.group.GroupPanel;
 import com.tec02.configuration.module.view.TabPanel;
@@ -19,7 +19,7 @@ public class ModePanel extends AbsItemTestElement<ModeDto> {
 
     private final ItemTestDto itemTestDto;
 
-    public ModePanel(String tabName, ModeDto modeDto, ItemTestDto itemTestDto, TabPanel<AbsTabElement> tabPanel) {
+    public ModePanel(String tabName, ModeDto modeDto, ItemTestDto itemTestDto, TabPanel<AbsElementTab> tabPanel) {
         super(tabPanel, tabName, modeDto);
         initComponents();
         this.itemTestDto = itemTestDto;
@@ -35,17 +35,19 @@ public class ModePanel extends AbsItemTestElement<ModeDto> {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        txtApiMode = new javax.swing.JTextField();
+        txtMode = new javax.swing.JTextField();
         spLooptest = new javax.swing.JSpinner();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         cbbGroupName = new javax.swing.JComboBox<>();
         txtPassword = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        txtApiMode1 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 153, 153));
 
-        jLabel1.setText("API mode");
+        jLabel1.setText("Mode");
 
         spLooptest.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
 
@@ -65,6 +67,8 @@ public class ModePanel extends AbsItemTestElement<ModeDto> {
 
         jLabel4.setText("Password");
 
+        jLabel5.setText("API mode");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -75,24 +79,30 @@ public class ModePanel extends AbsItemTestElement<ModeDto> {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtApiMode)
+                    .addComponent(txtMode)
                     .addComponent(cbbGroupName, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(spLooptest, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 50, Short.MAX_VALUE))
-                    .addComponent(txtPassword))
-                .addContainerGap())
+                        .addGap(0, 66, Short.MAX_VALUE))
+                    .addComponent(txtPassword)
+                    .addComponent(txtApiMode1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtApiMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtApiMode1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -120,7 +130,7 @@ public class ModePanel extends AbsItemTestElement<ModeDto> {
         if (modeDto == null) {
             modeDto = new ModeDto();
         }
-        this.txtApiMode.setText(modeDto.getMode());
+        this.txtMode.setText(modeDto.getModeName());
         this.spLooptest.setValue(modeDto.getLoop());
         String grName = modeDto.getGroup();
         GroupPanel groupPanel = (GroupPanel) this.tabPanelParent.getTab("Group");
@@ -143,8 +153,10 @@ public class ModePanel extends AbsItemTestElement<ModeDto> {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JSpinner spLooptest;
-    private javax.swing.JTextField txtApiMode;
+    private javax.swing.JTextField txtApiMode1;
+    private javax.swing.JTextField txtMode;
     private javax.swing.JTextField txtPassword;
     // End of variables declaration//GEN-END:variables
 
@@ -155,7 +167,8 @@ public class ModePanel extends AbsItemTestElement<ModeDto> {
         if (modeDto == null) {
             modeDto = new ModeDto();
         }
-        this.txtApiMode.setText(modeDto.getMode());
+        this.txtApiMode1.setText(modeDto.getApiModeName());
+        this.txtMode.setText(modeDto.getModeName());
         this.txtPassword.setText(modeDto.getPassword());
         this.spLooptest.setValue(modeDto.getLoop());
         String grName = modeDto.getGroup();
@@ -167,6 +180,7 @@ public class ModePanel extends AbsItemTestElement<ModeDto> {
         if (groups.keySet().contains(grName)) {
             this.cbbGroupName.setSelectedItem(grName);
         }
+        updateCbbGroupName();
     }
 
     @Override
@@ -175,24 +189,19 @@ public class ModePanel extends AbsItemTestElement<ModeDto> {
     }
 
     @Override
-    public void tabUpdate() {
-        updateCbbGroupName();
-    }
-
-    @Override
     public void update() {
         Object gr = cbbGroupName.getSelectedItem();
-        String apiModeName = txtApiMode.getText();
-//        if (gr != null) {
-            model.setPassword(txtPassword.getText());
-            model.setGroup(gr.toString());
-            model.setLoop((Integer) spLooptest.getValue());
-            model.setMode(apiModeName);
-//        }
+        String apiModeName = txtApiMode1.getText();
+        String apiName = txtMode.getText();
+        model.setPassword(txtPassword.getText());
+        model.setGroup(gr.toString());
+        model.setLoop((Integer) spLooptest.getValue());
+        model.setApiModeName(apiModeName);
+        model.setModeName(apiName);
     }
 
     @Override
     public void tabSelected() {
-        updateCbbGroupName();
+        refesh();
     }
 }

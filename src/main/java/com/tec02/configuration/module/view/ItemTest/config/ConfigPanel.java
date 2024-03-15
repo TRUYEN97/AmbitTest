@@ -7,34 +7,37 @@ package com.tec02.configuration.module.view.ItemTest.config;
 import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.model.itemTest.ModeDto;
 import com.tec02.configuration.module.view.AbsHasTabPanel;
-import com.tec02.configuration.module.view.AbsTabElement;
-import java.util.HashMap;
-import java.util.Map;
+import com.tec02.configuration.module.view.AbsElementTab;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JTabbedPane;
 
 /**
  *
  * @author Administrator
  */
-public class ConfigPanel extends AbsTabElement<ItemTestDto> {
+public class ConfigPanel extends AbsElementTab<ItemTestDto> {
 
     private final AbsHasTabPanel hasTabPanel;
 
     /**
      * Creates new form ConfigPanel
+     *
      * @param tabName
      */
-    public ConfigPanel( String tabName) {
+    public ConfigPanel(String tabName) {
         super(tabName, new ItemTestDto());
         initComponents();
         this.hasTabPanel = new AbsHasTabPanel<ItemTestDto, ModePanel>(JTabbedPane.LEFT) {
             @Override
             protected ModePanel createTabPanel(String name) {
-                ModeDto modeDto = model.getConfig().getModes().get(name);
-                if (modeDto == null) {
-                    modeDto = new ModeDto();
+                var modes = model.getConfig().getModes();
+                for (ModeDto modeDto : modes) {
+                    if (modeDto != null && modeDto.getModeName().equalsIgnoreCase(name)) {
+                        return new ModePanel(name, modeDto, model, tabParentPanel);
+                    }
                 }
-                return new ModePanel(name, modeDto, model, tabPanelParent);
+                return new ModePanel(name, new ModeDto(), model, tabParentPanel);
             }
 
             @Override
@@ -42,26 +45,28 @@ public class ConfigPanel extends AbsTabElement<ItemTestDto> {
                 if (model == null) {
                     return;
                 }
-                txtLimitCmd.setText(model.getConfig().getLimit());
+                txtLimitCmd.setText(model.getConfig().getLimitCmd());
+                txtLimitDir.setText(model.getConfig().getLimitDir());
                 var modes = model.getConfig().getModes();
-                for (String name : modes.keySet()) {
-                    addTab(name);
+                for (ModeDto modeDto : modes) {
+                    addTab(modeDto.getModeName());
                 }
             }
 
             @Override
             public void update() {
-                Map<String, ModeDto> modes = new HashMap<>();
+                model.getConfig().setLimitCmd(txtLimitCmd.getText());
+                model.getConfig().setLimitDir(txtLimitDir.getText());
+                List< ModeDto> modes = new ArrayList<>();
                 model.getConfig().setModes(modes);
                 for (ModePanel modePanel : getTabPanel().getTabElements().values()) {
                     modePanel.update();
-                    modes.put(modePanel.getTabName(), modePanel.getModel());
+                    modes.add(modePanel.getModel());
                 }
             }
         };
         this.jPanel1.add(this.hasTabPanel);
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -75,27 +80,36 @@ public class ConfigPanel extends AbsTabElement<ItemTestDto> {
         jLabel1 = new javax.swing.JLabel();
         txtLimitCmd = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
+        txtLimitDir = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(51, 255, 153));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel1.setText("Limit");
+        jLabel1.setText("Get limit command");
 
         jPanel1.setBackground(new java.awt.Color(0, 204, 204));
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setText("Dir limit");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtLimitCmd)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtLimitDir)
+                    .addComponent(txtLimitCmd, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,10 +119,13 @@ public class ConfigPanel extends AbsTabElement<ItemTestDto> {
                     .addComponent(jLabel1)
                     .addComponent(txtLimitCmd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtLimitDir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
 
     @Override
     public void refesh() {
@@ -124,13 +141,11 @@ public class ConfigPanel extends AbsTabElement<ItemTestDto> {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField txtLimitCmd;
+    private javax.swing.JTextField txtLimitDir;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void tabUpdate() {
-    }
 
     @Override
     public ItemTestDto getModel() {

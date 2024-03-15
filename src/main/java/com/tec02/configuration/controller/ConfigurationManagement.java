@@ -5,6 +5,7 @@
 package com.tec02.configuration.controller;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.tec02.common.Common;
 import com.tec02.common.Logger;
 import com.tec02.common.MyObjectMapper;
 import com.tec02.configuration.Iexecute;
@@ -28,17 +29,22 @@ import com.tec02.configuration.model.itemTest.ItemConfig;
 import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.model.setting.SettingDto;
 import com.tec02.configuration.model.socket.SocketDto;
+import com.tec02.configuration.module.IRefeshAndUpdate;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.gui.frameGui.Component.MyChooser;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Administrator
  */
-public class ConfigurationManagement implements Iexecute {
+public class ConfigurationManagement implements Iexecute, IRefeshAndUpdate {
 
     private static volatile ConfigurationManagement management;
+    private final MyChooser myChooser;
     private final List<AbsModule> modules;
     private File file;
     private final Logger logger;
@@ -68,6 +74,7 @@ public class ConfigurationManagement implements Iexecute {
         addModel(new Socket(new SocketDto()));
         addModel(new ItemTest(new ItemTestDto()));
         addModel(new Dhcp(new DhcpDto()));
+        this.myChooser = new MyChooser(System.getProperty("user.dir"));
         this.logger = new Logger("Log/ConfigurationManagement");
         this.tabPanel = new TabConfiguramentPanel(this);
     }
@@ -106,17 +113,14 @@ public class ConfigurationManagement implements Iexecute {
         } else {
             try {
                 JSONObject data = JSONObject.parseObject(Files.readString(file.toPath()));
-                AbsModule module;
-                for (Map.Entry<String, Object> entry : data.entrySet()) {
-                    String modelName = entry.getKey();
-                    if (entry.getValue() instanceof JSONObject moduleData) {
-                        if ((module = this.getModel(modelName)) == null) {
-                            String error = String.format("init(): \"%s\" model not found!", modelName);
-                            this.logger.addLog(error);
-                            return false;
-                        }
-                        module.setData(moduleData);
-                        module.refesh();
+                Object modelObject;
+                for (AbsModule module1 : modules) {
+                    modelObject = data.get(module1.getName());
+                    if (modelObject instanceof JSONObject moduleData) {
+                        module1.setData(moduleData);
+                    } else {
+                        String error = String.format("init(): \"%s\" model not found!", module1.getName());
+                        this.logger.addLog(error);
                     }
                 }
                 return true;
@@ -134,10 +138,54 @@ public class ConfigurationManagement implements Iexecute {
         this.modules.add(model);
     }
 
-    public void updateModel() {
+    @Override
+    public void update() {
         for (AbsModule module : modules) {
             module.update();
         }
+    }
+    
+    @Override
+    public void refesh() {
+        for (AbsModule module : modules) {
+            module.refesh();
+        }
+    }
+
+    @Override
+    public void execute() {
+        for (AbsModule module : modules) {
+            module.execute();
+        }
+    }
+
+    public boolean save() {
+        var model = this.getInputModel();
+        if (model == null) {
+            JOptionPane.showMessageDialog(null, "model == null!");
+            return false;
+        }
+        if (JFileChooser.APPROVE_OPTION
+                == this.myChooser.showSaveDialog(null,
+                        String.format("config_%s.json",
+                                System.currentTimeMillis()))) {
+            try {
+                File f = myChooser.getSelectedFile();
+                JSONObject resultJson = new JSONObject(model);
+                JSONObject ItemTest = resultJson.getJSONObject("ItemTest");
+                if (ItemTest != null) {
+                    ItemTest.remove("limits");
+                    resultJson.put("ItemTest", ItemTest);
+                }
+                Files.writeString(f.toPath(), MyObjectMapper.prettyPrintJsonUsingDefaultPrettyPrinter(resultJson.toJSONString()));
+                JOptionPane.showMessageDialog(null, String.format("Save ok! %s", f));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getLocalizedMessage());
+            }
+            return true;
+        }
+        return false;
     }
 
     public JSONObject getInputModel() {
@@ -193,19 +241,12 @@ public class ConfigurationManagement implements Iexecute {
         return config;
     }
 
-    private String getBaseItem(String itemName) {
-        if (itemName != null && itemName.matches(".+_[0-9]+$")) {
-            return itemName.substring(0, itemName.lastIndexOf("_"));
-        }
-        return itemName;
-    }
-
     public FunctionConfig getItemTestConfig(String configName) {
         Map<String, ItemConfig> itemsCongfig = getItemTestConfig().getModel().getItems();
         ItemConfig itemConfig;
         if (itemsCongfig == null
                 || ((itemConfig = itemsCongfig.get(configName)) == null
-                && (itemConfig = itemsCongfig.get(getBaseItem(configName))) == null)) {
+                && (itemConfig = itemsCongfig.get(Common.getBaseItem(configName))) == null)) {
             return null;
         }
         return new FunctionConfig(itemConfig);
@@ -216,17 +257,10 @@ public class ConfigurationManagement implements Iexecute {
         ItemLimit itemLimit;
         if (itemsLimit == null
                 || ((itemLimit = itemsLimit.get(itemName)) == null
-                && (itemLimit = itemsLimit.get(getBaseItem(itemName))) == null)) {
+                && (itemLimit = itemsLimit.get(Common.getBaseItem(itemName))) == null)) {
             return null;
         }
         return itemLimit;
-    }
-
-    @Override
-    public void execute() {
-        for (AbsModule module : modules) {
-            module.execute();
-        }
     }
 
     public ItemErrorCode getErrorcode(String limitName) {
@@ -234,7 +268,7 @@ public class ConfigurationManagement implements Iexecute {
         ItemErrorCode itemErrorCode;
         limitName = limitName.toUpperCase();
         if (errorcodes == null || ((itemErrorCode = errorcodes.get(limitName)) == null
-                && (itemErrorCode = errorcodes.get(getBaseItem(limitName))) == null)) {
+                && (itemErrorCode = errorcodes.get(Common.getBaseItem(limitName))) == null)) {
             return null;
         }
         return itemErrorCode;

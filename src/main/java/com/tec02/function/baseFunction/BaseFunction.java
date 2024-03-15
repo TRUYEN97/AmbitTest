@@ -6,7 +6,6 @@ package com.tec02.function.baseFunction;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.common.MyConst;
-import com.tec02.common.PcInformation;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.AbsStreamReadable;
 import com.tec02.communication.Communicate.ISender;
@@ -170,7 +169,7 @@ public class BaseFunction extends AbsBaseFunction {
         }
     }
 
-    public boolean sendcommad(final AbsCommunicate comport, String startPushCmd, String readUntils, int time) {
+    public boolean sendCommad(final AbsCommunicate comport, String startPushCmd, String readUntils, int time) {
         if (!this.sendCommand(comport, startPushCmd)) {
             return false;
         }

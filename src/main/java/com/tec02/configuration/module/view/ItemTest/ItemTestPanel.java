@@ -6,12 +6,9 @@ package com.tec02.configuration.module.view.ItemTest;
 
 import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.module.AbsModuleView;
-import com.tec02.configuration.module.view.AbsTabElement;
-import com.tec02.configuration.module.view.ItemTest.apply.ApplyPanel;
+import com.tec02.configuration.module.view.AbsElementTab;
 import com.tec02.configuration.module.view.ItemTest.config.ConfigPanel;
 import com.tec02.configuration.module.view.ItemTest.group.GroupPanel;
-import com.tec02.configuration.module.view.ItemTest.item.ItemPanel;
-import com.tec02.configuration.module.view.ItemTest.limit.LimitPanell;
 import com.tec02.configuration.module.view.TabPanel;
 import javax.swing.JTabbedPane;
 
@@ -21,18 +18,15 @@ import javax.swing.JTabbedPane;
  */
 public class ItemTestPanel extends AbsModuleView<ItemTestDto> {
 
-    protected final TabPanel<AbsTabElement> tabPanel;
+    protected final TabPanel<AbsElementTab> tabPanel;
 
     
     public ItemTestPanel() {
         initComponents();
         this.tabPanel = new TabPanel<>(JTabbedPane.LEFT);
         this.add(tabPanel);
-        this.tabPanel.addTab("Apply", new ApplyPanel("Apply"));
         this.tabPanel.addTab("Config", new ConfigPanel("Config"));
         this.tabPanel.addTab("Group", new GroupPanel("Group"));
-        this.tabPanel.addTab("Item", new ItemPanel("Item"));
-        this.tabPanel.addTab("Limit", new LimitPanell("Limit"));
     }
     
     
@@ -52,8 +46,8 @@ public class ItemTestPanel extends AbsModuleView<ItemTestDto> {
 
     @Override
     public void refesh() {
-        for (AbsTabElement view : this.tabPanel.getTabElements().values()) {
-            view.setTabPanelParent(tabPanel);
+        for (AbsElementTab view : this.tabPanel.getTabElements().values()) {
+            view.setTabParentPanel(tabPanel);
             view.setModel(model);
             view.refesh();
         }
@@ -61,7 +55,7 @@ public class ItemTestPanel extends AbsModuleView<ItemTestDto> {
 
     @Override
     public void update() {
-        for (AbsTabElement view : this.tabPanel.getTabElements().values()) {
+        for (AbsElementTab view : this.tabPanel.getTabElements().values()) {
             view.update();
         }
     }

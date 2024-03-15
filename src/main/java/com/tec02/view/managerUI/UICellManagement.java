@@ -24,6 +24,7 @@ public class UICellManagement {
     private UICellManagement() {
         this.uiCells = new ArrayList<>();
     }
+    
 
     public static UICellManagement getInstance() {
         UICellManagement ins = UICellManagement.instance;

@@ -5,6 +5,7 @@
 package com.tec02.view.subUI.SubUI;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
+import com.tec02.configuration.module.iml.Socket.AeClientRunner;
 import com.tec02.view.Gui;
 import com.tec02.view.managerUI.UICell;
 import com.tec02.view.subUI.AbsUI;
@@ -44,6 +45,7 @@ public abstract class AbsSubUI extends AbsUI {
     public void startTest() {
         super.startTest();
         this.tabDetail.startTest();
+        AeClientRunner.getInstance().sendDefaulDataToServer(uICell);
     }
 
     @Override
@@ -51,6 +53,7 @@ public abstract class AbsSubUI extends AbsUI {
         super.endTest();
         this.tabDetail.endTest();
         showEnd(this.dataCell.getResultColor(), this.dataCell.isPass());
+        AeClientRunner.getInstance().sendDefaulDataToServer(uICell);
     }
 
     

@@ -5,13 +5,13 @@
 package com.tec02.configuration.module.view.Socket;
 
 import com.tec02.configuration.model.socket.SocketClientDto;
-import com.tec02.configuration.module.view.AbsTabElement;
+import com.tec02.configuration.module.view.AbsElementTab;
 
 /**
  *
  * @author Administrator
  */
-public class ServerInfoPanel extends AbsTabElement<SocketClientDto> {
+public class ServerInfoPanel extends AbsElementTab<SocketClientDto> {
 
     /**
      * Creates new form ServerInfoPanal
@@ -131,10 +131,6 @@ public class ServerInfoPanel extends AbsTabElement<SocketClientDto> {
     @Override
     public SocketClientDto getModel() {
         return model;
-    }
-
-    @Override
-    public void tabUpdate() {
     }
 
     @Override

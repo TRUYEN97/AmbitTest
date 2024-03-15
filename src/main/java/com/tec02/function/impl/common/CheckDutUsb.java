@@ -45,8 +45,14 @@ public class CheckDutUsb extends AbsFucnUseTelnetOrCommportConnector {
                 responce = this.analysisBase.readShowUntil(communicate, readUntil, new TimeS(10));
                 String lines[] = responce.split("\n");
                 if (!responce.contains("Could not") && lines.length >= 2) {
-                    usb_fw = lines[0].substring(lines[0].indexOf("version ") + 8).trim();
-                    usb_model = lines[1].substring(0, lines[1].indexOf(" is running")).trim();
+                    int index1 = lines[1].indexOf("version ");
+                    int index2 = lines[2].indexOf(" is running");
+                    if (index1 > -1) {
+                        usb_fw = lines[1].substring(index1 + 8).trim();
+                    }
+                    if (index2 > -1) {
+                        usb_model = lines[2].substring(0, index2).trim();
+                    }
                 }
             }
             ValueSubItem subItem;
@@ -65,7 +71,8 @@ public class CheckDutUsb extends AbsFucnUseTelnetOrCommportConnector {
     }
 
     @Override
-    protected void createConfig(FunctionConfig config) {
+    protected void createConfig(FunctionConfig config
+    ) {
         config.setTime_out(10);
         config.setRetry(1);
         config.setFailApiName("usb_fw");

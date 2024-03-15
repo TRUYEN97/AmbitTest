@@ -4,14 +4,9 @@
  */
 package com.tec02.view;
 
-import com.tec02.common.MyObjectMapper;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.gui.frameGui.Component.MyChooser;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -80,7 +75,7 @@ public class ShowConfigEdit extends javax.swing.JFrame {
         btsave = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btsave.setText("Save");
         btsave.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +96,7 @@ public class ShowConfigEdit extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btsave)
-                        .addGap(0, 728, Short.MAX_VALUE)))
+                        .addGap(0, 876, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -110,7 +105,7 @@ public class ShowConfigEdit extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btsave)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -120,25 +115,8 @@ public class ShowConfigEdit extends javax.swing.JFrame {
 
     private void btsaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsaveActionPerformed
         // TODO add your handling code here:
-        this.management.updateModel();
-        var model = this.management.getInputModel();
-        if (model == null) {
-            JOptionPane.showMessageDialog(null, "model == null!");
-            return;
-        }
-        if (JFileChooser.APPROVE_OPTION
-                == this.myChooser.showSaveDialog(null,
-                        String.format("config_%s.json",
-                                System.currentTimeMillis()))) {
-            try {
-                File file = myChooser.getSelectedFile();
-                Files.writeString(file.toPath(), MyObjectMapper.prettyPrintJsonUsingDefaultPrettyPrinter(model.toJSONString()));
-                JOptionPane.showMessageDialog(null, String.format("Save ok! %s", file));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, ex.getLocalizedMessage());
-            }
-        }
+        this.management.update();
+        this.management.save();
     }//GEN-LAST:event_btsaveActionPerformed
 
     /**

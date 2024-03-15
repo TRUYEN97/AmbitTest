@@ -7,6 +7,7 @@ package com.tec02.main;
 import com.tec02.common.Logger;
 import com.tec02.common.MyConst;
 import com.tec02.configuration.model.itemTest.ItemConfig;
+import com.tec02.configuration.module.iml.Socket.AeClientRunner;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.SaveLocalLog;
@@ -171,21 +172,35 @@ public class UICellTester {
             }
             function = this.functionFactory.getFunction(
                     itemConfig.getFunction(), uICell,
+                    itemConfig.getItemName(),
                     itemConfig.getTest_name(), begin, true);
+            AeClientRunner.getInstance().sendDefaulDataToServer(uICell);
             if (function == null) {
-                uICell.getDataCell().addFailedItemFunction(new AbsFunction(null) {
+                function = new AbsFunction(FunctionConstructorModel.builder()
+                            .uICell(uICell)
+                            .build()) {
 
                     @Override
                     protected boolean test() {
+                        String mess = String.format("Function: \"%s\" not exists!",
+                                itemConfig.getFunction()
+                        );
+                        addLog(ERROR, mess);
+                        setMessage(mess);
                         return false;
                     }
 
                     @Override
                     protected void createDefaultConfig(FunctionConfig config) {
                         config.setTest_name(itemConfig.getTest_name());
+                        config.setFunction(itemConfig.getFunction());
                     }
-                });
+                };
+                uICell.getDataCell().addItemFunction(function);
+                uICell.getDataCell().addFailedItemFunction(function);
+                function.runTest(1);
             } else {
+                uICell.getDataCell().putData(MyConst.MODEL.TEST_ITEM, function.getModel().getTest_name());
                 currFt = this.poolRun.submit(function);
                 this.marks.add(new Mark(currFt, function));
                 if (!function.getConfig().isMulti()) {

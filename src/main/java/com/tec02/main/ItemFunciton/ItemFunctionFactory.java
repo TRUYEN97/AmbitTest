@@ -9,6 +9,7 @@ import com.tec02.function.AbsFunction;
 import com.tec02.function.FunctionFactory;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.view.managerUI.UICell;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -42,8 +43,11 @@ public class ItemFunctionFactory {
             constructorModel = FunctionConstructorModel.builder().build();
         }
         AbsFunction absFunction = getFunction(functionName, constructorModel);
+        if(absFunction == null){
+            return null;
+        }
         absFunction.updateConfigAndResetModel();
-        if (uICell != null && uICell.getDataCell() != null) {
+        if (uICell != null && uICell.getDataCell() != null && addToDataCell) {
             uICell.getDataCell().addItemFunction(absFunction);
         }
         return absFunction;
@@ -52,21 +56,26 @@ public class ItemFunctionFactory {
     public synchronized AbsBaseFunction getBaseFunction(String functionName, FunctionConstructorModel constructorModel) {
         AbsBaseFunction absFunction = this.functionFactory.getBaseFunction(functionName, constructorModel);
         if (absFunction == null) {
-            throw new RuntimeException(
+            JOptionPane.showMessageDialog(null,
                     String.format("Base-Func: \"%s\", Base-function not exists!",
                             functionName));
+            return null;
         }
         return absFunction;
     }
 
-    public AbsFunction getFunction(String functionName, UICell uICell, String itemName, Integer begin, boolean addToDataCell) {
+    public AbsFunction getFunction(String functionName, UICell uICell, String configName, String limitName, Integer begin, boolean addToDataCell) {
         FunctionConstructorModel constructorModel = FunctionConstructorModel.builder()
                 .uICell(uICell)
-                .itemName(itemName)
-                .configName(itemName)
+                .limitName(limitName)
+                .configName(configName)
                 .begin(begin)
                 .build();
         return getFunction(functionName, constructorModel, uICell, addToDataCell);
+    }
+
+    public AbsFunction getFunction(String functionName, UICell uICell, String configName, Integer begin, boolean addToDataCell) {
+        return getFunction(functionName, uICell, configName, configName, begin, addToDataCell);
     }
 
     public AbsFunction getFunction(String functionName, FunctionConstructorModel constructorModel) {

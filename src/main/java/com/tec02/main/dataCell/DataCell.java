@@ -6,6 +6,7 @@ package com.tec02.main.dataCell;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tec02.Time.TimeBase;
+import com.tec02.common.Common;
 import com.tec02.common.DataWareHouse;
 import com.tec02.common.MyConst;
 import com.tec02.common.MyObjectMapper;
@@ -42,11 +43,13 @@ public class DataCell {
         this.failedFunctions = new ArrayList<>();
         this.itemCounts = new HashMap<>();
         this.wareHouse = new DataWareHouse();
+        this.wareHouse.putkeyMap(MyConst.MODEL.SN, MyConst.MODEL.HHSN);
         this.wareHouse.putkeyMap(MyConst.MODEL.MLBSN, MyConst.MODEL.SERIAL);
         this.wareHouse.putkeyMap(MyConst.MODEL.PCNAME, MyConst.MODEL.STATION_NAME);
         this.wareHouse.putkeyMap(MyConst.MODEL.STATION, MyConst.MODEL.STATION_TYPE);
         this.uICell = uICell;
         this.timeBase = new TimeBase();
+        initWarehouse();
     }
 
     public void reset() {
@@ -62,7 +65,11 @@ public class DataCell {
         ConfigurationManagement configurationManagement = ConfigurationManagement.getInstance();
         JSONObject model = MyObjectMapper.convertValue(configurationManagement.getSettingConfig().getModel(), JSONObject.class);
         wareHouse.putAll(model);
-        String mode = ModeManagement.getInsatace().getModeFlow().getAPIMode();
+        var modelFlow = ModeManagement.getInsatace().getModeFlow();
+        String mode = "";
+        if (modelFlow != null) {
+            mode = modelFlow.getAPIMode();
+        }
         wareHouse.put(MyConst.MODEL.MODE, mode);
         wareHouse.put(MyConst.MODEL.PCNAME, PcInformation.getInstance().getPcName());
         wareHouse.put(MyConst.MODEL.POSITION, this.uICell.getName());
@@ -88,19 +95,27 @@ public class DataCell {
     public <T> T getModel(Class<T> clazz) {
         return MyObjectMapper.convertValue(wareHouse.toJson(), clazz);
     }
+    
 
     public synchronized String getNextItemName(String itemName, Integer begin) {
-        String simpleName = itemName.toLowerCase();
-        Integer count = this.itemCounts.get(simpleName);
+        if (itemName == null) {
+            return null;
+        }
+        String baseItemName = Common.getBaseItem(itemName);
+        String baseItemNameToLowerCase = baseItemName.toLowerCase();
+        begin = Common.checkBeginNumber(itemName, begin);
+        Integer count = this.itemCounts.get(baseItemNameToLowerCase);
         if (count != null) {
             if (begin != null && begin >= count) {
-                this.itemCounts.put(simpleName, begin);
-                return String.format("%s_%s", itemName, begin);
+                this.itemCounts.put(baseItemNameToLowerCase, begin);
+                return String.format("%s_%s", baseItemName, begin);
+            } else {
+                return String.format("%s_%s", baseItemName, count);
             }
         } else {
             if (begin != null && begin >= 0) {
-                this.itemCounts.put(simpleName, begin);
-                return String.format("%s_%s", itemName, begin);
+                this.itemCounts.put(baseItemNameToLowerCase, begin);
+                return String.format("%s_%s", baseItemName, begin);
             }
         }
         return itemName;
@@ -144,6 +159,10 @@ public class DataCell {
         }
         return functions;
     }
+
+    public boolean isTesting() {
+        return uICell.isTesting();
+    }
     public static final int JUST_PARENT_ITEM = 2;
     public static final int JUST_SUB_ITEM = 1;
     public static final int ALL_ITEM = 0;
@@ -156,12 +175,12 @@ public class DataCell {
             return "Ready";
         }
         if (isPass()) {
-            if(getAPImode().equalsIgnoreCase(MyConst.CONFIG.DEBUG)){
+            if (getAPImode().equalsIgnoreCase(MyConst.CONFIG.DEBUG)) {
                 builder.append(MyConst.CONFIG.DEBUG.toUpperCase());
                 builder.append(" ");
             }
             builder.append("PASS\r\n");
-        } else {
+        } else if (getFirtFailItem() != null) {
             var fail = getFirtFailItem().getModel();
             builder.append(String.format("%s: \"%s\"\r\n",
                     fail.getTest_name(),

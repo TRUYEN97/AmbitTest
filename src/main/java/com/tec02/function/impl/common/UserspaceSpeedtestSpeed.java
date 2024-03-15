@@ -5,7 +5,7 @@
 package com.tec02.function.impl.common;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
-import com.tec02.communication.Communicate.AbsCommunicate;
+import com.tec02.common.Common;
 import com.tec02.communication.Communicate.Impl.Cmd.Cmd;
 import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
 import com.tec02.function.AbsFunction;
@@ -76,8 +76,8 @@ public class UserspaceSpeedtestSpeed extends AbsFunction {
                     addLog(CMD, responce);
                 }
                 if (responce.contains(startKey)) {
-                    String subString = analysisBase.subString(responce, startKey, endKey);
-                    value = this.analysisBase.findGroup(subString, "\\d+(\\.\\d+)?");
+                    String subString = Common.subString(responce, startKey, endKey);
+                    value = Common.findGroup(subString, "\\d+(\\.\\d+)?");
                 } else {
                     return false;
                 }

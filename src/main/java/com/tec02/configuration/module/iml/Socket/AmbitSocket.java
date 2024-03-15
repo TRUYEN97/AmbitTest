@@ -4,6 +4,7 @@
  */
 package com.tec02.configuration.module.iml.Socket;
 
+import com.tec02.common.MyConst;
 import com.tec02.communication.socket.Unicast.Client.SocketClient;
 import com.tec02.communication.socket.Unicast.Server.SocketServer;
 import com.tec02.configuration.controller.ConfigurationManagement;
@@ -21,14 +22,14 @@ import java.util.Map;
 public class AmbitSocket extends Thread {
 
     private final SocketDto socketDto;
-    private final Map<String, SocketClient> Clients;
+    private final Map<String, SocketClient> clients;
     private final Gui gui;
     private final Receiver receiver;
     private SocketServer server;
 
     public AmbitSocket() {
         this.socketDto = ConfigurationManagement.getInstance().getSocketConfig().getModel();
-        this.Clients = new HashMap<>();
+        this.clients = new HashMap<>();
         this.gui = Gui.getInstance();
         this.receiver = new Receiver();
     }
@@ -37,28 +38,36 @@ public class AmbitSocket extends Thread {
     public void run() {
         if (socketDto.getServer().isFlag() && (server == null || !server.isAlive())) {
             try {
-                this.server = new SocketServer(socketDto.getServer().getPort(), new Receiver());
+                this.server = new SocketServer(socketDto.getServer().getPort(), this.receiver);
                 this.server.start();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         }
-        for (Map.Entry<String, SocketClientDto> entry : this.socketDto.getClients().entrySet()) {
+        var modelClients = this.socketDto.getClients();
+        SocketClientDto clientDto;
+        SocketClient client;
+        for (Map.Entry<String, SocketClientDto> entry : modelClients.entrySet()) {
             String key = entry.getKey();
-            SocketClientDto clientDto = entry.getValue();
-            SocketClient client = new SocketClient(clientDto.getHost(),
-                    clientDto.getPort(),
+            clientDto = entry.getValue();
+            if (clientDto == null) {
+                continue;
+            }
+            client = new SocketClient(key, clientDto.getHost(),
+                    clientDto.getPort(), 
                     this.receiver);
             if (clientDto.isFlag()) {
-                this.Clients.put(key, client);
+                this.clients.put(key, client);
+                if (key.equalsIgnoreCase(MyConst.AE_SERVER_NAME)) {
+                    AeClientRunner.getInstance().run(client);
+                } else {
+                    new ClientRunner(client).start();
+                }
             }
         }
-        if (this.Clients.isEmpty() && !isServerRuning()) {
+        if (this.clients.isEmpty() && !isServerRuning()) {
             this.gui.setSocketBackgroup(Color.RED);
             return;
-        }
-        for (String name : this.Clients.keySet()) {
-            new ClientRunner(this.Clients.get(name)).start();
         }
         StringBuilder builder = new StringBuilder();
         while (true) {
@@ -79,7 +88,7 @@ public class AmbitSocket extends Thread {
                 }
             }
             builder.append("<br>Server:<br>");
-            for (Map.Entry<String, SocketClient> entry : Clients.entrySet()) {
+            for (Map.Entry<String, SocketClient> entry : clients.entrySet()) {
                 String key = entry.getKey();
                 SocketClient val = entry.getValue();
                 if (val.isConnect()) {

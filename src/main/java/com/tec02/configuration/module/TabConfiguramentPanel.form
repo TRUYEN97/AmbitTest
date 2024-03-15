@@ -26,7 +26,7 @@
               <Component id="btRefesh" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="btUpdate" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="371" max="32767" attributes="0"/>
+              <EmptySpace pref="594" max="32767" attributes="0"/>
           </Group>
           <Component id="pnTab" alignment="0" max="32767" attributes="0"/>
       </Group>
@@ -40,7 +40,7 @@
                   <Component id="btUpdate" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnTab" pref="366" max="32767" attributes="0"/>
+              <Component id="pnTab" pref="413" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

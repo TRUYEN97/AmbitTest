@@ -8,6 +8,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.tec02.Time.WaitTime.AbsTime;
 import com.tec02.Time.WaitTime.Class.TimeS;
+import com.tec02.common.Common;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.communication.Communicate.Impl.Comport.ComPort;
 import com.tec02.function.baseFunction.FunctionConfig;
@@ -141,12 +142,12 @@ public class LedTest extends AbsFucnUseTelnetOrCommportConnector {
             }
         } else {
             JSONArray pns;
-            for (Object ob : ledModelConfig.values()) {
-                if (ob instanceof JSONObject pnModel) {
-                    pns = pnModel.getJSONArray(PNS);
-                    if (pns == null || pns.contains(pn)) {
-                        return pnModel;
-                    }
+            JSONObject pnModel;
+            for (String key : ledModelConfig.keySet()) {
+                pnModel = ledModelConfig.getJSONObject(key);
+                pns = pnModel.getJSONArray(PNS);
+                if (pns != null && pns.contains(pn)) {
+                    return pnModel;
                 }
             }
         }
@@ -171,8 +172,8 @@ public class LedTest extends AbsFucnUseTelnetOrCommportConnector {
         }
         String value;
         for (Map.Entry<String, String> entry : apis.entrySet()) {
-            value = this.analysisBase.findGroup(ledResponce, entry.getValue());
-            rs.put(entry.getKey(), this.analysisBase.findGroup(value, "\\d+(\\.\\d+)?"));
+            value = Common.findGroup(ledResponce, entry.getValue());
+            rs.put(entry.getKey(), Common.findGroup(value, "\\d+(\\.\\d+)?"));
         }
         return rs;
     }

@@ -31,9 +31,9 @@ public class Receiver implements IObjectServerReceiver, IObjectClientReceiver {
                 return;
             }
             if (status == 1) {
-                showData("The program has a new version!");
+                show("The program has a new version!");
             } else if (status == 2) {
-                showData("The program will turn off!");
+                show("The program will turn off!");
             }
         }).start();
     }
@@ -43,7 +43,8 @@ public class Receiver implements IObjectServerReceiver, IObjectClientReceiver {
         if (data == null) {
             return;
         }
-        if (data.trim().matches("^\\[.+\\].*")) {
+        data = data.trim();
+        if (data.matches("^\\[.+\\].*")) {
             startTest(data);
         }
     }
@@ -54,7 +55,7 @@ public class Receiver implements IObjectServerReceiver, IObjectClientReceiver {
             return;
         }
         data = data.trim();
-        showData(data);
+        showData(client, data);
         if (data.equalsIgnoreCase("name")) {
             client.send(String.format("name:%s", Core.getInstance().getAppName()));
         } else if (data.trim().matches("^\\[.+\\].*")) {
@@ -71,8 +72,8 @@ public class Receiver implements IObjectServerReceiver, IObjectClientReceiver {
 
     }
 
-    private void showData(String data) {
-        this.gui.showMess(String.format("Socket: %s", data));
+    private void showData(SocketClient client, String data) {
+        this.gui.showMess(String.format("%s: %s", client.getHostName(), data));
     }
 
     private void startTest(String data) {
@@ -83,15 +84,22 @@ public class Receiver implements IObjectServerReceiver, IObjectClientReceiver {
         } catch (InterruptedException ex) {
         }
     }
-    
+
     private void startTest(JSONObject data) {
         try {
             String sn = data.getString("sn");
             String index = data.getString("index");
+            if (sn == null) {
+                return;
+            }
             Thread.sleep(1000);
             this.core.setInput(sn, index);
         } catch (InterruptedException ex) {
         }
+    }
+
+    private void show(String log) {
+        this.gui.showMess(log);
     }
 
 }

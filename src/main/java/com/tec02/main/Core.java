@@ -23,8 +23,8 @@ public class Core {
     private int updateStatus = 0;
 
     private Core() {
-        this.cellUIManager = UICellManagement.getInstance();
         this.configurationManagement = ConfigurationManagement.getInstance();
+        this.cellUIManager = UICellManagement.getInstance();
     }
 
     public void setAppName(String appName) {
@@ -58,6 +58,12 @@ public class Core {
     }
 
     public void setInput(String input, String index) {
+        if (input == null) {
+            return;
+        }
+        if (index == null) {
+            index = "";
+        }
         if (this.updateStatus != 0 && cellUIManager.isNotTest()) {
             System.exit(0);
         }

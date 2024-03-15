@@ -13,9 +13,10 @@ import com.tec02.communication.DHCP.DhcpData;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.model.FunctionConstructorModel;
+import com.tec02.main.Core;
 import com.tec02.main.ErrorLog;
 import com.tec02.mylogger.MyLogger;
-import com.tec02.view.managerUI.UICell;
+import com.tec02.view.Gui;
 import java.io.File;
 import java.util.List;
 
@@ -63,7 +64,9 @@ public class SfisFunction extends AbsFunction {
             }
             writeLog("TE->API", String.format("%s %s", this.uICell.getName(), command));
             Response response = this.restAPI.sendPost(url, command);
-            writeLog("API->TE", String.format("%s %s", this.uICell.getName(), response));
+            String messResponce = String.format("%s %s", this.uICell.getName(), response);
+            writeLog("API->TE", messResponce);
+            Gui.getInstance().showSfisText(messResponce);
             addLog("Response is: " + response);
             if (send_final) {
                 return checkFinalResponse(response);

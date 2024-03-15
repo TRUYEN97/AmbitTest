@@ -4,8 +4,8 @@
  */
 package com.tec02.configuration.model.itemTest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +17,16 @@ import lombok.Setter;
 @Setter
 public class ConfigDto {
 
-    private String limit;
-    private Map<String, ModeDto> modes = new HashMap<>();
+    private String limitCmd;
+    private String limitDir;
+    private List<ModeDto> modes = new ArrayList<>();
 
     public ModeDto getMode(String name) {
-        return modes.get(name);
+        for (ModeDto mode : modes) {
+            if (mode != null && mode.getModeName().equalsIgnoreCase(name)) {
+                return mode;
+            }
+        }
+        return null;
     }
 }

@@ -4,9 +4,7 @@
  */
 package com.tec02.configuration.model.itemTest;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +17,6 @@ import lombok.Setter;
 @Getter
 public class ItemTestDto {
 
-    private List<String> apply = new ArrayList<>();
     private ConfigDto config = new ConfigDto();
     private Map<String, ItemGroupDto> groups = new HashMap<>();
     private Map<String, ItemConfig> items = new HashMap<>();

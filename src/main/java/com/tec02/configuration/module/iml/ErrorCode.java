@@ -28,8 +28,13 @@ public class ErrorCode extends AbsModule<ErrorCodeModel, InputErrorcode> {
 
     @Override
     public void refesh() {
-        super.refesh();
+        execute();
+    }
+
+    @Override
+    public void execute() {
         try {
+            super.refesh();
             String dir = model.getDir();
             if (dir != null && !dir.isBlank() && new File(dir).exists()) {
                 String[] elems;
@@ -57,13 +62,8 @@ public class ErrorCode extends AbsModule<ErrorCodeModel, InputErrorcode> {
                 model.setErrorcodes(itemErrorCodes);
             }
         } catch (IOException ex) {
-             throw new RuntimeException(ex);
+            throw new RuntimeException(ex);
         }
-    }
-
-    @Override
-    public void execute() {
-
     }
 
 }

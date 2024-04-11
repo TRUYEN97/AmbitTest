@@ -25,7 +25,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="350" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="335" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -83,18 +83,28 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel6" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
                       <Component id="txtLowerLimit" alignment="0" max="32767" attributes="0"/>
-                      <Component id="txtUpperLimit" alignment="1" min="-2" pref="164" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="txtUpperLimit" min="-2" pref="164" max="-2" attributes="0"/>
+                      </Group>
                       <Component id="jLabel5" alignment="1" max="32767" attributes="0"/>
-                      <Component id="cbWaitMulti" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
-                      <Component id="cbMulti" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbCheckSpec" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbFailContinue" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbSkipSpecDebug" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbSkipRunDebug" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbAlwaysrun" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbStopMultiTasking" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
+                      <Component id="cbWaitLocalMulti" alignment="0" max="32767" attributes="0"/>
+                      <Component id="cbStopLocalMultiTasking" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabel6" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
+                              <Component id="cbWaitMulti" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
+                              <Component id="cbMulti" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbCheckSpec" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbFailContinue" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbSkipSpecDebug" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbSkipRunDebug" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbAlwaysrun" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbStopMultiTasking" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -189,6 +199,10 @@
                           <Component id="cbWaitMulti" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cbStopMultiTasking" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cbWaitLocalMulti" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cbStopLocalMultiTasking" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cbFailContinue" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -416,6 +430,16 @@
         <Component class="javax.swing.JCheckBox" name="cbStopMultiTasking">
           <Properties>
             <Property name="text" type="java.lang.String" value="Stop multitasking"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbStopLocalMultiTasking">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Stop local multitasking"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbWaitLocalMulti">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Waiting for local multitasking"/>
           </Properties>
         </Component>
       </SubComponents>

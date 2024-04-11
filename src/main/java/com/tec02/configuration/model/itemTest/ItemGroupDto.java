@@ -25,6 +25,7 @@ public class ItemGroupDto {
     private List<String> items = new ArrayList<>();
     private Integer begin;
     private int loop = 1;
+    private int step = 1;
     private boolean coreGroup = true;
 
     public int getModeRun() {

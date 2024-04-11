@@ -11,6 +11,7 @@ import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
+import java.io.IOException;
 
 /**
  *
@@ -44,17 +45,14 @@ public class ResetButton extends AbsFucnUseTelnetOrCommportConnector {
         String readUntils = this.config.getString(READ_UNTIL);
         String spec = this.config.getString(SPEC);
         int time = this.config.getInteger(TIME, 10);
-        try ( ComPort comport = this.baseFunction.getComport()) {
-            try ( Telnet telent = this.baseFunction.getTelnet()) {
+        try {
+            try ( ComPort comport = this.baseFunction.getComport()) {
                 if (!this.baseFunction.sendCommand(comport, startPushCmd)) {
                     return false;
                 }
-                if (!this.analysisBase.isResponseContainKeyAndShow(telent,
-                        spec, spec, new TimeS(time))) {
-                    return false;
-                }
-            } finally {
-                this.baseFunction.sendCommad(comport, endPushCmds, readUntils, time);
+            }
+            if (!isResetOk(spec, time)) {
+                return false;
             }
             setResult(spec);
             return true;
@@ -62,12 +60,31 @@ public class ResetButton extends AbsFucnUseTelnetOrCommportConnector {
             e.printStackTrace();
             ErrorLog.addError(this, e.getMessage());
             return false;
+        } finally {
+            try ( ComPort comport = this.baseFunction.getComport()) {
+                this.baseFunction.sendCommand(comport, endPushCmds, readUntils, time);
+            } catch (Exception e) {
+                e.printStackTrace();
+                ErrorLog.addError(this, e.getMessage());
+                return false;
+            }
         }
     }
-    private static final String TIME = "time";
-    private static final String SPEC = "spec";
-    private static final String READ_UNTIL = "readUntil";
-    private static final String END_PUSH_CMDS = "endPushCmds";
-    private static final String START_PUSH_CMDS = "startPushCmds";
+
+    protected boolean isResetOk(String spec, int time) {
+        try (final Telnet telent = this.baseFunction.getTelnet()) {
+            return this.analysisBase.isResponseContainKeyAndShow(telent,
+                    spec, spec, new TimeS(time));
+        } catch (IOException e) {
+            e.printStackTrace();
+            ErrorLog.addError(this, e.getMessage());
+            return false;
+        }
+    }
+    protected static final String TIME = "time";
+    protected static final String SPEC = "spec";
+    protected static final String READ_UNTIL = "readUntil";
+    protected static final String END_PUSH_CMDS = "endPushCmds";
+    protected static final String START_PUSH_CMDS = "startPushCmds";
 
 }

@@ -88,7 +88,7 @@ public class LedTest extends AbsFucnUseTelnetOrCommportConnector {
             if (!sendCommands(ledCommands, communicate, timer, readUntil)) {
                 return false;
             }
-            this.baseFunction.delay(200);
+            this.baseFunction.delay(500);
             Map<String, String> rs = getLedValues();
             JSONArray endLedCommands = pnModel.getJSONArray(END_COMMANDS);
             addLog(CONFIG, "led end-commands: %s", endLedCommands);

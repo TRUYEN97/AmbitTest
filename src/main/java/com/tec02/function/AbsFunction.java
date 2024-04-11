@@ -58,6 +58,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     private String spec;
     protected int retry;
     private final Integer begin;
+    private final int step;
     private final String limitName;
     private final String configName;
     private Runnable stopMultiTaskAction;
@@ -74,6 +75,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         this.config = constructorModel.getConfig();
         this.logger = constructorModel.getLogger();
         this.begin = constructorModel.getBegin();
+        this.step = constructorModel.getStep();
         this.configName = constructorModel.getConfigName();
         if (this.dataCell != null) {
             this.limitName = this.dataCell.getNextItemName(config.getTest_name(), this.begin);
@@ -93,7 +95,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     public void setStopMultiTaskAction(Runnable stopMultiTaskAction) {
         this.stopMultiTaskAction = stopMultiTaskAction;
     }
-    
+
     protected void setErrorCode(String errorCode, String desErrorCode) {
         ItemErrorCode itemErrorCode = new ItemErrorCode();
         itemErrorCode.setErrorcode(errorCode);
@@ -105,7 +107,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         setErrorCode(itemErrorCode);
     }
 
-    protected boolean isAllSubItemPass() {
+    public boolean isAllSubItemPass() {
         boolean rs = true;
         for (AbsFunction subItem : subItems) {
             if (!subItem.isPass()) {
@@ -181,6 +183,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
                         .configName(config.getItemName())
                         .limitName(item)
                         .begin(begin)
+                        .step(step)
                         .build(), uICell, false);
         absFunction.functionType = SUB_FUNCTION;
         this.subItems.add(absFunction);
@@ -361,10 +364,10 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         }
     }
     public static final String TESTING = "Testing";
-    
-    public void stopMultitacking(){
+
+    public void stopMultitacking() {
         stop = true;
-        if(stopMultiTaskAction != null){
+        if (stopMultiTaskAction != null) {
             stopMultiTaskAction.run();
         }
     }
@@ -399,7 +402,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     private void end() {
         try {
             for (AbsFunction function : subItems) {
-                this.dataCell.addItemFunction(function);
+                this.dataCell.addItemFunction(function, step);
                 if (!function.isPass()) {
                     this.dataCell.addFailedItemFunction(function);
                 }
@@ -412,7 +415,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
                         // addd default failed API item 
                         AbsFunction defaulApiItem = createSubItem("VirFunction", failApi);
                         defaulApiItem.runTest(1);
-                        this.dataCell.addItemFunction(defaulApiItem);
+                        this.dataCell.addItemFunction(defaulApiItem, step);
                         if (!defaulApiItem.isPass()) {
                             this.dataCell.addFailedItemFunction(defaulApiItem);
                         }
@@ -507,7 +510,8 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
             Object value;
             for (String testKey : testKeys) {
                 value = data.get(testKey);
-                if (testKey.equals(MyConst.MODEL.ERROR_CODE)) {
+                if ((value == null || value.toString().isBlank()) 
+                        && testKey.equals(MyConst.MODEL.ERROR_CODE)) {
                     value = data.get(MyConst.MODEL.ERRORCODE);
                 }
                 rs.put(testKey, value);

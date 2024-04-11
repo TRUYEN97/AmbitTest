@@ -43,12 +43,12 @@ public class ItemFunctionFactory {
             constructorModel = FunctionConstructorModel.builder().build();
         }
         AbsFunction absFunction = getFunction(functionName, constructorModel);
-        if(absFunction == null){
+        if (absFunction == null) {
             return null;
         }
         absFunction.updateConfigAndResetModel();
         if (uICell != null && uICell.getDataCell() != null && addToDataCell) {
-            uICell.getDataCell().addItemFunction(absFunction);
+            uICell.getDataCell().addItemFunction(absFunction, constructorModel.getStep());
         }
         return absFunction;
     }
@@ -64,18 +64,32 @@ public class ItemFunctionFactory {
         return absFunction;
     }
 
-    public AbsFunction getFunction(String functionName, UICell uICell, String configName, String limitName, Integer begin, boolean addToDataCell) {
+    public AbsFunction getFunction(String functionName, UICell uICell, String configName,
+            String limitName, Integer begin, boolean addToDataCell) {
+        return getFunction(functionName, uICell, configName, limitName, begin, addToDataCell, 1);
+    }
+
+    public AbsFunction getFunction(String functionName, UICell uICell, String configName,
+            String limitName, Integer begin, boolean addToDataCell, int step) {
         FunctionConstructorModel constructorModel = FunctionConstructorModel.builder()
                 .uICell(uICell)
                 .limitName(limitName)
                 .configName(configName)
                 .begin(begin)
+                .step(step)
                 .build();
         return getFunction(functionName, constructorModel, uICell, addToDataCell);
     }
 
-    public AbsFunction getFunction(String functionName, UICell uICell, String configName, Integer begin, boolean addToDataCell) {
-        return getFunction(functionName, uICell, configName, configName, begin, addToDataCell);
+    public AbsFunction getFunction(String functionName, UICell uICell,
+            String configName, Integer begin, boolean addToDataCell) {
+        return getFunction(functionName, uICell, configName, begin, addToDataCell, 1);
+    }
+
+    public AbsFunction getFunction(String functionName, UICell uICell,
+            String configName, Integer begin, boolean addToDataCell, int step) {
+        return getFunction(functionName, uICell, configName,
+                configName, begin, addToDataCell, step);
     }
 
     public AbsFunction getFunction(String functionName, FunctionConstructorModel constructorModel) {

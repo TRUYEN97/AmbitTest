@@ -78,7 +78,7 @@ public class BaseFunction extends AbsBaseFunction {
             addLog("PC", "Telnet to IP: \"%s\" - Port: %s failed!", ip, port);
             return null;
         }
-        if (!telnet.connect(ip, port) && !sendCommand(telnet, "\r\n")) {
+        if (!telnet.connect(ip, port) && !BaseFunction.this.sendCommand(telnet, "\r\n")) {
             addLog("PC", "Telnet to IP: \"%s\" - Port: %s failed!", ip, port);
             return null;
         }
@@ -150,13 +150,29 @@ public class BaseFunction extends AbsBaseFunction {
         }
         return absCommunicate;
     }
+    
+    public boolean networkCardControl(String cardName, boolean enable) {
+        try ( Cmd cmd = new Cmd()) {
+            String command = String.format("netsh interface set interface \"%s\" admin=%s", cardName, enable ? "enabled" : "disabled");
+            if (!this.sendCommand(cmd, command)) {
+                return false;
+            }
+            String responce = cmd.readAll();
+            addLog(CMD, responce);
+            return responce.isBlank();
+        } catch (Exception e) {
+            e.printStackTrace();
+            addLog(ERROR, e.getLocalizedMessage());
+            return false;
+        }
+    }
 
     public boolean rebootSoft(String ip, String cmd, int waitTime, int pingTime) throws IOException {
         try ( Telnet telnet = getTelnet(ip, 23)) {
             if (telnet == null) {
                 return false;
             }
-            if (!sendCommand(telnet, cmd == null ? "reboot" : cmd)) {
+            if (!BaseFunction.this.sendCommand(telnet, cmd == null ? "reboot" : cmd)) {
                 return false;
             }
             addLog("PC", "Wait about %s S", waitTime);
@@ -169,7 +185,7 @@ public class BaseFunction extends AbsBaseFunction {
         }
     }
 
-    public boolean sendCommad(final AbsCommunicate comport, String startPushCmd, String readUntils, int time) {
+    public boolean sendCommand(final AbsCommunicate comport, String startPushCmd, String readUntils, int time) {
         if (!this.sendCommand(comport, startPushCmd)) {
             return false;
         }
@@ -321,10 +337,10 @@ public class BaseFunction extends AbsBaseFunction {
                 for (int i = 1; timer.onTime(); i++) {
                     addLog(CMD, "------------------------------------ " + i);
                     try {
-                        if (arp_d && sendCommand(cmd, arp)) {
+                        if (arp_d && BaseFunction.this.sendCommand(cmd, arp)) {
                             addLog(CMD, cmd.readAll().trim());
                         }
-                        if (sendCommand(cmd, command)) {
+                        if (BaseFunction.this.sendCommand(cmd, command)) {
                             String response = cmd.readAll().trim();
                             addLog(CMD, response);
                             if (checkPing) {

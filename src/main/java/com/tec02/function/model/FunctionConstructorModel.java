@@ -24,6 +24,7 @@ public class FunctionConstructorModel {
     private FunctionConfig config;
     private FunctionLogger logger;
     private Integer begin;
+    private int step = 1;
     private String limitName;
     private String configName;
 }

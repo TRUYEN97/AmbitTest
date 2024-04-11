@@ -25,7 +25,7 @@ public class ItemTest extends AbsModule<ItemTestDto, ItemTestDto, ItemTestPanel>
 
     private final Cmd cmd;
 
-    public ItemTest(ItemTestDto itemTestDto){
+    public ItemTest(ItemTestDto itemTestDto) {
         super(itemTestDto, itemTestDto, new ItemTestPanel());
         this.cmd = new Cmd();
     }
@@ -45,13 +45,17 @@ public class ItemTest extends AbsModule<ItemTestDto, ItemTestDto, ItemTestPanel>
                     || !responce.trim().endsWith("200")
                     || !responce.contains("{")
                     || !responce.contains("}")) {
-                throw new RuntimeException("Get limit failure!");
+                throw new RuntimeException("Get limits failure!");
             }
             limit = responce.substring(responce.indexOf("{"),
                     responce.lastIndexOf("}") + 1);
         } else if (limitDir != null && !limitDir.isBlank()) {
+            File file = new File(limitDir);
+            if (!file.exists()) {
+                throw new RuntimeException("Get limits file not found! " + file);
+            }
             FileService fileService = new FileService();
-            limit = fileService.readFile(new File(limitDir));
+            limit = fileService.readFile(file);
         } else {
             return;
         }
@@ -64,7 +68,7 @@ public class ItemTest extends AbsModule<ItemTestDto, ItemTestDto, ItemTestPanel>
             model.setLimits(limitDtos);
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getLocalizedMessage());
+            throw new RuntimeException(e);
         }
 
     }

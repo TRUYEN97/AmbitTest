@@ -26,9 +26,8 @@ public class Model extends ItemLimit {
     private String test_value = "";
     private String function = "";
 
-
     public String getTest_value() {
-        return test_value == null || test_value.isBlank() ? status : test_value;
+        return test_value == null ? "" : test_value;
     }
 
     public long getCycleTime() {

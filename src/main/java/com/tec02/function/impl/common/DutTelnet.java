@@ -27,6 +27,7 @@ public class DutTelnet extends AbsFunction {
             if (ip == null) {
                 return false;
             }
+            setResult(ip);
             try ( Telnet telnet = this.baseFunction.getTelnet(ip, 23)) {
                 return telnet != null;
             }

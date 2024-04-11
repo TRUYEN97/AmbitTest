@@ -151,7 +151,11 @@ public class AnalysisResult {
             return false;
         }
         result = result.trim();
-        String[] limits = configSpec.trim().split("\\|");
+        configSpec = configSpec.trim();
+        if (result.equals(configSpec)) {
+            return true;
+        }
+        String[] limits = configSpec.split("\\|");
         if (limits != null && limits.length > 0) {
             for (String spec : limits) {
                 if (spec.equals(result)) {

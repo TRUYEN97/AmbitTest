@@ -86,6 +86,8 @@ public class ShowItemConfig extends javax.swing.JPanel {
         btSave = new javax.swing.JButton();
         btGetDefaultConfig = new javax.swing.JButton();
         cbStopMultiTasking = new javax.swing.JCheckBox();
+        cbStopLocalMultiTasking = new javax.swing.JCheckBox();
+        cbWaitLocalMulti = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 153, 153));
 
@@ -183,6 +185,10 @@ public class ShowItemConfig extends javax.swing.JPanel {
 
         cbStopMultiTasking.setText("Stop multitasking");
 
+        cbStopLocalMultiTasking.setText("Stop local multitasking");
+
+        cbWaitLocalMulti.setText("Waiting for local multitasking");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -190,18 +196,25 @@ public class ShowItemConfig extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtLowerLimit)
-                    .addComponent(txtUpperLimit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(txtUpperLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbWaitMulti, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbMulti)
-                    .addComponent(cbCheckSpec)
-                    .addComponent(cbFailContinue)
-                    .addComponent(cbSkipSpecDebug)
-                    .addComponent(cbSkipRunDebug)
-                    .addComponent(cbAlwaysrun)
-                    .addComponent(cbStopMultiTasking, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbWaitLocalMulti, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbStopLocalMultiTasking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbWaitMulti, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbMulti)
+                            .addComponent(cbCheckSpec)
+                            .addComponent(cbFailContinue)
+                            .addComponent(cbSkipSpecDebug)
+                            .addComponent(cbSkipRunDebug)
+                            .addComponent(cbAlwaysrun)
+                            .addComponent(cbStopMultiTasking, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -276,6 +289,10 @@ public class ShowItemConfig extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbStopMultiTasking)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbWaitLocalMulti)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbStopLocalMultiTasking)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbFailContinue)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbCheckSpec)
@@ -312,7 +329,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -410,6 +427,12 @@ public class ShowItemConfig extends javax.swing.JPanel {
         if (config.isWait_multi_done() != cbWaitMulti.isSelected()) {
             return false;
         }
+        if (config.isWait_local_multi_done()!= cbWaitLocalMulti.isSelected()) {
+            return false;
+        }
+        if (config.isStopLocalMutitack()!= cbStopLocalMultiTasking.isSelected()) {
+            return false;
+        }
         if (config.getModeRun() != slModerun.getValue()) {
             return false;
         }
@@ -443,6 +466,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
             config.setFailApiName(txtFailApiName.getText());
             config.setModeRun(slModerun.getValue());
             config.setStopAllMutitack(cbStopMultiTasking.isSelected());
+            config.setStopLocalMutitack(cbStopLocalMultiTasking.isSelected());
             config.setAlwaysRun(cbAlwaysrun.isSelected());
             config.setCheck_spec(cbCheckSpec.isSelected());
             config.setDebugCancellCheckSpec(cbSkipSpecDebug.isSelected());
@@ -454,6 +478,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
             config.setItemName(txtItemName.getText());
             config.setMulti(cbMulti.isSelected());
             config.setWait_multi_done(cbWaitMulti.isSelected());
+            config.setWait_local_multi_done(cbWaitLocalMulti.isSelected());
             config.setRetry((int) spnRetry.getValue());
             config.setTime_out((int) spnTimeOut.getValue());
             config.setLimit_type(cbbLimitType.getSelectedItem().toString());
@@ -525,7 +550,9 @@ public class ShowItemConfig extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbMulti;
     private javax.swing.JCheckBox cbSkipRunDebug;
     private javax.swing.JCheckBox cbSkipSpecDebug;
+    private javax.swing.JCheckBox cbStopLocalMultiTasking;
     private javax.swing.JCheckBox cbStopMultiTasking;
+    private javax.swing.JCheckBox cbWaitLocalMulti;
     private javax.swing.JCheckBox cbWaitMulti;
     private javax.swing.JComboBox<String> cbbFunction;
     private javax.swing.JComboBox<String> cbbLimitType;

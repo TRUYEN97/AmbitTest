@@ -32,6 +32,8 @@ public class IperfSpeedTest extends AbsFucnUseTelnetOrCommportConnector {
         config.put(DUT_COMMAND, "iperf3 -s -D");
         config.put(PC_COMMAND, "iperf3 -c 192.168.1.1 -i 1 -w 4M -t 5 -O 2 -P 8 -B 192.168.1.10 -R");
     }
+    private static final String ENDKEY = "Endkey";
+    private static final String STARTKEY = "Startkey";
 
     @Override
     protected boolean test() {
@@ -43,7 +45,7 @@ public class IperfSpeedTest extends AbsFucnUseTelnetOrCommportConnector {
                 return false;
             }
             this.analysisBase.readShowUntil(telnet, readUntil, new TimeS(2));
-            String value = null;
+            Double value = null;
             try ( Cmd cmd = new Cmd()) {
                 if (!this.baseFunction.sendCommand(cmd, pcCommand)) {
                     return false;
@@ -52,14 +54,17 @@ public class IperfSpeedTest extends AbsFucnUseTelnetOrCommportConnector {
                 while ((line = cmd.readLine()) != null) {
                     addLog(telnet.getName(), line);
                     if (line.contains("[SUM]") && line.contains("receiver")) {
-                        value = Common.subString(line, "MBytes   ", " Mbits/sec");
+                        value = Double.valueOf(line.substring(line.lastIndexOf("Bytes") + 6, line.lastIndexOf("bits/sec") - 1).trim());
+                        if (line.contains("Gbits/sec")) {
+                            value *= 1000;
+                        }
                         break;
                     }
                 }
             }
             if (value != null) {
-                addLog(PC, "Value: %s MBytes", value);
-                setResult(value);
+                addLog(PC, "Value: %.0f Mbits/sec", value);
+                setResult(String.format("%.0f", value));
                 return true;
             } else {
                 return false;
@@ -69,6 +74,7 @@ public class IperfSpeedTest extends AbsFucnUseTelnetOrCommportConnector {
             ErrorLog.addError(this, e.getMessage());
             return false;
         }
+
     }
     private static final String READ_UNTIL = "readUntil";
     private static final String PC_COMMAND = "pcCommand";

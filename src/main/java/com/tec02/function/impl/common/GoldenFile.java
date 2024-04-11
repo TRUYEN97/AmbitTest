@@ -47,6 +47,7 @@ public class GoldenFile extends AbsFunction {
             }
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             addLog(ERROR, e.getLocalizedMessage());
             return false;
         }

@@ -28,8 +28,8 @@ public class Dutping extends AbsFunction {
         boolean type = this.config.get("keepPing", false);
         addLog(CONFIG, "keep Ping: %s", type);
         int timePing = config.getInteger("time_ping", 120);
+        setResult(ip);
         return this.baseFunction.pingTo(ip, timePing, !type);
-
     }
 
     @Override

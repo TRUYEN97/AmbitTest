@@ -42,8 +42,8 @@ public class Usbside extends AbsSendRetryCommand {
         if (!this.fixture.testfunc()) {
             return false;
         }
-        String dutCom = this.config.getString("DutCom");
-        int dutBaud = this.config.getInteger("DutBaudRate", 9600);
+        String dutCom = this.config.getString("DutCom", "COM4");
+        int dutBaud = this.config.getInteger("DutBaudRate", 115200);
         int dutWait = this.config.getInteger("DutWait", 1);
         addLog("Config", String.format("Test about %s s", dutWait));
         try ( ComPort comport = this.baseFunction.getComport(dutCom, dutBaud)) {

@@ -39,6 +39,7 @@ public class UICellTester {
     private final ItemFunctionFactory functionFactory;
     private final List<Mark> marks;
     private final Logger logger;
+    private final Core core;
     private Thread stopThread;
     private Future rootFuture;
     private String input;
@@ -50,6 +51,7 @@ public class UICellTester {
         this.pool = Executors.newSingleThreadExecutor();
         this.poolRun = Executors.newFixedThreadPool(5);
         this.functionFactory = ItemFunctionFactory.getInsatance();
+        this.core = Core.getInstance();
         this.marks = new ArrayList<>();
         this.logger = new Logger(String.format("log/CellTester/%s", uICell.getName()));
         this.stopTest = false;
@@ -59,11 +61,14 @@ public class UICellTester {
         if (isTesting() || input == null) {
             return;
         }
+        if (this.core.updateAvailable()) {
+            System.exit(0);
+        }
         this.input = input.toUpperCase();
         ModeFlow modeFlow = this.modeManagement.getModeFlow();
         this.rootFuture = this.pool.submit(() -> {
             this.stopTest = false;
-            for (int i = 0; i < modeFlow.getLoop() && !this.stopTest; i++) {
+            for (int i = 0; i < modeFlow.getLoop() && !this.stopTest; i++, modeFlow.reset()) {
                 try {
                     String modeName = moderun > 1 ? "*TE-Debug" : this.modeManagement.getCurrentModeName();
                     String modeApi = moderun > 1 ? MyConst.CONFIG.DEBUG : modeFlow.getAPIMode();
@@ -80,7 +85,7 @@ public class UICellTester {
                             modeFlow.nextToFailedFlow();
                         }
                     }
-                    waitForMultidone(500);
+                    waitForMultidone(50, this.marks, new TesterModel());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     this.logger.addLog("Error", ex.getLocalizedMessage());
@@ -105,6 +110,9 @@ public class UICellTester {
         if (isTesting() || allItem == null || allItem.isEmpty()) {
             return;
         }
+        if (this.core.updateAvailable()) {
+            System.exit(0);
+        }
         this.rootFuture = this.pool.submit(() -> {
             this.stopTest = false;
             try {
@@ -114,7 +122,7 @@ public class UICellTester {
                 this.uICell.getDataCell().setTestColor(Color.yellow);
                 this.uICell.getDataCell().setFailColor(Color.red);
                 run(null, allItem, true, MODE_DEBUG_ITEM);
-                waitForMultidone(500);
+                waitForMultidone(50, this.marks, new TesterModel());
             } catch (Exception ex) {
                 ex.printStackTrace();
                 this.logger.addLog("Error", ex.getLocalizedMessage());
@@ -125,46 +133,56 @@ public class UICellTester {
         });
     }
 
-    private boolean taskHasFailed() {
+    private TesterModel taskHasFailed(List<Mark> marks, TesterModel testerModel) {
         List<Mark> hasDones = new ArrayList<>();
         try {
-            boolean rs = true;
             for (Mark mark : marks) {
                 if (mark.future.isDone()) {
                     hasDones.add(mark);
-                    if (!mark.function.isPass() && !mark.function.getConfig().isFail_continue()) {
-                        rs = false;
+                    if (!mark.function.isPass() || !mark.function.isAllSubItemPass()) {
+                        testerModel.pass = false;
+                        if (!mark.function.getConfig().isFail_continue()) {
+                            testerModel.testAble = false;
+                        }
                     }
                 }
             }
-            return rs;
         } finally {
             marks.removeAll(hasDones);
+            if (marks != this.marks) {
+                this.marks.removeAll(hasDones);
+            }
         }
+        return testerModel;
     }
 
     private boolean run(Integer begin, List<ItemConfig> items, boolean alwaysRun, int modeRun) throws InterruptedException, ExecutionException {
+
         Future currFt;
         AbsFunction function;
         if (modeRun < MODE_ROOT) {
             modeRun = MODE_ROOT;
         }
-        boolean testRs = true;
-        int failCount = this.uICell.getDataCell().getFailedFunctions().size();
+        List<Mark> localMarks = new ArrayList<>();
+        TesterModel testerModel = new TesterModel();
         for (ItemConfig itemConfig : items) {
             if (stopTest) {
                 break;
             }
+            if (itemConfig.isStopLocalMutitack()) {
+                stopMultitack(localMarks);
+            }
             if (itemConfig.isStopAllMutitack()) {
-                stopMultitack();
+                stopMultitack(this.marks);
             }
-            if (!taskHasFailed()) {
-                testRs = false;
+            taskHasFailed(this.marks, testerModel);
+            if (itemConfig.isWait_local_multi_done()) {
+                waitForMultidone(50, localMarks, testerModel);
             }
-            if (itemConfig.isWait_multi_done() && !waitForMultidone(50)) {
-                testRs = false;
+            if (itemConfig.isWait_multi_done()) {
+                waitForMultidone(50, this.marks, testerModel);
             }
-            if ((!testRs && !alwaysRun && !itemConfig.isAlwaysRun())
+            if ((!testerModel.testAble && !alwaysRun && !itemConfig.isAlwaysRun())
                     || modeRun > itemConfig.getModeRun()) {
                 continue;
             }
@@ -172,10 +190,12 @@ public class UICellTester {
                     itemConfig.getFunction(), uICell,
                     itemConfig.getItemName(),
                     itemConfig.getTest_name(), begin, true);
-            AeClientRunner.getInstance().sendDefaulDataToServer(uICell);
             if (function == null) {
                 function = new AbsFunction(FunctionConstructorModel.builder()
                         .uICell(uICell)
+                        .limitName(itemConfig.getTest_name())
+                        .configName(itemConfig.getItemName())
+                        .begin(begin)
                         .build()) {
 
                     @Override
@@ -193,30 +213,27 @@ public class UICellTester {
                         config.setTest_name(itemConfig.getTest_name());
                         config.setFunction(itemConfig.getFunction());
                     }
-                
+
                 };
-                uICell.getDataCell().addItemFunction(function);
-                uICell.getDataCell().addFailedItemFunction(function);
-                function.runTest(1);
-            } else {
-                uICell.getDataCell().putData(MyConst.MODEL.TEST_ITEM, function.getModel().getTest_name());
-                currFt = this.poolRun.submit(function);
-                this.marks.add(new Mark(currFt, function));
-                if (!function.getConfig().isMulti()) {
-                    currFt.get();
-                }
+                uICell.getDataCell().addItemFunction(function, 1);
+            }
+            uICell.getDataCell().putData(MyConst.MODEL.TEST_ITEM, function.getModel().getTest_name());
+            AeClientRunner.getInstance().sendDefaulDataToServer(uICell);
+            currFt = this.poolRun.submit(function);
+            Mark mark = new Mark(currFt, function);
+            localMarks.add(mark);
+            this.marks.add(mark);
+            if (!function.getConfig().isMulti()) {
+                currFt.get();
             }
         }
-        return testRs && this.uICell.getDataCell().getFailedFunctions().size() <= failCount;
+        return taskHasFailed(this.marks, testerModel).pass;
     }
 
-    private boolean waitForMultidone(int delay) {
-        boolean rs = true;
+    private TesterModel waitForMultidone(int delay, List<Mark> marks, TesterModel testerModel) {
         delay = delay < 50 ? 50 : delay;
         while (!marks.isEmpty()) {
-            if (!taskHasFailed()) {
-                rs = false;
-            }
+            taskHasFailed(marks, testerModel);
             if (marks.isEmpty()) {
                 break;
             }
@@ -225,10 +242,10 @@ public class UICellTester {
             } catch (Exception ex) {
             }
         }
-        return rs;
+        return testerModel;
     }
 
-    private void stopMultitack() {
+    private void stopMultitack(List<Mark> marks) {
         for (Mark mark : marks) {
             mark.function.stopMultitacking();
         }
@@ -283,7 +300,7 @@ public class UICellTester {
                     FunctionConstructorModel.builder()
                             .uICell(uICell)
                             .build());
-            this.uICell.getDataCell().addItemFunction(saveLocalLog);
+            this.uICell.getDataCell().addItemFunction(saveLocalLog, 1);
             this.poolRun.submit(saveLocalLog).get();
         } catch (Exception e) {
             e.printStackTrace();
@@ -301,6 +318,12 @@ public class UICellTester {
             this.function = function;
         }
 
+    }
+
+    private class TesterModel {
+
+        boolean pass = true;
+        boolean testAble = true;
     }
 
 }

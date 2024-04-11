@@ -56,6 +56,10 @@ public class Core {
         }
         setInput(input, index);
     }
+    
+    public boolean updateAvailable(){
+        return this.updateStatus != 0 && cellUIManager.isNotTest();
+    }
 
     public void setInput(String input, String index) {
         if (input == null) {
@@ -63,9 +67,6 @@ public class Core {
         }
         if (index == null) {
             index = "";
-        }
-        if (this.updateStatus != 0 && cellUIManager.isNotTest()) {
-            System.exit(0);
         }
         input = input.trim();
         index = index.trim();

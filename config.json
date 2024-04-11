@@ -8,8 +8,8 @@
     "local_log" : "Log\\TestLog",
     "product" : "Trieste",
     "row" : 1,
-    "showMissingErrorocode" : true,
-    "station" : "MBLT",
+    "showMissingErrorocode" : false,
+    "station" : "CCT",
     "view" : "BigUI"
   },
   "Socket" : {
@@ -37,9 +37,15 @@
   },
   "ItemTest" : {
     "config" : {
-      "limitCmd" : "cd python && eero_api_limits_Trieste.py mblt",
-      "limitDir" : "\\.\\python\\limits.json",
+      "limitCmd" : "",
+      "limitDir" : "limits.json",
       "modes" : [ {
+        "apiModeName" : "production",
+        "group" : "init",
+        "loop" : 1,
+        "modeName" : "Production",
+        "password" : ""
+      }, {
         "apiModeName" : "debug",
         "group" : "init-debug",
         "loop" : 1,
@@ -53,7 +59,7 @@
         "coreGroup" : true,
         "failColor" : [ 170, 0, 200 ],
         "failedTo" : "",
-        "items" : [ "CheckTime", "gen_node", "nodeproperty_mac", "nodeproperty_unit_part_number" ],
+        "items" : [ "CheckTime", "gen_node" ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "pws",
@@ -64,7 +70,7 @@
         "coreGroup" : true,
         "failColor" : [ 255, 0, 0 ],
         "failedTo" : "pws-end",
-        "items" : [ "usb_bside", "i_tp524_vdd_3v3_openshort", "VOLTAGE_TEST", "thermal_shutdown", "usb_aside", "dut_ping", "i_ubootidle", "v_ubootidle", "dut_telnet", "prepare_eth1", "eth0_ping", "eth1_ping", "eth0_speed_valid", "eth1_speed_valid", "eth1_speed_tx", "test_image_version", "CHECK_DUT_USB", "nodeproperty_uboot_version", "nodeproperty_board_register_value", "led_model", "phy_model", "phy_status", "mmc_model", "bzt_bootloader_version", "qsdk_version", "setenv_sn", "setenv_mac", "setenv_eth0", "setenv_eth1", "MMC_READ_WRITE_SPEED_TEST", "LED_R", "LED_G", "LED_B", "LED_W", "LED_OFF", "button", "prepare_eth0", "eth0_speed_tx", "eth0_speed_rx", "eth1_speed_rx" ],
+        "items" : [ "led_bootup", "autoCCT", "disenable_network", "ping_to_gg", "enable_network", "removeCCT", "resetCCT" ],
         "loop" : 1,
         "modeRun" : 3,
         "passTo" : "pws-end",
@@ -75,7 +81,7 @@
         "coreGroup" : true,
         "failColor" : [ 170, 0, 200 ],
         "failedTo" : "",
-        "items" : [ "CheckTime", "gen_node_debug", "mac", "nodeproperty_mac", "nodeproperty_unit_part_number" ],
+        "items" : [ "CheckTime", "gen_node_debug" ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "pws",
@@ -86,7 +92,7 @@
         "coreGroup" : false,
         "failColor" : [ 0, 204, 153 ],
         "failedTo" : "",
-        "items" : [ "UpLogFTP", "mydas", "upTeAPI" ],
+        "items" : [ ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "",
@@ -97,7 +103,7 @@
         "coreGroup" : true,
         "failColor" : [ 255, 0, 0 ],
         "failedTo" : "final",
-        "items" : [ "upAPI" ],
+        "items" : [ "verify_cct" ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "final",
@@ -119,7 +125,7 @@
         "coreGroup" : true,
         "failColor" : [ 255, 0, 0 ],
         "failedTo" : "final",
-        "items" : [ "shop_floor", "fixtureOpen" ],
+        "items" : [ "fixtureOpen" ],
         "loop" : 1,
         "modeRun" : 3,
         "passTo" : "end",
@@ -153,9 +159,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "eth0_speed_valid",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "gen_node" : {
@@ -164,7 +172,7 @@
           "data_format" : [ "mlbsn", "ethernetmac", "pnname", "model" ],
           "send_format_fail" : [ "sn", "pcname", "status", "errorcode" ],
           "send_final" : false,
-          "MaxLength" : -1,
+          "MaxLength" : 16,
           "send_format" : [ "sn", "pcname" ],
           "url" : "http://10.90.100.20/sfcapi/api/connect"
         },
@@ -181,9 +189,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "gen_node",
         "time_out" : 100,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : true
       },
       "led_model" : {
@@ -212,9 +222,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "led_model",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "eth1_speed_valid" : {
@@ -243,9 +255,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "eth1_speed_valid",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "usb_aside" : {
@@ -277,9 +291,11 @@
         "multi" : true,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "usb_aside",
         "time_out" : 9999,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "eth1_ping" : {
@@ -303,9 +319,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "eth1_ping",
         "time_out" : 30,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "nodeproperty_uboot_version" : {
@@ -334,9 +352,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "nodeproperty_uboot_version",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "temp_cpu" : {
@@ -365,9 +385,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "temp_cpu",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "CHECK_DUT_USB" : {
@@ -398,9 +420,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "CHECK_DUT_USB",
         "time_out" : 10,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "shop_floor" : {
@@ -421,9 +445,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : true,
+        "stopLocalMutitack" : false,
         "test_name" : "shop_floor",
         "time_out" : 2147483647,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : true
       },
       "eth0_ping" : {
@@ -447,9 +473,39 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "eth0_ping",
         "time_out" : 30,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
+      "autoCCT" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "windowsTitle" : "AnLink",
+          "app" : "java -jar AutoClickOnScreen.jar",
+          "dir" : "image",
+          "commands" : [ "show", "click2", "openApp.png-1-10000", "startUp.png-1-5000", "start.png-1-2000", "next.png-3-2000", "next1.png-1-50000-1", "bm.png-1-10000", "wfName.png-1-2000", "input:AutoCCT", "wfPassword.png-1-2000", "input:12345678", "next.png-3-2000", "finishSetup.png-3-10000", "exit.png-3-2000-1", "cancel.png-3-2000-1", "show", "click2" ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "AutoClickOnScreen",
+        "itemName" : "autoCCT",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 0,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "autoCCT",
+        "time_out" : 2147483647,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "nodeproperty_board_register_value" : {
@@ -478,9 +534,39 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "nodeproperty_board_register_value",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
+      "removeCCT" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "windowsTitle" : "AnLink",
+          "app" : "java -jar AutoClickOnScreen.jar",
+          "dir" : "image",
+          "commands" : [ "show", "click2", "openApp.png-1-10000", "basement.png-1-10000", "Advanced.png-1-10000", "remove.png-1-10000", "DeleteNetwork.png-1-10000", "DeleteNetwork1.png-1-10000", "show", "click2" ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "AutoClickOnScreen",
+        "itemName" : "removeCCT",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 0,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "removeCCT",
+        "time_out" : 2147483647,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "LED_B" : {
@@ -529,16 +615,18 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "LED_B",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "dut_ping" : {
         "alwaysRun" : false,
         "bonus" : {
           "IP" : "192.168.1.1",
-          "time_ping" : 120,
+          "time_ping" : 90,
           "nonDHCP" : false,
           "keepPing" : false
         },
@@ -553,11 +641,13 @@
         "lower_limit" : "",
         "modeRun" : 3,
         "multi" : false,
-        "retry" : 1,
+        "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "dut_ping",
-        "time_out" : 140,
+        "time_out" : 95,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "fixtureOpen" : {
@@ -568,7 +658,7 @@
           "FixtureKeys" : [ "OK" ],
           "FixtureRetryCmds" : [ ],
           "FixtureCmds" : [ "AT+CC_AOFF%", "AT+VBUS_AOFF%", "AT+TESTEND%" ],
-          "FixtureCom" : "COM5"
+          "FixtureCom" : "COM1"
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
@@ -583,9 +673,11 @@
         "multi" : true,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "fixtureOpen",
         "time_out" : 25,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "eth1_speed_tx" : {
@@ -616,9 +708,11 @@
         "multi" : true,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "eth1_speed_tx",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "upTeAPI" : {
@@ -647,9 +741,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "upTeAPI",
         "time_out" : 2147483647,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "cpu_stress" : {
@@ -677,9 +773,43 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "cpu_stress",
         "time_out" : 2500,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
+      "led_bootup" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "time" : 2,
+          "timeOut" : 70,
+          "delayS" : 0,
+          "getLedValueCmd" : "AT+LEDPARAMETER%",
+          "apis" : {
+            "led_b_x" : "COR_X\\=?=\\d+(\\.\\d+)?",
+            "led_b_y" : "COR_Y\\=?=\\d+(\\.\\d+)?"
+          }
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "LedBootup",
+        "itemName" : "led_bootup",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 0,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "led_bootup",
+        "time_out" : 80,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "LED_R" : {
@@ -728,9 +858,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "LED_R",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "ram_stress" : {
@@ -758,34 +890,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "ram_stress",
         "time_out" : 2000,
         "upper_limit" : "",
-        "wait_multi_done" : false
-      },
-      "dut_ping_10s" : {
-        "alwaysRun" : false,
-        "bonus" : {
-          "IP" : "192.168.1.1",
-          "time_ping" : 10,
-          "type" : "check"
-        },
-        "check_spec" : true,
-        "debugCancellCheckSpec" : false,
-        "debugCancellRun" : false,
-        "failApiName" : "",
-        "fail_continue" : false,
-        "function" : "Dutping",
-        "itemName" : "dut_ping_10s",
-        "limit_type" : "BOOL",
-        "lower_limit" : "",
-        "modeRun" : 3,
-        "multi" : false,
-        "retry" : 1,
-        "stopAllMutitack" : false,
-        "test_name" : "dut_ping",
-        "time_out" : 140,
-        "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "qsdk_version" : {
@@ -814,9 +923,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "qsdk_version",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "eth0_speed_tx" : {
@@ -844,13 +955,15 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "eth0_speed_tx",
         "time_out" : 30,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "SendToSfis" : {
-        "alwaysRun" : true,
+        "alwaysRun" : false,
         "bonus" : {
           "data_format" : [ ],
           "send_format_fail" : [ "sn", "pcname", "status", "errorcode" ],
@@ -872,9 +985,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "SendToSfis",
         "time_out" : 100,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "i_tp524_vdd_3v3_openshort" : {
@@ -906,9 +1021,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "i_tp524_vdd_3v3_openshort",
         "time_out" : 30,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "LED_G" : {
@@ -957,9 +1074,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "LED_G",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "i_ubootidle" : {
@@ -989,9 +1108,37 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "i_ubootidle",
         "time_out" : 30,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
+      "verify_cct" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "mess" : "",
+          "log" : ""
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "VirFunction",
+        "itemName" : "verify_cct",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 0,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "verify_cct",
+        "time_out" : 2,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "v_ubootidle" : {
@@ -1021,9 +1168,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "v_ubootidle",
         "time_out" : 30,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "nodeproperty_mac" : {
@@ -1044,9 +1193,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "nodeproperty_mac",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "CheckTestConditions" : {
@@ -1069,9 +1220,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "CheckTestConditions",
         "time_out" : 2147483647,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "sn_ok" : {
@@ -1098,9 +1251,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "sn_ok",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "mac_ok" : {
@@ -1127,9 +1282,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "mac_ok",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "setenv_sn" : {
@@ -1147,7 +1304,7 @@
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
-        "debugCancellRun" : true,
+        "debugCancellRun" : false,
         "failApiName" : "",
         "fail_continue" : false,
         "function" : "SetENV",
@@ -1158,9 +1315,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "setenv_sn",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "LED_W" : {
@@ -1209,9 +1368,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "LED_W",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "mac" : {
@@ -1232,9 +1393,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "mac",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "button" : {
@@ -1264,9 +1427,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "button",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "mydas" : {
@@ -1290,9 +1455,37 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "mydas",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
+      "disenable_network" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "cardname" : "Network",
+          "setEnable" : false
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "NetworkAdapterControl",
+        "itemName" : "disenable_network",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 1,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "disenable_network",
+        "time_out" : 10,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "gen_node_debug" : {
@@ -1301,7 +1494,7 @@
           "data_format" : [ "mlbsn", "ethernetmac", "pnname" ],
           "send_format_fail" : [ "sn", "pcname", "status" ],
           "send_final" : false,
-          "MaxLength" : -1,
+          "MaxLength" : 16,
           "send_format" : [ "sn", "pcname", "mode" ],
           "url" : "http://10.90.100.20/sfcapi/api/connect"
         },
@@ -1318,9 +1511,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "gen_node",
         "time_out" : 100,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : true
       },
       "thermal_shutdown" : {
@@ -1351,9 +1546,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "thermal_shutdown",
         "time_out" : 25,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "ReleasePowerSwitchOutlet" : {
@@ -1379,9 +1576,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "ReleasePowerSwitchOutlet",
         "time_out" : 2147483647,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "reboot_soft" : {
@@ -1406,9 +1605,51 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "reboot_soft",
         "time_out" : 350,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
+      "resetCCT" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "type" : "!comport",
+          "baudrate" : 115200,
+          "comport" : 1,
+          "IP" : "192.168.1.1",
+          "nonDHCP" : false,
+          "startPushCmds" : "AT+RESET_PRESS%",
+          "endPushCmds" : "AT+RESET_RELEASE%",
+          "readUntil" : "ok",
+          "spec" : "",
+          "time" : 15,
+          "ledWaitTime" : 1,
+          "getLedValueCmd" : "AT+LEDPARAMETER%",
+          "apis" : {
+            "led_r_x" : "COR_X\\=?=\\d+(\\.\\d+)?",
+            "led_r_y" : "COR_Y\\=?=\\d+(\\.\\d+)?"
+          }
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "ResetButtonCCT",
+        "itemName" : "resetCCT",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 1,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "resetCCT",
+        "time_out" : 80,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "VOLTAGE_TEST" : {
@@ -1436,9 +1677,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "VOLTAGE_TEST",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "upAPI" : {
@@ -1467,9 +1710,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "upAPI",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "CheckProduct" : {
@@ -1510,9 +1755,39 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "CheckProduct",
         "time_out" : 10,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
+      "ping_to_gg" : {
+        "alwaysRun" : false,
+        "bonus" : {
+          "IP" : "8.8.8.8",
+          "nonDHCP" : true,
+          "keepPing" : false,
+          "time_ping" : 10
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "Dutping",
+        "itemName" : "ping_to_gg",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 1,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "ping_to_gg",
+        "time_out" : 140,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "eth1_speed_rx" : {
@@ -1543,9 +1818,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "eth1_speed_rx",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "CheckTime" : {
@@ -1567,9 +1844,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "CheckTime",
         "time_out" : 100,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "UpLogFTP" : {
@@ -1602,9 +1881,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "UpLogFTP",
         "time_out" : 2147483647,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "phy_model" : {
@@ -1633,9 +1914,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "phy_model",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "prepare_eth1" : {
@@ -1664,9 +1947,37 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "prepare_eth1",
         "time_out" : 15,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
+      "enable_network" : {
+        "alwaysRun" : true,
+        "bonus" : {
+          "cardname" : "Network",
+          "setEnable" : true
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "NetworkAdapterControl",
+        "itemName" : "enable_network",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 1,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "enable_network",
+        "time_out" : 10,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "setenv_mac" : {
@@ -1685,7 +1996,7 @@
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
-        "debugCancellRun" : true,
+        "debugCancellRun" : false,
         "failApiName" : "",
         "fail_continue" : false,
         "function" : "SetENV_MAC",
@@ -1696,9 +2007,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "setenv_mac",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "setenv_eth0" : {
@@ -1717,7 +2030,7 @@
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
-        "debugCancellRun" : true,
+        "debugCancellRun" : false,
         "failApiName" : "",
         "fail_continue" : false,
         "function" : "SetENV_MAC",
@@ -1728,9 +2041,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "setenv_eth0",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "phy_status" : {
@@ -1759,9 +2074,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "phy_status",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "bzt_bootloader_version" : {
@@ -1790,9 +2107,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "bzt_bootloader_version",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "setenv_eth1" : {
@@ -1811,7 +2130,7 @@
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
-        "debugCancellRun" : true,
+        "debugCancellRun" : false,
         "failApiName" : "",
         "fail_continue" : false,
         "function" : "SetENV_MAC",
@@ -1822,9 +2141,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "setenv_eth1",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "MMC_READ_WRITE_SPEED_TEST" : {
@@ -1854,9 +2175,11 @@
         "multi" : true,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "MMC_READ_WRITE_SPEED_TEST",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "nodeproperty_unit_part_number" : {
@@ -1877,9 +2200,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "nodeproperty_unit_part_number",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "mmc_model" : {
@@ -1908,9 +2233,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "mmc_model",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "wps_ok" : {
@@ -1936,9 +2263,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "wps_ok",
         "time_out" : 30,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "fixture_close" : {
@@ -1948,7 +2277,7 @@
           "FixtureBaudRate" : 115200,
           "FixtureKeys" : [ "IO_OK", "OK" ],
           "FixtureCmds" : [ "AT+TESTSTART%", "AT+CC_AON%", "AT+VBUS_AON%" ],
-          "FixtureCom" : "COM5"
+          "FixtureCom" : "COM1"
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
@@ -1963,9 +2292,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "fixture_close",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "power_cycle" : {
@@ -1991,9 +2322,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "power_cycle",
         "time_out" : 2147483647,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "LED_OFF" : {
@@ -2042,9 +2375,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "LED_OFF",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "prepare_eth0" : {
@@ -2073,9 +2408,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "prepare_eth0",
         "time_out" : 15,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "usb_bside" : {
@@ -2104,9 +2441,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "usb_bside",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "eth0_speed_rx" : {
@@ -2134,9 +2473,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "eth0_speed_rx",
         "time_out" : 20,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "dut_telnet" : {
@@ -2157,9 +2498,11 @@
         "multi" : false,
         "retry" : 1,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "dut_telnet",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "emmc_badblocks" : {
@@ -2188,9 +2531,11 @@
         "multi" : false,
         "retry" : 0,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "emmc_badblocks",
         "time_out" : 800,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "test_image_version" : {
@@ -2218,9 +2563,11 @@
         "multi" : false,
         "retry" : 2,
         "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
         "test_name" : "test_image_version",
         "time_out" : 60,
         "upper_limit" : "",
+        "wait_local_multi_done" : false,
         "wait_multi_done" : false
       }
     }

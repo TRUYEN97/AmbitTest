@@ -36,7 +36,7 @@ public class CheckTestConditions extends AbsFunction {
                           """, failedConsecutive);
             String id = this.config.getString("id", "TE");
             String pw = this.config.getString("pw", "Foxconn168!!");
-            if (check(id, mess, failedConsecutive)) {
+            if (check(id, pw, failedConsecutive)) {
                 addLog("PC", "Has been confirmed by %s!", id);
                 return true;
             } else {

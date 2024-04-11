@@ -122,15 +122,18 @@ public class DataCell {
         return itemName;
     }
 
-    public void addItemFunction(AbsFunction absFunction) {
+    public void addItemFunction(AbsFunction absFunction, int step) {
         if (absFunction == null) {
             return;
+        }
+        if (step < 1) {
+            step = 1;
         }
         String testItemName = absFunction.getBaseItem().trim().toLowerCase();
         Integer count = 0;
         if (this.itemCounts.containsKey(testItemName)
                 && (count = this.itemCounts.get(testItemName)) != null) {
-            this.itemCounts.put(testItemName, count + 1);
+            this.itemCounts.put(testItemName, count + step);
         } else {
             this.itemCounts.put(testItemName, 0);
         }
@@ -291,7 +294,7 @@ public class DataCell {
         this.uICell.getDataCell().putData(MyConst.MODEL.MODE_NAME, modeName);
         this.uICell.getDataCell().putData(MyConst.MODEL.MODE, modeAPI);
         this.wareHouse.put(MyConst.MODEL.START_TIME, timeBase.getSimpleDateTime());
-        this.wareHouse.put(MyConst.MODEL.ON_SFIS, modeAPI.equalsIgnoreCase(MyConst.CONFIG.DEBUG) ? "off" : "on");
+        this.wareHouse.put(MyConst.MODEL.ON_SFIS, "off");
         this.startTime = System.currentTimeMillis();
     }
 

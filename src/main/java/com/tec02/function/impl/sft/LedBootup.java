@@ -96,7 +96,6 @@ public class LedBootup extends AbsFunction {
 
     private static final String APIS = "apis";
     private static final String LED_VALUE_CMD = "getLedValueCmd";
-    private static final String PNS = "pns";
 
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
@@ -104,6 +103,7 @@ public class LedBootup extends AbsFunction {
         config.put("time", 5);
         config.put("timeOut", 70);
         config.put("delayS", 0);
+        config.put(LED_VALUE_CMD, "AT+LEDSTATUS%");
         JSONObject apis = new JSONObject();
         config.put(APIS, apis);
         apis.put("led_r_r", "R\\=?=\\d+(\\.\\d+)?");

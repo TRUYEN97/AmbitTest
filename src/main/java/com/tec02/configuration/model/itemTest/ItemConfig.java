@@ -22,11 +22,13 @@ public class ItemConfig implements IItemConfig {
     private boolean multi = false;
     private boolean check_spec = true;
     private boolean wait_multi_done = false;
+    private boolean wait_local_multi_done = false;
     private boolean fail_continue = false;
     private boolean debugCancellCheckSpec = false;
     private boolean debugCancellRun = false;
     private boolean alwaysRun = false;
     private boolean stopAllMutitack = false;
+    private boolean stopLocalMutitack = false;
     private String function = "";
     private String test_name = "";
     private String failApiName = "";

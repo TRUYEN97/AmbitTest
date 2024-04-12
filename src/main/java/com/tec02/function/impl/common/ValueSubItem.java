@@ -14,7 +14,7 @@ import com.tec02.function.model.FunctionConstructorModel;
  */
 public class ValueSubItem extends AbsFunction {
 
-    private String value = null;
+    protected String value = null;
 
     public ValueSubItem(FunctionConstructorModel constructorModel) {
         super(constructorModel);

@@ -72,15 +72,18 @@ public class CreateTxt extends AbsBaseFunction {
         loger.add(String.format("Status = %s\r\n", this.dataCell.getString(MyConst.SFIS.STATUS)));
         loger.add(String.format("Version = %s\r\n", this.dataCell.getString(MyConst.MODEL.SOFTWARE_VERSION)));
         if (!this.dataCell.isPass()) {
+            loger.add(String.format("F.f %s\r\n", this.dataCell.getFirtFailItem()));
             loger.add(String.format("Error code = %s\r\n", this.dataCell.getString(MyConst.MODEL.ERROR_CODE)));
             loger.add(String.format("Local error code = %s\r\n", this.dataCell.getString(MyConst.MODEL.ERRORCODE)));
             loger.add(String.format("Error description = %s\r\n", this.dataCell.getString(MyConst.MODEL.ERRORDES)));
         }
         loger.add(String.format("Test time = %.3f s\r\n", this.dataCell.getCycleTestTime() / 1000.0));
         loger.add(String.format("Station = %s\r\n", this.dataCell.getString(MyConst.MODEL.PCNAME)));
-        loger.add(String.format("Location = %s\r\n", this.dataCell.getString(MyConst.MODEL.POSITION)));
+        loger.add(String.format("POSITION = %s\r\n", this.dataCell.getString(MyConst.MODEL.POSITION)));
         loger.add(String.format("HHSN = %s\r\n", this.dataCell.getString(MyConst.SFIS.SN)));
         loger.add(String.format("DEVICESN = %s\r\n", this.dataCell.getString(MyConst.SFIS.MLBSN)));
+        loger.add(String.format("MO = %s\r\n", this.dataCell.getString(MyConst.SFIS.MO)));
+        loger.add(String.format("PNNAME = %s\r\n", this.dataCell.getString(MyConst.SFIS.PNNAME)));
         loger.add("===================================================================\r\n");
     }
 

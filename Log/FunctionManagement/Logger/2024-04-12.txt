@@ -1,0 +1,275 @@
+2024-04-12 06:44:40.123:   add base func: CreateJsonApi
+2024-04-12 06:44:40.124:   add base func: AnalysisBase
+2024-04-12 06:44:40.125:   add base func: BaseFunction
+2024-04-12 06:44:40.126:   add base func: CreateTxt
+2024-04-12 06:44:40.127:   add base func: FileBaseFunction
+2024-04-12 06:44:40.127:   add base func: UpFTP
+2024-04-12 06:44:40.128:   add base func: ZipFile
+2024-04-12 06:44:40.129:   add func: CheckTime
+2024-04-12 06:44:40.130:   add func: PowerSwitchFunc
+2024-04-12 06:44:40.131:   add func: CheckTestConditions
+2024-04-12 06:44:40.132:   add func: Dutping
+2024-04-12 06:44:40.132:   add func: DutTelnet
+2024-04-12 06:44:40.133:   add func: CheckDutCompare
+2024-04-12 06:44:40.134:   add func: RebootSoft
+2024-04-12 06:44:40.135:   add func: EmmcWriteRead
+2024-04-12 06:44:40.136:   add func: EmmcSpeed
+2024-04-12 06:44:40.136:   add func: TelnetReadUntilKey
+2024-04-12 06:44:40.137:   add func: EmmcBadBlock
+2024-04-12 06:44:40.138:   add func: SfisFunction
+2024-04-12 06:44:40.139:   add func: CheckProduct
+2024-04-12 06:44:40.139:   add func: TempCPU
+2024-04-12 06:44:40.140:   add func: GetSfisAndCompareSpec
+2024-04-12 06:44:40.140:   add func: VirFunction
+2024-04-12 06:44:40.141:   add func: DeltaValue
+2024-04-12 06:44:40.142:   add func: UpAPI
+2024-04-12 06:44:40.142:   add func: Mydas
+2024-04-12 06:44:40.143:   add func: UpLogFTP
+2024-04-12 06:44:40.143:   add func: GoldenFile
+2024-04-12 06:44:40.144:   add func: OpenShort
+2024-04-12 06:44:40.145:   add func: FixtureAction
+2024-04-12 06:44:40.145:   add func: Usbside
+2024-04-12 06:44:40.146:   add func: UpTeAPI
+2024-04-12 06:44:40.146:   add func: SaveLocalLog
+2024-04-12 06:44:40.147:   add func: ThermalShutdown
+2024-04-12 06:44:40.148:   add func: UbootidleTestFixture
+2024-04-12 06:44:40.148:   add func: VoltageTest
+2024-04-12 06:44:40.149:   add func: ValueSubItem
+2024-04-12 06:44:40.149:   add func: CheckDutUsb
+2024-04-12 06:44:40.150:   add func: ValueSubItem
+2024-04-12 06:44:40.150:   add func: UserspaceSpeedtestSpeed
+2024-04-12 06:44:40.151:   add func: LedTest
+2024-04-12 06:44:40.151:   add func: SetENV
+2024-04-12 06:44:40.152:   add func: ResetButton
+2024-04-12 06:44:40.152:   add func: ResetButtonCCT
+2024-04-12 06:44:40.153:   add func: IperfSpeedTest
+2024-04-12 06:44:40.153:   add func: CheckKingTonIC
+2024-04-12 06:44:40.154:   add func: LedBootup
+2024-04-12 06:44:40.154:   add func: CheckComport
+2024-04-12 06:44:40.155:   add func: FindMacBLE
+2024-04-12 06:44:40.156:   add func: UsbsideCheckReboot
+2024-04-12 06:44:40.156:   add func: NetworkAdapterControl
+2024-04-12 06:44:40.157:   add func: AutoClickOnScreen
+2024-04-12 06:44:40.157:   add func: PhyItem
+2024-04-12 06:44:40.158:   add func: NetworkControlAndPing
+2024-04-12 06:44:40.158:   add func: ValueWithSpecSubItem
+2024-04-12 07:29:49.960:   add base func: CreateJsonApi
+2024-04-12 07:29:49.961:   add base func: AnalysisBase
+2024-04-12 07:29:49.962:   add base func: BaseFunction
+2024-04-12 07:29:49.963:   add base func: CreateTxt
+2024-04-12 07:29:49.963:   add base func: FileBaseFunction
+2024-04-12 07:29:49.964:   add base func: UpFTP
+2024-04-12 07:29:49.965:   add base func: ZipFile
+2024-04-12 07:29:49.966:   add func: CheckTime
+2024-04-12 07:29:49.967:   add func: PowerSwitchFunc
+2024-04-12 07:29:49.968:   add func: CheckTestConditions
+2024-04-12 07:29:49.968:   add func: Dutping
+2024-04-12 07:29:49.969:   add func: DutTelnet
+2024-04-12 07:29:49.971:   add func: CheckDutCompare
+2024-04-12 07:29:49.972:   add func: RebootSoft
+2024-04-12 07:29:49.972:   add func: EmmcWriteRead
+2024-04-12 07:29:49.973:   add func: EmmcSpeed
+2024-04-12 07:29:49.974:   add func: TelnetReadUntilKey
+2024-04-12 07:29:49.975:   add func: EmmcBadBlock
+2024-04-12 07:29:49.975:   add func: SfisFunction
+2024-04-12 07:29:49.976:   add func: CheckProduct
+2024-04-12 07:29:49.977:   add func: TempCPU
+2024-04-12 07:29:49.977:   add func: GetSfisAndCompareSpec
+2024-04-12 07:29:49.978:   add func: VirFunction
+2024-04-12 07:29:49.978:   add func: DeltaValue
+2024-04-12 07:29:49.979:   add func: UpAPI
+2024-04-12 07:29:49.980:   add func: Mydas
+2024-04-12 07:29:49.981:   add func: UpLogFTP
+2024-04-12 07:29:49.981:   add func: GoldenFile
+2024-04-12 07:29:49.982:   add func: OpenShort
+2024-04-12 07:29:49.983:   add func: FixtureAction
+2024-04-12 07:29:49.984:   add func: Usbside
+2024-04-12 07:29:49.984:   add func: UpTeAPI
+2024-04-12 07:29:49.985:   add func: SaveLocalLog
+2024-04-12 07:29:49.985:   add func: ThermalShutdown
+2024-04-12 07:29:49.986:   add func: UbootidleTestFixture
+2024-04-12 07:29:49.987:   add func: VoltageTest
+2024-04-12 07:29:49.987:   add func: ValueSubItem
+2024-04-12 07:29:49.988:   add func: CheckDutUsb
+2024-04-12 07:29:49.988:   add func: ValueSubItem
+2024-04-12 07:29:49.989:   add func: UserspaceSpeedtestSpeed
+2024-04-12 07:29:49.989:   add func: LedTest
+2024-04-12 07:29:49.990:   add func: SetENV
+2024-04-12 07:29:49.990:   add func: ResetButton
+2024-04-12 07:29:49.991:   add func: ResetButtonCCT
+2024-04-12 07:29:49.991:   add func: IperfSpeedTest
+2024-04-12 07:29:49.992:   add func: CheckKingTonIC
+2024-04-12 07:29:49.993:   add func: LedBootup
+2024-04-12 07:29:49.993:   add func: CheckComport
+2024-04-12 07:29:49.994:   add func: FindMacBLE
+2024-04-12 07:29:49.994:   add func: UsbsideCheckReboot
+2024-04-12 07:29:49.995:   add func: NetworkAdapterControl
+2024-04-12 07:29:49.995:   add func: AutoClickOnScreen
+2024-04-12 07:29:49.996:   add func: PhyItem
+2024-04-12 07:29:49.997:   add func: NetworkControlAndPing
+2024-04-12 07:29:49.997:   add func: ValueWithSpecSubItem
+2024-04-12 07:59:57.078:   add base func: CreateJsonApi
+2024-04-12 07:59:57.079:   add base func: AnalysisBase
+2024-04-12 07:59:57.080:   add base func: BaseFunction
+2024-04-12 07:59:57.081:   add base func: CreateTxt
+2024-04-12 07:59:57.082:   add base func: FileBaseFunction
+2024-04-12 07:59:57.082:   add base func: UpFTP
+2024-04-12 07:59:57.083:   add base func: ZipFile
+2024-04-12 07:59:57.084:   add func: CheckTime
+2024-04-12 07:59:57.085:   add func: PowerSwitchFunc
+2024-04-12 07:59:57.086:   add func: CheckTestConditions
+2024-04-12 07:59:57.087:   add func: Dutping
+2024-04-12 07:59:57.088:   add func: DutTelnet
+2024-04-12 07:59:57.089:   add func: CheckDutCompare
+2024-04-12 07:59:57.090:   add func: RebootSoft
+2024-04-12 07:59:57.090:   add func: EmmcWriteRead
+2024-04-12 07:59:57.091:   add func: EmmcSpeed
+2024-04-12 07:59:57.092:   add func: TelnetReadUntilKey
+2024-04-12 07:59:57.093:   add func: EmmcBadBlock
+2024-04-12 07:59:57.093:   add func: SfisFunction
+2024-04-12 07:59:57.094:   add func: CheckProduct
+2024-04-12 07:59:57.095:   add func: TempCPU
+2024-04-12 07:59:57.095:   add func: GetSfisAndCompareSpec
+2024-04-12 07:59:57.096:   add func: VirFunction
+2024-04-12 07:59:57.096:   add func: DeltaValue
+2024-04-12 07:59:57.097:   add func: UpAPI
+2024-04-12 07:59:57.098:   add func: Mydas
+2024-04-12 07:59:57.098:   add func: UpLogFTP
+2024-04-12 07:59:57.099:   add func: GoldenFile
+2024-04-12 07:59:57.100:   add func: OpenShort
+2024-04-12 07:59:57.100:   add func: FixtureAction
+2024-04-12 07:59:57.101:   add func: Usbside
+2024-04-12 07:59:57.101:   add func: UpTeAPI
+2024-04-12 07:59:57.102:   add func: SaveLocalLog
+2024-04-12 07:59:57.103:   add func: ThermalShutdown
+2024-04-12 07:59:57.104:   add func: UbootidleTestFixture
+2024-04-12 07:59:57.104:   add func: VoltageTest
+2024-04-12 07:59:57.104:   add func: ValueSubItem
+2024-04-12 07:59:57.105:   add func: CheckDutUsb
+2024-04-12 07:59:57.105:   add func: ValueSubItem
+2024-04-12 07:59:57.106:   add func: UserspaceSpeedtestSpeed
+2024-04-12 07:59:57.106:   add func: LedTest
+2024-04-12 07:59:57.107:   add func: SetENV
+2024-04-12 07:59:57.107:   add func: ResetButton
+2024-04-12 07:59:57.108:   add func: ResetButtonCCT
+2024-04-12 07:59:57.108:   add func: IperfSpeedTest
+2024-04-12 07:59:57.109:   add func: CheckKingTonIC
+2024-04-12 07:59:57.109:   add func: LedBootup
+2024-04-12 07:59:57.110:   add func: CheckComport
+2024-04-12 07:59:57.110:   add func: FindMacBLE
+2024-04-12 07:59:57.111:   add func: UsbsideCheckReboot
+2024-04-12 07:59:57.111:   add func: NetworkAdapterControl
+2024-04-12 07:59:57.112:   add func: AutoClickOnScreen
+2024-04-12 07:59:57.112:   add func: PhyItem
+2024-04-12 07:59:57.113:   add func: NetworkControlAndPing
+2024-04-12 07:59:57.114:   add func: ValueWithSpecSubItem
+2024-04-12 08:13:36.373:   add base func: CreateJsonApi
+2024-04-12 08:13:36.374:   add base func: AnalysisBase
+2024-04-12 08:13:36.375:   add base func: BaseFunction
+2024-04-12 08:13:36.376:   add base func: CreateTxt
+2024-04-12 08:13:36.377:   add base func: FileBaseFunction
+2024-04-12 08:13:36.378:   add base func: UpFTP
+2024-04-12 08:13:36.378:   add base func: ZipFile
+2024-04-12 08:13:36.380:   add func: CheckTime
+2024-04-12 08:13:36.381:   add func: PowerSwitchFunc
+2024-04-12 08:13:36.382:   add func: CheckTestConditions
+2024-04-12 08:13:36.382:   add func: Dutping
+2024-04-12 08:13:36.383:   add func: DutTelnet
+2024-04-12 08:13:36.385:   add func: CheckDutCompare
+2024-04-12 08:13:36.386:   add func: RebootSoft
+2024-04-12 08:13:36.386:   add func: EmmcWriteRead
+2024-04-12 08:13:36.387:   add func: EmmcSpeed
+2024-04-12 08:13:36.388:   add func: TelnetReadUntilKey
+2024-04-12 08:13:36.389:   add func: EmmcBadBlock
+2024-04-12 08:13:36.389:   add func: SfisFunction
+2024-04-12 08:13:36.390:   add func: CheckProduct
+2024-04-12 08:13:36.391:   add func: TempCPU
+2024-04-12 08:13:36.392:   add func: GetSfisAndCompareSpec
+2024-04-12 08:13:36.393:   add func: VirFunction
+2024-04-12 08:13:36.394:   add func: DeltaValue
+2024-04-12 08:13:36.394:   add func: UpAPI
+2024-04-12 08:13:36.395:   add func: Mydas
+2024-04-12 08:13:36.396:   add func: UpLogFTP
+2024-04-12 08:13:36.396:   add func: GoldenFile
+2024-04-12 08:13:36.397:   add func: OpenShort
+2024-04-12 08:13:36.398:   add func: FixtureAction
+2024-04-12 08:13:36.398:   add func: Usbside
+2024-04-12 08:13:36.399:   add func: UpTeAPI
+2024-04-12 08:13:36.400:   add func: SaveLocalLog
+2024-04-12 08:13:36.400:   add func: ThermalShutdown
+2024-04-12 08:13:36.401:   add func: UbootidleTestFixture
+2024-04-12 08:13:36.402:   add func: VoltageTest
+2024-04-12 08:13:36.402:   add func: ValueSubItem
+2024-04-12 08:13:36.403:   add func: CheckDutUsb
+2024-04-12 08:13:36.403:   add func: ValueSubItem
+2024-04-12 08:13:36.404:   add func: UserspaceSpeedtestSpeed
+2024-04-12 08:13:36.404:   add func: LedTest
+2024-04-12 08:13:36.405:   add func: SetENV
+2024-04-12 08:13:36.405:   add func: ResetButton
+2024-04-12 08:13:36.406:   add func: ResetButtonCCT
+2024-04-12 08:13:36.407:   add func: IperfSpeedTest
+2024-04-12 08:13:36.407:   add func: CheckKingTonIC
+2024-04-12 08:13:36.408:   add func: LedBootup
+2024-04-12 08:13:36.408:   add func: CheckComport
+2024-04-12 08:13:36.409:   add func: FindMacBLE
+2024-04-12 08:13:36.410:   add func: UsbsideCheckReboot
+2024-04-12 08:13:36.410:   add func: NetworkAdapterControl
+2024-04-12 08:13:36.411:   add func: AutoClickOnScreen
+2024-04-12 08:13:36.411:   add func: PhyItem
+2024-04-12 08:13:36.412:   add func: NetworkControlAndPing
+2024-04-12 08:13:36.412:   add func: ValueWithSpecSubItem
+2024-04-12 08:14:03.117:   add base func: CreateJsonApi
+2024-04-12 08:14:03.118:   add base func: AnalysisBase
+2024-04-12 08:14:03.118:   add base func: BaseFunction
+2024-04-12 08:14:03.120:   add base func: CreateTxt
+2024-04-12 08:14:03.121:   add base func: FileBaseFunction
+2024-04-12 08:14:03.122:   add base func: UpFTP
+2024-04-12 08:14:03.122:   add base func: ZipFile
+2024-04-12 08:14:03.124:   add func: CheckTime
+2024-04-12 08:14:03.125:   add func: PowerSwitchFunc
+2024-04-12 08:14:03.126:   add func: CheckTestConditions
+2024-04-12 08:14:03.127:   add func: Dutping
+2024-04-12 08:14:03.127:   add func: DutTelnet
+2024-04-12 08:14:03.128:   add func: CheckDutCompare
+2024-04-12 08:14:03.129:   add func: RebootSoft
+2024-04-12 08:14:03.130:   add func: EmmcWriteRead
+2024-04-12 08:14:03.131:   add func: EmmcSpeed
+2024-04-12 08:14:03.131:   add func: TelnetReadUntilKey
+2024-04-12 08:14:03.132:   add func: EmmcBadBlock
+2024-04-12 08:14:03.133:   add func: SfisFunction
+2024-04-12 08:14:03.134:   add func: CheckProduct
+2024-04-12 08:14:03.134:   add func: TempCPU
+2024-04-12 08:14:03.135:   add func: GetSfisAndCompareSpec
+2024-04-12 08:14:03.136:   add func: VirFunction
+2024-04-12 08:14:03.136:   add func: DeltaValue
+2024-04-12 08:14:03.137:   add func: UpAPI
+2024-04-12 08:14:03.138:   add func: Mydas
+2024-04-12 08:14:03.138:   add func: UpLogFTP
+2024-04-12 08:14:03.139:   add func: GoldenFile
+2024-04-12 08:14:03.140:   add func: OpenShort
+2024-04-12 08:14:03.140:   add func: FixtureAction
+2024-04-12 08:14:03.141:   add func: Usbside
+2024-04-12 08:14:03.141:   add func: UpTeAPI
+2024-04-12 08:14:03.142:   add func: SaveLocalLog
+2024-04-12 08:14:03.142:   add func: ThermalShutdown
+2024-04-12 08:14:03.142:   add func: UbootidleTestFixture
+2024-04-12 08:14:03.144:   add func: VoltageTest
+2024-04-12 08:14:03.144:   add func: ValueSubItem
+2024-04-12 08:14:03.144:   add func: CheckDutUsb
+2024-04-12 08:14:03.144:   add func: ValueSubItem
+2024-04-12 08:14:03.145:   add func: UserspaceSpeedtestSpeed
+2024-04-12 08:14:03.145:   add func: LedTest
+2024-04-12 08:14:03.147:   add func: SetENV
+2024-04-12 08:14:03.147:   add func: ResetButton
+2024-04-12 08:14:03.148:   add func: ResetButtonCCT
+2024-04-12 08:14:03.148:   add func: IperfSpeedTest
+2024-04-12 08:14:03.149:   add func: CheckKingTonIC
+2024-04-12 08:14:03.149:   add func: LedBootup
+2024-04-12 08:14:03.150:   add func: CheckComport
+2024-04-12 08:14:03.150:   add func: FindMacBLE
+2024-04-12 08:14:03.151:   add func: UsbsideCheckReboot
+2024-04-12 08:14:03.151:   add func: NetworkAdapterControl
+2024-04-12 08:14:03.152:   add func: AutoClickOnScreen
+2024-04-12 08:14:03.152:   add func: PhyItem
+2024-04-12 08:14:03.153:   add func: NetworkControlAndPing
+2024-04-12 08:14:03.153:   add func: ValueWithSpecSubItem

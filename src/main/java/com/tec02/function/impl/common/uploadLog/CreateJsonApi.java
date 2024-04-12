@@ -79,12 +79,12 @@ public class CreateJsonApi extends AbsBaseFunction {
             return;
         }
         if (!limitErrorCode && key.equalsIgnoreCase(MyConst.MODEL.ERROR_CODE)) {
-            value = this.dataCell.getString(MyConst.MODEL.ERRORCODE);
+            value = this.dataCell.getString(MyConst.MODEL.ERRORCODE, "");
         } else {
-            value = this.dataCell.getString(key);
+            value = this.dataCell.getString(key, "");
         }
         addLog(PC, "Root: %s = %s", key, value);
-        data.put(key, value == null ? "" : value);
+        data.put(key, value);
         addLog(PC, "-----------------------------------------");
     }
 

@@ -510,9 +510,12 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
             Object value;
             for (String testKey : testKeys) {
                 value = data.get(testKey);
-                if ((value == null || value.toString().isBlank()) 
-                        && testKey.equals(MyConst.MODEL.ERROR_CODE)) {
-                    value = data.get(MyConst.MODEL.ERRORCODE);
+                if (value == null || value.toString().isBlank()) {
+                    if (testKey.equals(MyConst.MODEL.ERROR_CODE)) {
+                        value = data.get(MyConst.MODEL.ERRORCODE);
+                    }else{
+                        value = "";
+                    }
                 }
                 rs.put(testKey, value);
             }

@@ -25,6 +25,19 @@ public class Common {
         }
         return itemName;
     }
+    
+    
+
+    public static Double cvtString2Num(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        try {
+            return Double.valueOf(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 
     public static boolean isGroupItem(String name) {
         return name.startsWith("*G-");

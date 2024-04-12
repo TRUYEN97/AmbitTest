@@ -48,6 +48,7 @@ import com.tec02.function.impl.mblt.OpenShort;
 import com.tec02.function.impl.mblt.Usbside;
 import com.tec02.function.impl.mblt.UbootidleTestFixture;
 import com.tec02.function.impl.common.ValueSubItem;
+import com.tec02.function.impl.common.ValueWithSpecSubItem;
 import com.tec02.function.impl.common.controller.ResetButtonCCT;
 import com.tec02.function.impl.common.reader.PhyItem;
 import com.tec02.function.impl.mblt.SetENV;
@@ -156,6 +157,7 @@ public class FunctionFactory {
         addFunctionClass(AutoClickOnScreen.class);
         addFunctionClass(PhyItem.class);
         addFunctionClass(NetworkControlAndPing.class);
+        addFunctionClass(ValueWithSpecSubItem.class);
     }
     
     @NonNull

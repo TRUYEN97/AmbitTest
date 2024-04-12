@@ -16,6 +16,7 @@ import lombok.NonNull;
  */
 public class AnalysisResult {
 
+    private final CompareValue compareValue;
     private final FunctionConfig config;
     private final Model model;
     private final ItemErrorCode errorCode;
@@ -25,6 +26,7 @@ public class AnalysisResult {
         this.config = config;
         this.model = model;
         this.errorCode = errorCode;
+        this.compareValue = new CompareValue();
     }
 
     public void checkResult(boolean status) {
@@ -48,16 +50,35 @@ public class AnalysisResult {
             setSimpleErrorcode();
             return;
         }
+        String ll = config.getLower_limit();
+        String up = config.getUpper_limit();
         switch (config.getLimit_type()) {
             case MyConst.CONFIG.MATCH -> {
-                if (!checkMatchType(StringResult)) {
+                if (!this.compareValue.checkMatchType(StringResult, ll, up)) {
                     setSimpleErrorcode();
                 } else {
                     setPass();
                 }
             }
             case MyConst.CONFIG.LIMIT -> {
-                checkLimitType(StringResult);
+                int rs = this.compareValue.checkLimitType(StringResult, ll, up);
+                switch (rs) {
+                    case CompareValue.TOOHIGH -> {
+                        setTooHighErrorcode();
+                    }
+                    case CompareValue.TOOLOW -> {
+                        setTooLowErrorcode();
+                    }
+                    case CompareValue.FALSE -> {
+                        setSimpleErrorcode();
+                    }
+                    case CompareValue.TRUE -> {
+                        setPass();
+                    }
+                    default -> {
+                        setSimpleErrorcode();
+                    }
+                }
             }
             default -> {
                 setSimpleErrorcode();
@@ -133,93 +154,10 @@ public class AnalysisResult {
         setErrorCode(errorcode, error_code, descError);
     }
 
-    private boolean checkMatchType(String result) {
-        try {
-            if (getMatch(result, config.getLower_limit())) {
-                return true;
-            }
-            return getMatch(result, config.getUpper_limit());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-    }
-
-    private boolean getMatch(String result, String configSpec) {
-        if (result == null) {
-            return false;
-        }
-        result = result.trim();
-        configSpec = configSpec.trim();
-        if (result.equals(configSpec)) {
-            return true;
-        }
-        String[] limits = configSpec.split("\\|");
-        if (limits != null && limits.length > 0) {
-            for (String spec : limits) {
-                if (spec.equals(result)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return false;
-    }
-
-    private Double cvtString2Num(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-        try {
-            return Double.valueOf(value);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    private void checkLimitType(String result) {
-        Double upper = cvtString2Num(config.getUpper_limit());
-        Double lower = cvtString2Num(config.getLower_limit());
-        Double value = cvtString2Num(result);
-        if ((upper == null && lower == null) || value == null) {
-            setSimpleErrorcode();
-            return;
-        }
-        if (lower == null) {
-            if (aGreatThanB(value, upper)) {
-                setTooHighErrorcode();
-                return;
-            }
-        } else if (upper == null) {
-            if (aGreatThanB(lower, value)) {
-                setTooLowErrorcode();
-                return;
-            }
-        } else {
-            if (aGreatThanB(value, upper)) {
-                setTooHighErrorcode();
-                return;
-            }
-            if (aGreatThanB(lower, value)) {
-                setTooLowErrorcode();
-                return;
-            }
-        }
-        setPass();
-    }
-
     private boolean isRequired(int num) {
         return config.getRequired() == num;
     }
-
-    private static boolean aGreatThanB(Double a, Double b) {
-        if (a == null) {
-            return false;
-        }
-        return a.compareTo(b) >= 1;
-    }
-
+    
     private boolean isSpecAvailable() {
         String lowLimit = config.getLower_limit();
         String upperLimit = config.getUpper_limit();

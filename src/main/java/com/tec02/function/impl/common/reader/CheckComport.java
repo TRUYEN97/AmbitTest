@@ -34,7 +34,7 @@ public class CheckComport extends AbsFunction {
             int failCount = this.config.getInteger("failTimes", 2);
             List<String> notContains = this.config.getJsonList("NotContain");
             List<String> contains = this.config.getJsonList("Contain",
-                    List.of("Started ", "Qorvo"));
+                    List.of("Started ", "Qorvo", "BLE"));
             String mac = this.dataCell.getString(MyConst.MODEL.MAC);
             int timeOut = this.config.getInteger("time", 70);
 //            addLog(PC, "time out: %s", timeOut);
@@ -131,6 +131,7 @@ public class CheckComport extends AbsFunction {
 
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
+        config.put("failTimes", 1);
         config.put("NotContain", List.of());
         config.put("Contain", List.of());
         config.put("time", 70);

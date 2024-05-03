@@ -19,6 +19,7 @@ public class ItemConfig implements IItemConfig {
     private int time_out = Integer.MAX_VALUE;
     private int retry = 0;
     private int modeRun = 3;
+    private int begin = -1;
     private boolean multi = false;
     private boolean check_spec = true;
     private boolean wait_multi_done = false;

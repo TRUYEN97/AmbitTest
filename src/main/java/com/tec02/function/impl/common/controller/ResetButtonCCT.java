@@ -10,6 +10,7 @@ import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.common.Common;
 import com.tec02.communication.Communicate.Impl.Comport.ComPort;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.impl.common.ValueSubItem;
 import com.tec02.function.impl.common.ValueWithSpecSubItem;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
@@ -60,21 +61,32 @@ public class ResetButtonCCT extends ResetButton {
 
     private boolean checkLedValue(AbsTime timer, ComPort comport) throws IOException {
         JSONObject rs;
+        boolean useLocalLimit = this.config.get(USER_LOCAL_LIMITS, false);
         timer.update();
         while (timer.onTime()) {
             rs = getLedValues(comport);
             addLog(CONFIG, "Led values: %s", rs);
-            ValueWithSpecSubItem subItem;
             clearSubItem();
             JSONObject jsVal;
-            for (String key : rs.keySet()) {
-                jsVal = rs.getJSONObject(key);
-                subItem = createSubItem(ValueWithSpecSubItem.class, key);
-                subItem.setLowerlimit(jsVal.getString(LOWER_LIMIT));
-                subItem.setUpperlimit(jsVal.getString(UPPER_LIMIT));
-                subItem.setValue(jsVal.getString(VAL));
-                subItem.setLimitType(jsVal.getString(LIMIT_TYPE));
-                subItem.runTest(1);
+            if (useLocalLimit) {
+                ValueWithSpecSubItem subItem;
+                for (String key : rs.keySet()) {
+                    jsVal = rs.getJSONObject(key);
+                    subItem = createSubItem(ValueWithSpecSubItem.class, key);
+                    subItem.setLowerlimit(jsVal.getString(LOWER_LIMIT));
+                    subItem.setUpperlimit(jsVal.getString(UPPER_LIMIT));
+                    subItem.setValue(jsVal.getString(VAL));
+                    subItem.setLimitType(jsVal.getString(LIMIT_TYPE));
+                    subItem.runTest(1);
+                }
+            } else {
+                ValueSubItem subItem;
+                for (String key : rs.keySet()) {
+                    jsVal = rs.getJSONObject(key);
+                    subItem = createSubItem(ValueSubItem.class, key);
+                    subItem.setValue(jsVal.getString(VAL));
+                    subItem.runTest(1);
+                }
             }
             if (!isAllSubItemPass()) {
                 return false;
@@ -105,6 +117,7 @@ public class ResetButtonCCT extends ResetButton {
     private static final String APIS = "apis";
     private static final String LED_WAIT_TIME = "ledWaitTime";
     private static final String LED_VALUE_CMD = "getLedValueCmd";
+    private static final String USER_LOCAL_LIMITS = "UserLocalLimits";
 
     @Override
     protected void createConfig(FunctionConfig config) {
@@ -113,6 +126,7 @@ public class ResetButtonCCT extends ResetButton {
         config.setTime_out(80);
         config.put(TIME, 20);
         config.put(LED_WAIT_TIME, 1);
+        config.put(USER_LOCAL_LIMITS, false);
         config.put(LED_VALUE_CMD, "AT+LEDPARAMETER%");
         JSONObject apis = new JSONObject();
         config.put(APIS, apis);

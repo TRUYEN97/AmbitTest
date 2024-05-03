@@ -123,6 +123,7 @@
                                               <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
                                               <Component id="jLabel10" alignment="1" pref="77" max="32767" attributes="0"/>
                                               <Component id="jLabel9" alignment="1" max="32767" attributes="0"/>
+                                              <Component id="jLabel11" alignment="0" max="32767" attributes="0"/>
                                           </Group>
                                           <Component id="jLabel4" alignment="1" min="-2" pref="77" max="-2" attributes="0"/>
                                       </Group>
@@ -137,6 +138,7 @@
                                       <Component id="txtItemName" alignment="1" min="-2" pref="177" max="-2" attributes="0"/>
                                       <Component id="txtApiName" alignment="1" min="-2" pref="177" max="-2" attributes="0"/>
                                       <Component id="txtFailApiName" alignment="1" min="-2" pref="177" max="-2" attributes="0"/>
+                                      <Component id="spnBegin" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
@@ -166,6 +168,11 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="spnRetry" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="spnBegin" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -440,6 +447,19 @@
         <Component class="javax.swing.JCheckBox" name="cbWaitLocalMulti">
           <Properties>
             <Property name="text" type="java.lang.String" value="Waiting for local multitasking"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JSpinner" name="spnBegin">
+          <Properties>
+            <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+              <SpinnerModel initial="-1" maximum="2147482647" minimum="-1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel11">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Begin"/>
           </Properties>
         </Component>
       </SubComponents>

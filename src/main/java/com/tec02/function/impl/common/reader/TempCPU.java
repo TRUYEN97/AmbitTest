@@ -97,9 +97,9 @@ public class TempCPU extends AbsFucnUseTelnetOrCommportConnector {
         config.setTime_out(100);
         config.setRetry(1);
         config.put(COMMAND, "temperature");
-        config.put(STARTKEYS, "");
-        config.put(ENDKEYS, "");
-        config.put(REGEXS, "");
+        config.put(STARTKEYS, List.of());
+        config.put(ENDKEYS, List.of());
+        config.put(REGEXS, List.of());
         config.put(TIME, 10);
         config.put(READ_UNTIL, "root@eero-test:/#");
     }

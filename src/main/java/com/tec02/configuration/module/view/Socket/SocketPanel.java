@@ -31,6 +31,7 @@ public class SocketPanel extends AbsHasTabPanel<SocketDto, ServerInfoPanel> {
         SocketClientDto clientDto = model.getClients().get(name);
         if (clientDto == null) {
             clientDto = new SocketClientDto();
+            model.getClients().put(name, clientDto);
         }
         return new ServerInfoPanel(name, clientDto);
     }

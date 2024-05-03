@@ -69,11 +69,6 @@ public class ConfigurationManagement implements Iexecute, IRefeshAndUpdate {
 
     private ConfigurationManagement(){
         this.modules = new ArrayList<>();
-        addModel(new ErrorCode());
-        addModel(new Setting(new SettingDto()));
-        addModel(new Socket(new SocketDto()));
-        addModel(new ItemTest(new ItemTestDto()));
-        addModel(new Dhcp(new DhcpDto()));
         this.myChooser = new MyChooser(System.getProperty("user.dir"));
         this.logger = new Logger("Log/ConfigurationManagement");
         this.tabPanel = new TabConfiguramentPanel(this);
@@ -105,6 +100,12 @@ public class ConfigurationManagement implements Iexecute, IRefeshAndUpdate {
     }
 
     public boolean init() {
+        modules.clear();
+        addModel(new ErrorCode());
+        addModel(new Setting(new SettingDto()));
+        addModel(new Socket(new SocketDto()));
+        addModel(new ItemTest(new ItemTestDto()));
+        addModel(new Dhcp(new DhcpDto()));
         if (file == null) {
             for (AbsModule entry : modules) {
                 entry.refesh();

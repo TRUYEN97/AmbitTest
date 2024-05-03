@@ -29,12 +29,6 @@ public class ConfigPanel extends AbsHasTabPanel<ItemTestDto, ModePanel> {
 
     @Override
     protected ModePanel createTabPanel(String name) {
-        var modes = model.getConfig().getModes();
-        for (ModeDto modeDto : modes) {
-            if (modeDto != null && modeDto.getModeName().equalsIgnoreCase(name)) {
-                return new ModePanel(name, model, this);
-            }
-        }
         return new ModePanel(name, model, this);
     }
 

@@ -88,6 +88,8 @@ public class ShowItemConfig extends javax.swing.JPanel {
         cbStopMultiTasking = new javax.swing.JCheckBox();
         cbStopLocalMultiTasking = new javax.swing.JCheckBox();
         cbWaitLocalMulti = new javax.swing.JCheckBox();
+        spnBegin = new javax.swing.JSpinner();
+        jLabel11 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 153, 153));
 
@@ -189,6 +191,11 @@ public class ShowItemConfig extends javax.swing.JPanel {
 
         cbWaitLocalMulti.setText("Waiting for local multitasking");
 
+        spnBegin.setModel(new javax.swing.SpinnerNumberModel(-1, -1, 2147482647, 1));
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel11.setText("Begin");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -230,7 +237,8 @@ public class ShowItemConfig extends javax.swing.JPanel {
                                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -241,7 +249,8 @@ public class ShowItemConfig extends javax.swing.JPanel {
                                     .addComponent(spnTimeOut, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtItemName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtApiName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtFailApiName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(txtFailApiName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spnBegin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btSave, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -262,6 +271,10 @@ public class ShowItemConfig extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(spnRetry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(spnBegin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cbbFunction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -442,6 +455,9 @@ public class ShowItemConfig extends javax.swing.JPanel {
         if (config.getTime_out() != (int) spnTimeOut.getValue()) {
             return false;
         }
+        if (config.getBegin() != (int) spnBegin.getValue()) {
+            return false;
+        }
         return true;
     }
 
@@ -465,6 +481,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
             config.setBonus(JSONObject.parseObject(txtAreaConfig.getText()));
             config.setFailApiName(txtFailApiName.getText());
             config.setModeRun(slModerun.getValue());
+            config.setBegin(slModerun.getValue());
             config.setStopAllMutitack(cbStopMultiTasking.isSelected());
             config.setStopLocalMutitack(cbStopLocalMultiTasking.isSelected());
             config.setAlwaysRun(cbAlwaysrun.isSelected());
@@ -512,6 +529,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
             cbMulti.setSelected(config.isMulti());
             slModerun.setValue(config.getModeRun());
             spnRetry.setValue(config.getRetry());
+            spnBegin.setValue(config.getBegin());
             spnTimeOut.setValue(config.getTime_out());
             txtFailApiName.setText(config.getFailApiName());
             txtApiName.setText(config.getTest_name());
@@ -558,6 +576,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cbbLimitType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -569,6 +588,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider slModerun;
+    private javax.swing.JSpinner spnBegin;
     private javax.swing.JSpinner spnRetry;
     private javax.swing.JSpinner spnTimeOut;
     private javax.swing.JTextField txtApiName;
@@ -597,6 +617,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
         cbFailContinue.setSelected(false);
         cbMulti.setSelected(false);
         spnRetry.setValue(0);
+        spnBegin.setValue(-1);
         spnTimeOut.setValue(Integer.MAX_VALUE);
         txtItemName.setText(null);
         txtApiName.setText(null);

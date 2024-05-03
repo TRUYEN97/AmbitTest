@@ -92,8 +92,7 @@ public class AeClientRunner {
         putDataToJson(dataJson, dataCell, MyConst.MODEL.MAC, "");
         putDataToJson(dataJson, dataCell, MyConst.MODEL.MODE, "");
         putDataToJson(dataJson, dataCell, MyConst.MODEL.STATUS, "");
-        dataJson.put(MyConst.MODEL.MESSAGE, dataCell.isTesting() ? "Testing" : dataCell.getMassage()
-                .replaceAll("\r\n", " "));
+        dataJson.put(MyConst.MODEL.MESSAGE, getMessage(dataCell));
         dataJson.put(MyConst.MODEL.PASS_COUNT, uiCell.getPasscount());
         dataJson.put(MyConst.MODEL.FAIL_COUNT, uiCell.getFailcount());
         dataJson.put(MyConst.MODEL.INPUT_COUNT, uiCell.getTestCount());
@@ -102,6 +101,11 @@ public class AeClientRunner {
         dataJson.put(MyConst.MODEL.TEST_TIME_MIN, (int) (time / 60));
         dataJson.put(MyConst.MODEL.TEST_TIME_SEC, (int) (time % 60));
         return send(dataJson.toString());
+    }
+
+    private static Object getMessage(DataCell dataCell) {
+        return dataCell.isTesting() ? "Testing" : dataCell.getMassage()
+                .replaceAll("\r\n", " ");
     }
 
     private void putDataToJson(JSONObject dataJson, DataCell dataCell, String key, String defaulVal) {

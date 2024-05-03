@@ -142,12 +142,10 @@ public class TabConfiguramentPanel extends javax.swing.JPanel {
 
     public final void reload() {
         this.management.init();
-        if (this.tabPanel.isEmpty()) {
-            this.tabPanel.clearAllTab();
-            var modules = this.management.getModules();
-            for (AbsModule module : modules) {
-                this.tabPanel.addTab(module.getName(), module.getView());
-            }
+        this.tabPanel.clearAllTab();
+        var modules = this.management.getModules();
+        for (AbsModule module : modules) {
+            this.tabPanel.addTab(module.getName(), module.getView());
         }
         refesh();
     }

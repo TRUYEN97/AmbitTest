@@ -45,6 +45,7 @@ public class GroupElementPanel extends AbsModuleView<ItemTestDto> {
             this.thisModel = model.getGroups().get(tabName);
         } else {
             this.thisModel = new ItemGroupDto();
+            model.getGroups().put(tabName, thisModel);
         }
         initComponents();
         this.showConfig = new ShowConfig();
@@ -87,7 +88,7 @@ public class GroupElementPanel extends AbsModuleView<ItemTestDto> {
             Object obSelected = this.modeListTabel.getSelectioned();
             copyItemSelected(obSelected, model);
             this.update();
-            this.tabCurrentPanel.refesh();
+            this.tabParentPanel.refesh();
         });
         selectmenu.addItemMenu("Delete", (e) -> {
             deleteItem(this.modeListTabel);
@@ -517,11 +518,13 @@ public class GroupElementPanel extends AbsModuleView<ItemTestDto> {
     private void btPassToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPassToActionPerformed
         // TODO add your handling code here:
         tabCurrentPanel.setSelectedTab(String.valueOf(this.cbbPassTo.getSelectedItem()));
+        update();
     }//GEN-LAST:event_btPassToActionPerformed
 
     private void btFailToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFailToActionPerformed
         // TODO add your handling code here:
         tabCurrentPanel.setSelectedTab(String.valueOf(this.cbbFailTo.getSelectedItem()));
+        update();
     }//GEN-LAST:event_btFailToActionPerformed
 
 

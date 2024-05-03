@@ -179,7 +179,7 @@ public class AnalysisBase extends AbsBaseFunction {
             addLog(PC, "String data == null");
             return false;
         }
-//        addLog(CONFIG, "Check contains: %s", specs);
+        addLog(CONFIG, "Check contains: %s", specs);
         for (String spec : specs) {
             if (response.contains(spec)) {
                 return true;

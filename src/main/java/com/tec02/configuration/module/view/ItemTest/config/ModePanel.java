@@ -22,7 +22,11 @@ public class ModePanel extends AbsModuleView<ModeDto> {
         initComponents();
         setTabCurremtPanel(hasTabPanel.getTabPanel());
         this.itemTestDto = itemTestDto;
-        this.model = itemTestDto.getConfig().getMode(tabName, new ModeDto());
+        this.model = itemTestDto.getConfig().getMode(tabName);
+        if(this.model == null){
+            this.model = new ModeDto();
+            itemTestDto.getConfig().getModes().add(this.model);
+        }
     }
 
     /**

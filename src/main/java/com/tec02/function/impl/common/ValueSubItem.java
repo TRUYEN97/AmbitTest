@@ -26,6 +26,9 @@ public class ValueSubItem extends AbsFunction {
 
     @Override
     public boolean test() {
+        if(this.value == null){
+            this.value = this.config.getString(VALUE);
+        }
         addLog(PC, "value: %s", value);
         if (this.value == null || this.value.isBlank()) {
             return false;
@@ -33,9 +36,11 @@ public class ValueSubItem extends AbsFunction {
         setResult(value);
         return true;
     }
+    private static final String VALUE = "value";
 
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
+        config.put(VALUE, "");
     }
 
 

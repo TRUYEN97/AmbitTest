@@ -5,6 +5,7 @@
 package com.tec02.main.modeFlow;
 
 import com.tec02.common.Common;
+import com.tec02.common.MyObjectMapper;
 import com.tec02.configuration.model.itemTest.ItemGroupDto;
 import com.tec02.configuration.model.itemTest.ItemTestDto;
 import com.tec02.configuration.model.itemTest.ModeDto;
@@ -101,6 +102,7 @@ public class ModeFlow {
         }
         ItemConfig itemConfig;
         int modeRun = itemGroupDto.getModeRun();
+        Integer begin = itemGroupDto.getBegin();
         for (String name : itemGroupDto.getItems()) {
             if (Common.isGroupItem(name)) {
                 name = Common.getBaseItem(name);
@@ -109,10 +111,15 @@ public class ModeFlow {
                     itemConfigs.addAll(scanItemIn(getGroup(name), hasGroupsScan));
                     hasGroupsScan.remove(name);
                 }
-            } else if ((itemConfig = (ItemConfig) this.itemTestDto.getItems().get(name)) != null) {
+            } else if (this.itemTestDto.getItems().containsKey(name)
+                    && (itemConfig = MyObjectMapper.convertValue(this.itemTestDto.getItems().get(name),
+                            ItemConfig.class)) != null) {
                 itemConfig.setItemName(name);
                 if (itemConfig.getModeRun() > modeRun) {
                     itemConfig.setModeRun(modeRun);
+                }
+                if (begin != null && begin > itemConfig.getBegin()) {
+                    itemConfig.setBegin(begin);
                 }
                 itemConfigs.add(itemConfig);
             } else {
@@ -171,12 +178,12 @@ public class ModeFlow {
     }
 
     public boolean isCoreGroup() {
-        if(itemGroupDto == null){
+        if (itemGroupDto == null) {
             return false;
         }
         return itemGroupDto.isCoreGroup();
     }
-    
+
     public boolean hasCoreGroup() {
         return coreGroup;
     }

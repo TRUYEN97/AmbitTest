@@ -57,15 +57,21 @@ public class Receiver implements IObjectServerReceiver, IObjectClientReceiver {
                 case "BLE" -> {
                     String ip = jsonData.getString(MyConst.SOCKET.IP);
                     String mac = jsonData.getString(MyConst.SOCKET.MAC);
-                    String scanLog = "BLE not found!";
+                    String scanLog = null;
+                    String macBle = "";
                     if (ip != null && !ip.isBlank() && mac != null && !mac.isBlank()) {
                         int time = jsonData.getIntValue(MyConst.SOCKET.TIME, 5);
                         BLE_Scanner scanner = BLE_Scanner.getInstance();
                         scanner.clear(ip, mac);
-                        scanLog = scanner.expect(ip, mac, new TimeS(time));
+                        BLE_Scanner.ScannerData scannerData = scanner.expect(ip, mac, new TimeS(time));
+                        if(scannerData != null){
+                            scanLog = String.valueOf(scannerData.builder);
+                            macBle = String.valueOf(scannerData.mac);
+                        }
                     }
                     JSONObject result = new JSONObject();
                     result.put(MyConst.SOCKET.STATUS, scanLog != null);
+                    result.put(MyConst.SOCKET.MAC, macBle);
                     result.put(MyConst.SOCKET.DATA, scanLog);
                     handler.send(result.toString());
                     handler.disconnect();

@@ -25,8 +25,6 @@ public class Common {
         }
         return itemName;
     }
-    
-    
 
     public static Double cvtString2Num(String value) {
         if (value == null || value.isBlank()) {

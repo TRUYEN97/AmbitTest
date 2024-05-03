@@ -31,11 +31,6 @@ public final class ModeManagement {
     
     private ModeManagement() {
         this.configurationManagement = ConfigurationManagement.getInstance();
-        this.itemTestDto = this.configurationManagement.getItemTestConfig().getModel();
-        var modeNames = this.itemTestDto.getConfig().getModes();
-        if (modeNames != null && !modeNames.isEmpty()) {
-            setModeName(modeNames.get(0).getModeName());
-        }
     }
     
     public static ModeManagement getInsatace() {
@@ -52,6 +47,11 @@ public final class ModeManagement {
     }
     
     public List<String> getModeNames() {
+        this.itemTestDto = this.configurationManagement.getItemTestConfig().getModel();
+        var modeNames = this.itemTestDto.getConfig().getModes();
+        if (modeNames != null && !modeNames.isEmpty()) {
+            setModeName(modeNames.get(0).getModeName());
+        }
         return itemTestDto.getConfig().getModes().stream().map((t) -> {
             return t.getModeName();
         }).collect(Collectors.toList());

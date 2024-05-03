@@ -58,7 +58,7 @@ public class BLE_Scanner {
         }
     }
 
-    public String expect(String ip, String macExpection, AbsTime timer) {
+    public ScannerData expect(String ip, String macExpection, AbsTime timer) {
         if (ip == null || macExpection == null) {
             return null;
         }
@@ -74,7 +74,7 @@ public class BLE_Scanner {
         }
         while (timer.onTime()) {
             if (scanner.macs.containsKey(macExpection)) {
-                return scanner.macs.remove(macExpection).toString();
+                return scanner.macs.remove(macExpection);
             }
             try {
                 Thread.sleep(100);
@@ -89,7 +89,7 @@ public class BLE_Scanner {
         private final Telnet telnet;
         private final String ip;
         private final int port;
-        private final LinkedHashMap<String, StringBuilder> macs;
+        private final LinkedHashMap<String, ScannerData> macs;
 
         public Scanner(String ip, int port) {
             this.telnet = new Telnet();
@@ -141,7 +141,7 @@ public class BLE_Scanner {
                     String mac = getMac(line.toUpperCase());
                     if (mac != null && !macs.containsKey(mac)) {
                         myLogger.addLog(ip, "\"%s\" -> \"%s\"", line, mac);
-                        macs.put(mac.substring(0, 16), builder);
+                        macs.put(mac.substring(0, 16), new ScannerData(builder, mac));
                     }
                 }
                 if (line.startsWith("adv data: ")
@@ -160,6 +160,7 @@ public class BLE_Scanner {
                 for (int i = elems.length - 1; i >= 0; i--) {
                     builder.append(elems[i]).append(":");
                 }
+                builder.deleteCharAt(builder.length()-1);
                 if (builder.length() >= 17) {
                     return builder.toString();
                 }
@@ -175,5 +176,15 @@ public class BLE_Scanner {
             return this.telnet.readUntil(timer, readUntil) != null;
         }
 
+    }
+    
+    public static class ScannerData{
+        public final StringBuilder builder;
+        public final String mac;
+
+        public ScannerData(StringBuilder builder, String mac) {
+            this.builder = builder;
+            this.mac = mac;
+        }
     }
 }

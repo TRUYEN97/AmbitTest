@@ -5,11 +5,13 @@
 package com.tec02.function.impl.common.reader;
 
 import com.tec02.Time.WaitTime.Class.TimeS;
+import com.tec02.common.Common;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
+import java.util.List;
 
 /**
  *
@@ -27,6 +29,7 @@ public class CheckKingTonIC extends AbsFucnUseTelnetOrCommportConnector {
         config.setRetry(1);
         config.put(CHECK_IC_CMD, "mmc cid read /sys/block/mmcblk0/device");
         config.put(IC_NAME, "MT3204");
+        config.put(CONTAINS, List.of("(Kingston)"));
         config.put(READ_UNTIL, "root@eero-test:/#");
         config.put(READ_REMOVAL_TYPE, "mmc extcsd read /dev/mmcblk0 | grep SECURE");
         config.put(REMOVAL_VALUE, "0x36");
@@ -39,6 +42,7 @@ public class CheckKingTonIC extends AbsFucnUseTelnetOrCommportConnector {
         try ( AbsCommunicate connect = this.baseFunction.getTelnetOrComportConnector()) {
             String checkIcNameCmd = this.config.getString(CHECK_IC_CMD,
                     "mmc cid read /sys/block/mmcblk0/device");
+            List<String> contains = this.config.getJsonList(CONTAINS, List.of());
             String icName = this.config.getString(IC_NAME, "MT3204");
             String readUntil = this.config.getString(READ_UNTIL, "root@eero-test:/#");
             String readRemovalTypeValue = this.config.getString(READ_REMOVAL_TYPE,
@@ -49,16 +53,27 @@ public class CheckKingTonIC extends AbsFucnUseTelnetOrCommportConnector {
             if (!this.baseFunction.sendCommand(connect, checkIcNameCmd)) {
                 return false;
             }
-            if (this.analysisBase.isResponseContainKeyAndShow(connect, icName,
-                    readUntil, new TimeS(time))) {
+            String responce = this.analysisBase.readShowUntil(connect, readUntil, new TimeS(time));
+            if (responce == null || responce.isBlank() || !this.analysisBase.macthAll(responce, contains)) {
+                return false;
+            }
+            if (responce.contains(icName)) {
                 if (!this.baseFunction.sendCommand(connect, readRemovalTypeValue)) {
                     return false;
                 }
                 if (!this.analysisBase.isResponseContainKeyAndShow(connect, removalTypeValue,
                         readUntil, new TimeS(time))) {
-                    if (reWriteCmd != null && !reWriteCmd.isBlank()) {
+                    if (reWriteCmd == null || reWriteCmd.isBlank()) {
                         return false;
-                    } else if (!this.baseFunction.sendCommand(connect, reWriteCmd)) {
+                    }
+                    if (!this.baseFunction.sendCommand(connect, reWriteCmd, readUntil, time)) {
+                        return false;
+                    }
+                    if (!this.baseFunction.sendCommand(connect, readRemovalTypeValue)) {
+                        return false;
+                    }
+                    if (!this.analysisBase.isResponseContainKeyAndShow(connect, removalTypeValue,
+                            readUntil, new TimeS(time))) {
                         return false;
                     }
                 }
@@ -70,6 +85,8 @@ public class CheckKingTonIC extends AbsFucnUseTelnetOrCommportConnector {
             return false;
         }
     }
+
+    private static final String CONTAINS = "Contains";
     private static final String RE_WRITE_COMMAND = "reWriteCommand";
     private static final String READ_REMOVAL_TYPE = "readRemovalType";
     private static final String REMOVAL_VALUE = "removalValue";
@@ -77,6 +94,5 @@ public class CheckKingTonIC extends AbsFucnUseTelnetOrCommportConnector {
     private static final String READ_UNTIL = "readUntil";
     private static final String IC_NAME = "icName";
     private static final String CHECK_IC_CMD = "checkIcCmd";
-
 
 }

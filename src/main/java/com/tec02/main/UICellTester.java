@@ -78,7 +78,7 @@ public class UICellTester {
                     List<ItemConfig> items;
                     while ((items = modeFlow.getListItem()) != null && !this.stopTest) {
                         this.uICell.getDataCell().setTestColor(modeFlow.getTestColor());
-                        if (run(modeFlow.getBegin(), items, !modeFlow.isCoreGroup(), moderun)) {
+                        if (run(items, !modeFlow.isCoreGroup(), moderun)) {
                             modeFlow.nextToPassFlow();
                         } else {
                             this.uICell.getDataCell().setFailColor(modeFlow.getFailColor());
@@ -121,7 +121,7 @@ public class UICellTester {
                 this.uICell.getAbsSubUi().startTest();
                 this.uICell.getDataCell().setTestColor(Color.yellow);
                 this.uICell.getDataCell().setFailColor(Color.red);
-                run(null, allItem, true, MODE_DEBUG_ITEM);
+                run( allItem, true, MODE_DEBUG_ITEM);
                 waitForMultidone(50, this.marks, new TesterModel());
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -156,7 +156,7 @@ public class UICellTester {
         return testerModel;
     }
 
-    private boolean run(Integer begin, List<ItemConfig> items, boolean alwaysRun, int modeRun) throws InterruptedException, ExecutionException {
+    private boolean run(List<ItemConfig> items, boolean alwaysRun, int modeRun) throws InterruptedException, ExecutionException {
 
         Future currFt;
         AbsFunction function;
@@ -189,13 +189,13 @@ public class UICellTester {
             function = this.functionFactory.getFunction(
                     itemConfig.getFunction(), uICell,
                     itemConfig.getItemName(),
-                    itemConfig.getTest_name(), begin, true);
+                    itemConfig.getTest_name(), itemConfig.getBegin(), true);
             if (function == null) {
                 function = new AbsFunction(FunctionConstructorModel.builder()
                         .uICell(uICell)
                         .limitName(itemConfig.getTest_name())
                         .configName(itemConfig.getItemName())
-                        .begin(begin)
+                        .begin(itemConfig.getBegin())
                         .build()) {
 
                     @Override

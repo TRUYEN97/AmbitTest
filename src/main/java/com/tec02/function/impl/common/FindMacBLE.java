@@ -6,6 +6,7 @@ package com.tec02.function.impl.common;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.tec02.Time.WaitTime.Class.TimeS;
+import com.tec02.common.Common;
 import com.tec02.common.MyConst;
 import com.tec02.communication.socket.Unicast.Client.SocketClient;
 import com.tec02.function.AbsFunction;
@@ -54,17 +55,19 @@ public class FindMacBLE extends AbsFunction {
             TimeS timer = new TimeS(time + 1);
             String line;
             JSONObject responce = null;
-            while (timer.onTime() && socketClient.isConnect()) {
+            if (timer.onTime() && socketClient.isConnect()) {
                 line = socketClient.readLine();
                 addLog("BLE SCANNER", line);
                 responce = JSONObject.parseObject(line);
-                break;
             }
             if (!timer.onTime()) {
                 addLog(PC, "Time out!");
             }
             boolean isPass = responce != null && responce.getBooleanValue(MyConst.SOCKET.STATUS);
             addLog(PC, "Scan BLE is %s", isPass ? "OK" : "failed");
+            if (responce != null && isPass) {
+                setResult(responce.getString(MyConst.SOCKET.MAC));
+            }
             return isPass;
         } catch (Exception e) {
             e.printStackTrace();

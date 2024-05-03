@@ -49,7 +49,7 @@ public class UpAPI extends AbsFunction {
             if (retry > 0) {
                 ConfigurationManagement.getInstance().getItemTestConfig().execute();
                 for (AbsFunction itemFunction : dataCell.getFunctions(DataCell.ALL_ITEM)) {
-                    if (itemFunction.isDone() && itemFunction.updateLimit()) {
+                    if (itemFunction.updateLimit() && itemFunction.isDone()) {
                         itemFunction.checkResult();
                     }
                 }

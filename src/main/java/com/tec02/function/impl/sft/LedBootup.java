@@ -11,6 +11,7 @@ import com.tec02.common.Common;
 import com.tec02.communication.Communicate.Impl.Comport.ComPort;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
+import com.tec02.function.impl.common.ValueSubItem;
 import com.tec02.function.impl.common.ValueWithSpecSubItem;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
@@ -50,7 +51,7 @@ public class LedBootup extends AbsFunction {
             return false;
         }
     }
-    
+
     private static final String VAL = "val";
     private static final String UPPER_LIMIT = "upper_limit";
     private static final String LOWER_LIMIT = "lower_limit";
@@ -59,21 +60,32 @@ public class LedBootup extends AbsFunction {
 
     private boolean checkLedValue(AbsTime timer, ComPort comport) throws IOException {
         JSONObject rs;
+        boolean useLocalLimit = this.config.get(USER_LOCAL_LIMITS, false);
         timer.update();
         while (timer.onTime()) {
             rs = getLedValues(comport);
             addLog(CONFIG, "Led values: %s", rs);
-            ValueWithSpecSubItem subItem;
             clearSubItem();
             JSONObject jsVal;
-            for (String key : rs.keySet()) {
-                jsVal = rs.getJSONObject(key);
-                subItem = createSubItem(ValueWithSpecSubItem.class, key);
-                subItem.setLowerlimit(jsVal.getString(LOWER_LIMIT));
-                subItem.setUpperlimit(jsVal.getString(UPPER_LIMIT));
-                subItem.setValue(jsVal.getString(VAL));
-                subItem.setLimitType(jsVal.getString(LIMIT_TYPE));
-                subItem.runTest(1);
+            if (useLocalLimit) {
+                ValueWithSpecSubItem subItem;
+                for (String key : rs.keySet()) {
+                    jsVal = rs.getJSONObject(key);
+                    subItem = createSubItem(ValueWithSpecSubItem.class, key);
+                    subItem.setLowerlimit(jsVal.getString(LOWER_LIMIT));
+                    subItem.setUpperlimit(jsVal.getString(UPPER_LIMIT));
+                    subItem.setValue(jsVal.getString(VAL));
+                    subItem.setLimitType(jsVal.getString(LIMIT_TYPE));
+                    subItem.runTest(1);
+                }
+            } else {
+                ValueSubItem subItem;
+                for (String key : rs.keySet()) {
+                    jsVal = rs.getJSONObject(key);
+                    subItem = createSubItem(ValueSubItem.class, key);
+                    subItem.setValue(jsVal.getString(VAL));
+                    subItem.runTest(1);
+                }
             }
             if (!isAllSubItemPass()) {
                 return false;
@@ -122,6 +134,7 @@ public class LedBootup extends AbsFunction {
         config.put("time", 5);
         config.put("timeOut", 70);
         config.put("delayS", 0);
+        config.put(USER_LOCAL_LIMITS, false);
         config.put(LED_VALUE_CMD, "AT+LEDPARAMETER%");
         JSONObject apis = new JSONObject();
         config.put(APIS, apis);
@@ -130,5 +143,6 @@ public class LedBootup extends AbsFunction {
         apis.put("led_b_y", Map.of(REGEX, "COR_Y\\=?=\\d+(\\.\\d+)?",
                 LOWER_LIMIT, "0.270", UPPER_LIMIT, "0.320", LIMIT_TYPE, "LIMIT"));
     }
+    private static final String USER_LOCAL_LIMITS = "UserLocalLimits";
 
 }

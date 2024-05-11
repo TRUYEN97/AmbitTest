@@ -17,28 +17,25 @@ import javax.swing.JOptionPane;
  * @author Administrator
  */
 public class AmbitUI {
-
-    private final DrawBoardUI drawBoardUI;
-    private final ConfigurationManagement configurationManagement;
-    private final Gui gui;
+   
 
     public AmbitUI(String name, String version) {
         Core core = Core.getInstance();
         core.setAppName(name);
         core.setSoftwareVsersion(version);
-        this.drawBoardUI = new DrawBoardUI();
-        this.configurationManagement = ConfigurationManagement.getInstance();
-        this.gui = Gui.getInstance();
-        UICellManagement.getInstance().setGui(this.gui);
     }
 
     private void run() throws FileNotFoundException {
-        this.configurationManagement.setFile("config.json");
-        this.configurationManagement.init();
-        this.configurationManagement.execute();
-        this.drawBoardUI.setDrawPanel(this.gui.getDrawPanel());
-        this.drawBoardUI.draw();
-        this.gui.display();
+        ConfigurationManagement configurationManagement = ConfigurationManagement.getInstance();
+        configurationManagement.setFile("config.json");
+        configurationManagement.init();
+        configurationManagement.execute();
+        Gui gui = Gui.getInstance();
+        UICellManagement.getInstance().setGui(gui);
+        DrawBoardUI drawBoardUI = new DrawBoardUI();
+        drawBoardUI.setDrawPanel(gui.getDrawPanel());
+        drawBoardUI.draw();
+        gui.display();
     }
 
     public static void main(String[] args) {

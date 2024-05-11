@@ -34,7 +34,7 @@ public final class MyConst {
         public static final String RESULT = "result";
         public static final String MESSAGE = "message";
         public static final String MLBSN = "mlbsn";
-        public static final String PNNAME = "pname";
+        public static final String PNNAME = "pnname";
         public static final String MO = "mo";
         public static final String SN = "sn";
         public static final String DATA = "data";

@@ -204,9 +204,6 @@ public class ShowItemConfig extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtLowerLimit)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(txtUpperLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cbWaitLocalMulti, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cbStopLocalMultiTasking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -221,7 +218,8 @@ public class ShowItemConfig extends javax.swing.JPanel {
                             .addComponent(cbSkipRunDebug)
                             .addComponent(cbAlwaysrun)
                             .addComponent(cbStopMultiTasking, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txtUpperLimit, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -481,7 +479,6 @@ public class ShowItemConfig extends javax.swing.JPanel {
             config.setBonus(JSONObject.parseObject(txtAreaConfig.getText()));
             config.setFailApiName(txtFailApiName.getText());
             config.setModeRun(slModerun.getValue());
-            config.setBegin(slModerun.getValue());
             config.setStopAllMutitack(cbStopMultiTasking.isSelected());
             config.setStopLocalMutitack(cbStopLocalMultiTasking.isSelected());
             config.setAlwaysRun(cbAlwaysrun.isSelected());
@@ -496,6 +493,7 @@ public class ShowItemConfig extends javax.swing.JPanel {
             config.setMulti(cbMulti.isSelected());
             config.setWait_multi_done(cbWaitMulti.isSelected());
             config.setWait_local_multi_done(cbWaitLocalMulti.isSelected());
+            config.setBegin((int) spnBegin.getValue());
             config.setRetry((int) spnRetry.getValue());
             config.setTime_out((int) spnTimeOut.getValue());
             config.setLimit_type(cbbLimitType.getSelectedItem().toString());

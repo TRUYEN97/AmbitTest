@@ -74,5 +74,6 @@ public final class MyConst {
         public static final String SERIAL = "serial";
         public static final String ON_SFIS = "onSfis";
         public static final String CYCLE_TIME = "cycle_time";
+        public static final String MD5 = "md5";
     }
 }

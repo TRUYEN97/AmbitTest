@@ -66,6 +66,7 @@ public class RebootSoft extends AbsFunction{
         config.setTime_out(350);
         config.put("IP", "192.168.1.1");
         config.put("ReadUntil", "root@eero-test:/#");
+        config.put("command", "reboot -f");
         config.put("times", 3);
         config.put("waitTime", 40);
         config.put("pingTimes", 300);

@@ -32,14 +32,16 @@ public class ItemErrorCode {
 
     public String getDesc_tooHighErrorcode() {
         if (desc_tooHighErrorcode == null || desc_tooHighErrorcode.isBlank()) {
-            return getDesc_errorcode().concat("_TOOHIGH");
+            String descErrorCode = getDesc_errorcode();
+            return descErrorCode == null || descErrorCode.isBlank()? "" : descErrorCode.concat("_TOOHIGH");
         }
         return desc_tooHighErrorcode;
     }
 
     public String getDesc_tooLowErrorcode() {
         if (desc_tooLowErrorcode == null || desc_tooLowErrorcode.isBlank()) {
-            return getDesc_errorcode().concat("_TOOLOW");
+            String descErrorCode = getDesc_errorcode();
+            return descErrorCode == null || descErrorCode.isBlank()? "" : descErrorCode.concat("_TOOLOW");
         }
         return desc_tooLowErrorcode;
     }
@@ -50,14 +52,16 @@ public class ItemErrorCode {
 
     public String getTooHighErrorcode() {
         if (tooHighErrorcode == null || tooHighErrorcode.isBlank()) {
-            return getErrorcode().concat(".H");
+            String errorCode = getErrorcode();
+            return errorCode == null || errorCode.isBlank()? "" : errorCode.concat(".H");
         }
         return tooHighErrorcode;
     }
 
     public String getTooLowErrorcode() {
         if (tooLowErrorcode == null || tooLowErrorcode.isBlank()) {
-            return getErrorcode().concat(".L");
+            String errorCode = getErrorcode();
+            return errorCode == null || errorCode.isBlank()? "" : errorCode.concat(".L");
         }
         return tooLowErrorcode;
     }

@@ -7,6 +7,7 @@ package com.tec02.main;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.view.managerUI.UICellManagement;
 import com.tec02.view.managerUI.UICell;
+import java.io.File;
 import javax.swing.JOptionPane;
 
 /**

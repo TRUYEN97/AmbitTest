@@ -4,11 +4,14 @@
  */
 package com.tec02.main;
 
+import com.tec02.FileService.FileService;
+import com.tec02.FileService.MD5;
 import com.tec02.view.managerUI.DrawBoardUI;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.view.Gui;
 import com.tec02.view.ShowConfigEdit;
 import com.tec02.view.managerUI.UICellManagement;
+import java.io.File;
 import java.io.FileNotFoundException;
 import javax.swing.JOptionPane;
 
@@ -17,7 +20,6 @@ import javax.swing.JOptionPane;
  * @author Administrator
  */
 public class AmbitUI {
-   
 
     public AmbitUI(String name, String version) {
         Core core = Core.getInstance();

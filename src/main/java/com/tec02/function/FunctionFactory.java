@@ -50,6 +50,7 @@ import com.tec02.function.impl.mblt.UbootidleTestFixture;
 import com.tec02.function.impl.common.ValueSubItem;
 import com.tec02.function.impl.common.ValueWithSpecSubItem;
 import com.tec02.function.impl.common.controller.ResetButtonCCT;
+import com.tec02.function.impl.common.reader.GetMD5;
 import com.tec02.function.impl.common.reader.PhyItem;
 import com.tec02.function.impl.mblt.SetENV;
 import com.tec02.function.impl.mblt.UsbsideCheckReboot;
@@ -158,6 +159,7 @@ public class FunctionFactory {
         addFunctionClass(PhyItem.class);
         addFunctionClass(NetworkControlAndPing.class);
         addFunctionClass(ValueWithSpecSubItem.class);
+        addFunctionClass(GetMD5.class);
     }
     
     @NonNull

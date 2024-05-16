@@ -31,6 +31,7 @@ import com.tec02.function.impl.common.NetworkControlAndPing;
 import com.tec02.function.impl.common.controller.NetworkAdapterControl;
 import com.tec02.function.impl.common.controller.ResetButton;
 import com.tec02.function.impl.common.SaveLocalLog;
+import com.tec02.function.impl.common.SendCommandInFileAndPing;
 import com.tec02.function.impl.common.SfisFunction;
 import com.tec02.function.impl.common.reader.TelnetReadUntilKey;
 import com.tec02.function.impl.common.reader.TempCPU;
@@ -162,6 +163,7 @@ public class FunctionFactory {
         addFunctionClass(ValueWithSpecSubItem.class);
         addFunctionClass(GetMD5.class);
         addFunctionClass(ReadComport.class);
+        addFunctionClass(SendCommandInFileAndPing.class);
     }
     
     @NonNull

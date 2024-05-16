@@ -5,7 +5,7 @@
 package com.tec02.function.impl.mblt.voltageTest;
 
 import com.tec02.Time.WaitTime.Class.TimeMs;
-import com.tec02.function.impl.common.AbsSendRetryCommand;
+import com.tec02.function.impl.AbsSendRetryCommand;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.function.impl.common.controller.FixtureAction;
 import com.tec02.function.model.FunctionConstructorModel;
@@ -32,8 +32,8 @@ public abstract class AbsVoltage extends AbsSendRetryCommand {
             List<String> commands, int delay) {
         if (commands != null && !commands.isEmpty() && this.fixtureAction.sendCommand(communicate,
                 commands,
-                config.getJsonList("FixtureKeys", List.of("OK")),
-                config.getInteger("FixtureWait", 10))) {
+                config.getJsonList(FIXTURE_KEYS, List.of("OK")),
+                config.getInteger(FIXTURE_WAIT, 10))) {
             this.baseFunction.delay(delay);
             return true;
         }

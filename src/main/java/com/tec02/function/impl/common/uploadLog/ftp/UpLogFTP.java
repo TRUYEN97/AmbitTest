@@ -4,6 +4,7 @@
  */
 package com.tec02.function.impl.common.uploadLog.ftp;
 
+import com.tec02.common.MyConst;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.impl.common.uploadLog.CreateJsonApi;
@@ -50,8 +51,8 @@ public class UpLogFTP extends AbsFunction {
                 "error_code", "errorcode", "errorDes",
                 "start_time", "test_value", "units"));
         config.put("LocalPrefix", List.of("Log/TestLog"));
-        config.put("FtpPrefixTxt", List.of("data/Trieste", "Text", "pnname", "station_type", "start_day", "station_name", "status"));
-        config.put("FtpPrefixJson", List.of("data/Trieste", "json", "pnname", "station_type", "start_day", "station_name", "status"));
+        config.put("FtpPrefixTxt", List.of("data","product", "Text", "pnname", "station_type", "start_day", "station_name", "status"));
+        config.put("FtpPrefixJson", List.of("data","product", "json", "pnname", "station_type", "start_day", "station_name", "status"));
         config.put("LocalName", List.of("mlbsn", "sn", "position", "status", "mode", "finish_time"));
         config.put("LocalNameFail", List.of("mlbsn", "sn", "position", "status", "error_details", "errorcode", "mode", "finish_time"));
     }
@@ -76,7 +77,7 @@ public class UpLogFTP extends AbsFunction {
                 this.dataCell.updateResultTest();
             }
             if (upJson(localJsonPath, ftpJsonPath) && upTxt(localTxtPath, ftpTxtPath)) {
-                this.dataCell.putData("ftppath", ftpTxtPath);
+                this.dataCell.putData(MyConst.MODEL.FTP_PATH, ftpTxtPath);
                 setResult(ftpTxtPath);
                 return true;
             }

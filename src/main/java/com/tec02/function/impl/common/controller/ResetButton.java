@@ -8,7 +8,7 @@ import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.Impl.Comport.ComPort;
 import com.tec02.communication.Communicate.Impl.Telnet.Telnet;
 import com.tec02.function.baseFunction.FunctionConfig;
-import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
+import com.tec02.function.impl.AbsFucnUseTelnetOrCommportConnector;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class ResetButton extends AbsFucnUseTelnetOrCommportConnector {
         }
     }
 
-    protected boolean isResetOk(String spec, int time) {
+    protected boolean isResetOk(String spec, int time) throws Exception {
         try (final Telnet telent = this.baseFunction.getTelnet()) {
             return this.analysisBase.isResponseContainKeyAndShow(telent,
                     spec, spec, new TimeS(time));

@@ -150,7 +150,9 @@ public class SmallUI extends AbsSubUI {
                     text == null ? "Finished!" : text.replaceAll("\r\n", "<br>")));
             mess.append(String.format(" \"%s\"", text));
         }
-        this.setToolTipText(messHtml.toString());
+        this.lbTime.setToolTipText(messHtml.toString());
+        this.lbInfo.setToolTipText(messHtml.toString());
+        this.lbName.setToolTipText(messHtml.toString());
         this.gui.showSfisText(mess.toString());
     }
 

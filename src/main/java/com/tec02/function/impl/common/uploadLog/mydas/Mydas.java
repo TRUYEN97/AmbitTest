@@ -18,6 +18,12 @@ import com.tec02.main.dataCell.DataCell;
  * @author Administrator
  */
 public class Mydas extends AbsFunction {
+    
+    
+    protected static final String TITLE_VER = "titleVer";
+    protected static final String FLOW_VER = "flowVer";
+    protected static final String SEND_DETAIL = "sendDetail";
+    protected static final String IP = "IP";
 
     public Mydas(FunctionConstructorModel constructorModel) {
         super(constructorModel);
@@ -25,9 +31,9 @@ public class Mydas extends AbsFunction {
 
     @Override
     protected boolean test() {
-        String IP = this.config.getString("IP");
-        addLog("CONFIG", String.format(String.format("IP: %s", IP)));
-        boolean sendDetail = this.config.get("sendDetail", true);
+        String ip = this.config.getString(IP);
+        addLog("CONFIG", String.format(String.format("IP: %s", ip)));
+        boolean sendDetail = this.config.get(SEND_DETAIL, true);
         addLog("CONFIG", String.format(String.format("Send detail: %s", sendDetail)));
         String pcName = PcInformation.getInstance().getPcName();
         addLog("CONFIG", String.format(String.format("PC name: %s", pcName)));
@@ -35,16 +41,16 @@ public class Mydas extends AbsFunction {
         addLog("CONFIG", String.format(String.format("Product: %s", dutModel)));
         String station = this.settingDto.getStation();
         addLog("CONFIG", String.format(String.format("Station: %s", station)));
-        String pn = this.dataCell.getString("pnname");
+        String pn = this.dataCell.getString(MyConst.MODEL.PNNAME);
         addLog("CONFIG", String.format(String.format("PN name: %s", pn)));
-        String flowVer = this.dataCell.getString("flowVer", "3.0");
+        String flowVer = this.dataCell.getString(FLOW_VER, "3.0");
         addLog("CONFIG", String.format(String.format("flowVer: %s", flowVer)));
-        String titleVer = this.dataCell.getString("titleVer", "3.0");
+        String titleVer = this.dataCell.getString(TITLE_VER, "3.0");
         addLog("CONFIG", String.format(String.format("titleVer: %s", titleVer)));
         if (retry < 1) {
             this.dataCell.updateResultTest();
         }
-        MydasClient mydasClient = new MydasClient(IP, pcName, flowVer, titleVer, dutModel, station, pn);
+        MydasClient mydasClient = new MydasClient(ip, pcName, flowVer, titleVer, dutModel, station, pn);
         return sendMydas(mydasClient, sendDetail);
     }
 
@@ -125,10 +131,10 @@ public class Mydas extends AbsFunction {
         int status = this.dataCell.isPass() ? 1 : 0;
         builder.append(this.dataCell.getString(MyConst.SFIS.MLBSN, "")).append(",");
         builder.append(status).append(",");
-        builder.append(this.dataCell.getString("ftppath", "")).append(",");
+        builder.append(this.dataCell.getString(MyConst.MODEL.FTP_PATH, "")).append(",");
         builder.append(this.dataCell.getString(MyConst.MODEL.SOFTWARE_VERSION, "")).append(",");
         builder.append(this.dataCell.getString(MyConst.MODEL.PCNAME, "")).append(",");
-        builder.append(this.dataCell.getString("cycle_time", "")).append(",");
+        builder.append(this.dataCell.getString(MyConst.MODEL.CYCLE_TIME, "")).append(",");
         builder.append(getFinishTime()).append(",");
         builder.append(",").append(this.uICell.getName()).append(",");
         return builder.toString();
@@ -144,10 +150,10 @@ public class Mydas extends AbsFunction {
     protected void createDefaultConfig(FunctionConfig config) {
         config.setTime_out(60);
         config.setAlwaysRun(true);
-        config.put("flowVer", "3.0");
-        config.put("titleVer", "3.0");
-        config.put("IP", "10.90.100.168");
-        config.put("sendDetail", false);
+        config.put(FLOW_VER, "3.0");
+        config.put(TITLE_VER, "3.0");
+        config.put(IP, "10.90.100.168");
+        config.put(SEND_DETAIL, false);
     }
 
 }

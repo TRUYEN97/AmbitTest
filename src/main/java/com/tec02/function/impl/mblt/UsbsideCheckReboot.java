@@ -4,8 +4,7 @@
  */
 package com.tec02.function.impl.mblt;
 
-import com.tec02.Time.WaitTime.Class.TimeMs;
-import com.tec02.function.impl.common.AbsSendRetryCommand;
+import com.tec02.function.impl.AbsSendRetryCommand;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.Impl.Comport.ComPort;
 import com.tec02.function.baseFunction.FunctionConfig;
@@ -72,7 +71,7 @@ public class UsbsideCheckReboot extends AbsSendRetryCommand {
             while (timer.onTime() && !stop) {
                 line = comport.readLine();
                 line = line == null ? "" : line;
-                addLog(COMPORT, line);
+                addLog(COMPORT_LOGKEY, line);
                 builder.append(line).append("\r\n");
                 if (notContains != null && !notContains.isEmpty() && isContains(notContains, line)) {
                     count += 1;

@@ -49,7 +49,7 @@ public class BaseFunction extends AbsBaseFunction {
         return ftp;
     }
 
-    public Telnet getTelnet() {
+    public Telnet getTelnet() throws Exception {
         String ip = this.getIp();
         return getTelnet(ip);
     }
@@ -92,26 +92,31 @@ public class BaseFunction extends AbsBaseFunction {
         return telnet;
     }
 
-    public String getIp() {
+    public String getIp() throws Exception {
         if (this.dhcpDto.isOn() && !config.get(NON_DHCP, false)) {
             String mac = this.dataCell.get(MyConst.MODEL.MAC);
+            String ip = null;
             if (mac == null) {
                 addLog("It's DHCP mode but MAC is null!");
-                return null;
+            } else {
+                addLog("PC", "Get IP from the DHCP with MAC is \"%s\"", mac);
+                addLog("Setting", "MAC length = %s", DhcpData.getInstance().getMACLength());
+                ip = DhcpData.getInstance().getIP(mac);
             }
-            addLog("PC", "Get IP from the DHCP with MAC is \"%s\"", mac);
-            addLog("Setting", "MAC length = %s", DhcpData.getInstance().getMACLength());
-            return DhcpData.getInstance().getIP(mac);
+            if (ip == null) {
+                addLog("PC", "Get IP with cell_id: %s", uICell.getId());
+                ip = String.format("%s.%s", DhcpData.getInstance().getNetIP(), uICell.getId());
+            }
+            return ip;
         }
         addLog("Get IP from the function config with key is \"IP\".");
-        return config.getString("IP");
+        return config.getString(IP);
     }
-    private static final String NON_DHCP = "nonDHCP";
 
     public String getComportName() {
-        int com = this.config.get("comport", 1);
+        int com = this.config.get(COMPORT, 1);
         com = com < 1 ? 1 : com;
-        if ((this.uICell.isMultiUI() || this.dhcpDto.isOn()) 
+        if ((this.uICell.isMultiUI() || this.dhcpDto.isOn())
                 && !config.get(NON_DHCP, false)) {
             int port = com + this.uICell.getId();
             return String.format("COM%d", port);
@@ -119,10 +124,15 @@ public class BaseFunction extends AbsBaseFunction {
             return String.format("COM%d", com);
         }
     }
+    public static final String COMPORT = "comport";
+    public static final String BAUDRATE = "baudrate";
+    public static final String TYPE = "type";
+    public static final String NON_DHCP = "nonDHCP";
+    public static final String IP = "IP";
 
     public ComPort getComport() {
         String com = this.getComportName();
-        int baudrate = this.config.get("baudrate", 115200);
+        int baudrate = this.config.get(BAUDRATE, 115200);
         return this.getComport(com, baudrate);
     }
 
@@ -138,9 +148,9 @@ public class BaseFunction extends AbsBaseFunction {
     }
 
     public AbsCommunicate getTelnetOrComportConnector() throws Exception {
-        String type = this.config.get("type", "telnet");
+        String type = this.config.get(TYPE, "telnet");
         AbsCommunicate absCommunicate;
-        if (type.equalsIgnoreCase("comport")) {
+        if (type.equalsIgnoreCase(COMPORT)) {
             absCommunicate = this.getComport();
         } else {
             absCommunicate = this.getTelnet();
@@ -150,7 +160,7 @@ public class BaseFunction extends AbsBaseFunction {
         }
         return absCommunicate;
     }
-    
+
     public boolean networkCardControl(String cardName, boolean enable) {
         try ( Cmd cmd = new Cmd()) {
             String command = String.format("netsh interface set interface \"%s\" admin=%s", cardName, enable ? "enabled" : "disabled");
@@ -200,10 +210,7 @@ public class BaseFunction extends AbsBaseFunction {
                 addLog("PC", "*************** Shut down ok! [%.3f S]*****************", waitToSleepTime.getTime());
                 return true;
             }
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-            }
+            delay(1000);
         } while (waitToSleepTime.onTime());
         addLog("PC", "*************** Shut down failed! [%.3f S]*****************", waitToSleepTime.getTime());
         return false;
@@ -245,7 +252,7 @@ public class BaseFunction extends AbsBaseFunction {
         return true;
     }
 
-    public boolean dutPing(String targetIp, int time) {
+    public boolean dutPing(String targetIp, int time) throws Exception {
         return this.dutPing(getIp(), targetIp, time, true);
     }
 

@@ -56,7 +56,7 @@ public class UICellTester {
         this.logger = new Logger(String.format("log/CellTester/%s", uICell.getName()));
         this.stopTest = false;
     }
-
+    
     public void setInput(String input, int moderun) {
         if (isTesting() || input == null) {
             return;
@@ -74,6 +74,7 @@ public class UICellTester {
                     String modeApi = moderun > 1 ? MyConst.CONFIG.DEBUG : modeFlow.getAPIMode();
                     this.uICell.getDataCell().reset();
                     this.uICell.getDataCell().start(this.input, modeName, modeApi);
+                    /////////////////// call UI
                     this.uICell.getAbsSubUi().startTest();
                     List<ItemConfig> items;
                     while ((items = modeFlow.getListItem()) != null && !this.stopTest) {
@@ -266,7 +267,7 @@ public class UICellTester {
         if (!isTesting()) {
             input = null;
         }
-        return input.toUpperCase();
+        return input;
     }
 
     public void stop() {

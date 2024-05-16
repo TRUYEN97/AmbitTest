@@ -30,7 +30,6 @@ public class UICell {
     private final UICellTester cellTester;
     private final DataCell dataCell;
     private final TimeS timeS;
-    private String input;
     private int failcount = 0;
     private int failConsecutivecount = 0;
     private int passcount = 0;

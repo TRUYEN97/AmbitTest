@@ -63,6 +63,8 @@ public final class MyConst {
         public static final String STATION = "station";
         public static final String HHSN = "hhsn";
         public static final String LINE = "line";
+        public static final String START_DAY = "start_day";
+        public static final String FINISH_DAY = "finish_day";
         public static final String STATION_NAME = "station_name";
         public static final String PASS_COUNT = "pass_count";
         public static final String FAIL_COUNT = "fail_count";
@@ -75,5 +77,6 @@ public final class MyConst {
         public static final String ON_SFIS = "onSfis";
         public static final String CYCLE_TIME = "cycle_time";
         public static final String MD5 = "md5";
+        public static final String FTP_PATH = "ftppath";
     }
 }

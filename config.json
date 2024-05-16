@@ -3,14 +3,14 @@
     "dir" : "trieste_errorCode.txt"
   },
   "Setting" : {
-    "column" : 1,
+    "column" : 8,
     "line" : "MP",
     "local_log" : "Log\\TestLog",
     "product" : "Trieste",
-    "row" : 1,
+    "row" : 12,
     "showMissingErrorocode" : false,
     "station" : "CCT",
-    "view" : "BigUI"
+    "view" : "SmallUI"
   },
   "Socket" : {
     "clients" : {
@@ -31,14 +31,14 @@
       }
     },
     "server" : {
-      "flag" : false,
+      "flag" : true,
       "port" : 8686
     }
   },
   "ItemTest" : {
     "config" : {
-      "limitCmd" : "",
-      "limitDir" : "limits.json",
+      "limitCmd" : "cd python && eero_api_limits_Trieste.py CCT",
+      "limitDir" : "",
       "modes" : [ {
         "apiModeName" : "production",
         "group" : "init",
@@ -59,10 +59,11 @@
         "coreGroup" : true,
         "failColor" : [ 170, 0, 200 ],
         "failedTo" : "",
-        "items" : [ "CheckTime", "gen_node" ],
+        "items" : [ "CheckTime", "gen_node", "mac_ok" ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "pws",
+        "step" : 1,
         "testColor" : [ 255, 255, 0 ]
       },
       "test" : {
@@ -70,10 +71,11 @@
         "coreGroup" : true,
         "failColor" : [ 255, 0, 0 ],
         "failedTo" : "pws-end",
-        "items" : [ "led_bootup", "autoCCT", "disenable_network", "ping_to_gg", "enable_network", "removeCCT", "resetCCT" ],
+        "items" : [ "verify_cct" ],
         "loop" : 1,
         "modeRun" : 3,
         "passTo" : "pws-end",
+        "step" : 1,
         "testColor" : [ 255, 255, 0 ]
       },
       "init-debug" : {
@@ -81,10 +83,11 @@
         "coreGroup" : true,
         "failColor" : [ 170, 0, 200 ],
         "failedTo" : "",
-        "items" : [ "CheckTime", "gen_node_debug" ],
+        "items" : [ "CheckTime", "*G-test","gen_node_debug" ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "pws",
+        "step" : 1,
         "testColor" : [ 255, 255, 0 ]
       },
       "final" : {
@@ -92,10 +95,11 @@
         "coreGroup" : false,
         "failColor" : [ 0, 204, 153 ],
         "failedTo" : "",
-        "items" : [ ],
+        "items" : [ "UpLogFTP", "upTeAPI" ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "",
+        "step" : 1,
         "testColor" : [ 255, 255, 0 ]
       },
       "end" : {
@@ -103,10 +107,11 @@
         "coreGroup" : true,
         "failColor" : [ 255, 0, 0 ],
         "failedTo" : "final",
-        "items" : [ "verify_cct" ],
+        "items" : [ "upAPI", "SendToSfis" ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "final",
+        "step" : 1,
         "testColor" : [ 255, 255, 0 ]
       },
       "pws" : {
@@ -114,10 +119,11 @@
         "coreGroup" : true,
         "failColor" : [ 170, 0, 200 ],
         "failedTo" : "final",
-        "items" : [ "fixture_close" ],
+        "items" : [ ],
         "loop" : 1,
         "modeRun" : 3,
         "passTo" : "test",
+        "step" : 1,
         "testColor" : [ 255, 255, 0 ]
       },
       "pws-end" : {
@@ -125,16 +131,18 @@
         "coreGroup" : true,
         "failColor" : [ 255, 0, 0 ],
         "failedTo" : "final",
-        "items" : [ "fixtureOpen" ],
+        "items" : [ ],
         "loop" : 1,
         "modeRun" : 3,
         "passTo" : "end",
+        "step" : 1,
         "testColor" : [ 255, 255, 0 ]
       }
     },
     "items" : {
       "eth0_speed_valid" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "",
@@ -168,6 +176,7 @@
       },
       "gen_node" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "data_format" : [ "mlbsn", "ethernetmac", "pnname", "model" ],
           "send_format_fail" : [ "sn", "pcname", "status", "errorcode" ],
@@ -198,6 +207,7 @@
       },
       "led_model" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "lp5562|ktd2027",
@@ -231,6 +241,7 @@
       },
       "eth1_speed_valid" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "",
@@ -264,6 +275,7 @@
       },
       "usb_aside" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "FixtureRetryCmds" : [ ],
           "FixtureCom" : "COM5",
@@ -300,6 +312,7 @@
       },
       "eth1_ping" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "IP" : "192.168.1.20",
           "time_ping" : 10,
@@ -328,6 +341,7 @@
       },
       "nodeproperty_uboot_version" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "",
@@ -361,6 +375,7 @@
       },
       "temp_cpu" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "^[0-9]+$",
@@ -394,6 +409,7 @@
       },
       "CHECK_DUT_USB" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "apis" : [ "usb_fw", "usb_model" ],
           "Time" : 10,
@@ -429,6 +445,7 @@
       },
       "shop_floor" : {
         "alwaysRun" : true,
+        "begin" : -1,
         "bonus" : {
           "mess" : ""
         },
@@ -454,6 +471,7 @@
       },
       "eth0_ping" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "IP" : "192.168.1.10",
           "time_ping" : 10,
@@ -480,36 +498,9 @@
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
-      "autoCCT" : {
-        "alwaysRun" : false,
-        "bonus" : {
-          "windowsTitle" : "AnLink",
-          "app" : "java -jar AutoClickOnScreen.jar",
-          "dir" : "image",
-          "commands" : [ "show", "click2", "openApp.png-1-10000", "startUp.png-1-5000", "start.png-1-2000", "next.png-3-2000", "next1.png-1-50000-1", "bm.png-1-10000", "wfName.png-1-2000", "input:AutoCCT", "wfPassword.png-1-2000", "input:12345678", "next.png-3-2000", "finishSetup.png-3-10000", "exit.png-3-2000-1", "cancel.png-3-2000-1", "show", "click2" ]
-        },
-        "check_spec" : true,
-        "debugCancellCheckSpec" : false,
-        "debugCancellRun" : false,
-        "failApiName" : "",
-        "fail_continue" : false,
-        "function" : "AutoClickOnScreen",
-        "itemName" : "autoCCT",
-        "limit_type" : "BOOL",
-        "lower_limit" : "",
-        "modeRun" : 3,
-        "multi" : false,
-        "retry" : 0,
-        "stopAllMutitack" : false,
-        "stopLocalMutitack" : false,
-        "test_name" : "autoCCT",
-        "time_out" : 2147483647,
-        "upper_limit" : "",
-        "wait_local_multi_done" : false,
-        "wait_multi_done" : false
-      },
       "nodeproperty_board_register_value" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "[0-9]+",
@@ -541,36 +532,9 @@
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
-      "removeCCT" : {
-        "alwaysRun" : false,
-        "bonus" : {
-          "windowsTitle" : "AnLink",
-          "app" : "java -jar AutoClickOnScreen.jar",
-          "dir" : "image",
-          "commands" : [ "show", "click2", "openApp.png-1-10000", "basement.png-1-10000", "Advanced.png-1-10000", "remove.png-1-10000", "DeleteNetwork.png-1-10000", "DeleteNetwork1.png-1-10000", "show", "click2" ]
-        },
-        "check_spec" : true,
-        "debugCancellCheckSpec" : false,
-        "debugCancellRun" : false,
-        "failApiName" : "",
-        "fail_continue" : false,
-        "function" : "AutoClickOnScreen",
-        "itemName" : "removeCCT",
-        "limit_type" : "BOOL",
-        "lower_limit" : "",
-        "modeRun" : 3,
-        "multi" : false,
-        "retry" : 0,
-        "stopAllMutitack" : false,
-        "stopLocalMutitack" : false,
-        "test_name" : "removeCCT",
-        "time_out" : 2147483647,
-        "upper_limit" : "",
-        "wait_local_multi_done" : false,
-        "wait_multi_done" : false
-      },
       "LED_B" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "checkLedModel" : "cat /sys/class/leds/W/device/name",
           "baudrate" : 115200,
@@ -624,6 +588,7 @@
       },
       "dut_ping" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "IP" : "192.168.1.1",
           "time_ping" : 90,
@@ -651,7 +616,8 @@
         "wait_multi_done" : false
       },
       "fixtureOpen" : {
-        "alwaysRun" : false,
+        "alwaysRun" : true,
+        "begin" : -1,
         "bonus" : {
           "FixtureWait" : 20,
           "FixtureBaudRate" : 115200,
@@ -682,6 +648,7 @@
       },
       "eth1_speed_tx" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "initCommand" : "taskkill.exe /IM userspace_speedtest.exe",
           "startKey" : "Estimated bitrate: ",
@@ -717,6 +684,7 @@
       },
       "upTeAPI" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "LocalTxtName" : [ "mlbsn", "station_name", "mode", "{serial}" ],
           "followLimit" : false,
@@ -748,8 +716,61 @@
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
+      "led_reset" : {
+        "alwaysRun" : false,
+        "begin" : -1,
+        "bonus" : {
+          "baudrate" : 115200,
+          "comport" : 1,
+          "time" : 1,
+          "timeOut" : 120,
+          "delayS" : 0,
+          "UseLocalLimits" : false,
+          "getLedValueCmd" : "AT+LEDPARAMETER%",
+          "apis" : {
+            "led_setup_mode_b_x" : {
+              "regex" : "COR_X\\=?=\\d+(\\.\\d+)?",
+              "lower_limit" : "0.107",
+              "upper_limit" : "0.157",
+              "limit_type" : "LIMIT"
+            },
+            "led_setup_mode_b_y" : {
+              "regex" : "COR_Y\\=?=\\d+(\\.\\d+)?",
+              "lower_limit" : "0.041",
+              "upper_limit" : "0.091",
+              "limit_type" : "LIMIT"
+            },
+            "led_setup_mode_b_lum" : {
+              "regex" : "LUM\\=?=\\d+(\\.\\d+)?",
+              "lower_limit" : "30000",
+              "upper_limit" : "90000",
+              "limit_type" : "LIMIT"
+            }
+          }
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "LedBootup",
+        "itemName" : "led_reset",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 0,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "led_reset",
+        "time_out" : 150,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : true
+      },
       "cpu_stress" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -782,14 +803,34 @@
       },
       "led_bootup" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
-          "time" : 2,
-          "timeOut" : 70,
-          "delayS" : 0,
+          "baudrate" : 115200,
+          "comport" : 1,
+          "time" : 1,
+          "timeOut" : 120,
+          "delayS" : 20,
+          "UseLocalLimits" : false,
           "getLedValueCmd" : "AT+LEDPARAMETER%",
           "apis" : {
-            "led_b_x" : "COR_X\\=?=\\d+(\\.\\d+)?",
-            "led_b_y" : "COR_Y\\=?=\\d+(\\.\\d+)?"
+            "led_bootup_b_x" : {
+              "regex" : "COR_X\\=?=\\d+(\\.\\d+)?",
+              "lower_limit" : "0.107",
+              "upper_limit" : "0.157",
+              "limit_type" : "LIMIT"
+            },
+            "led_bootup_b_y" : {
+              "regex" : "COR_Y\\=?=\\d+(\\.\\d+)?",
+              "lower_limit" : "0.041",
+              "upper_limit" : "0.091",
+              "limit_type" : "LIMIT"
+            },
+            "led_bootup_b_lum" : {
+              "regex" : "LUM\\=?=\\d+(\\.\\d+)?",
+              "lower_limit" : "30000",
+              "upper_limit" : "90000",
+              "limit_type" : "LIMIT"
+            }
           }
         },
         "check_spec" : true,
@@ -802,7 +843,7 @@
         "limit_type" : "BOOL",
         "lower_limit" : "",
         "modeRun" : 3,
-        "multi" : false,
+        "multi" : true,
         "retry" : 0,
         "stopAllMutitack" : false,
         "stopLocalMutitack" : false,
@@ -814,6 +855,7 @@
       },
       "LED_R" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "checkLedModel" : "cat /sys/class/leds/W/device/name",
           "baudrate" : 115200,
@@ -867,6 +909,7 @@
       },
       "ram_stress" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -899,6 +942,7 @@
       },
       "qsdk_version" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "\\d+(\\.*\\d*)*",
@@ -932,6 +976,7 @@
       },
       "eth0_speed_tx" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -964,6 +1009,7 @@
       },
       "SendToSfis" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "data_format" : [ ],
           "send_format_fail" : [ "sn", "pcname", "status", "errorcode" ],
@@ -994,6 +1040,7 @@
       },
       "i_tp524_vdd_3v3_openshort" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "FixtureWait" : 20,
           "regex" : "[0-9]+\\.?[0-9]*",
@@ -1030,6 +1077,7 @@
       },
       "LED_G" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "checkLedModel" : "cat /sys/class/leds/W/device/name",
           "baudrate" : 115200,
@@ -1083,6 +1131,7 @@
       },
       "i_ubootidle" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "FixtureWait" : 20,
           "startKey" : "=",
@@ -1117,16 +1166,24 @@
       },
       "verify_cct" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
-          "mess" : "",
-          "log" : ""
+          "type" : "comport",
+          "baudrate" : 115200,
+          "comport" : 9,
+          "IP" : "192.168.1.1",
+          "nonDHCP" : false,
+          "command" : [ "" ],
+          "keyWord" : "Started \u001B[0;1;39mQorvo BLE setup service",
+          "ReadUntil" : "Started \u001B[0;1;39mQorvo BLE setup service",
+          "Time" : 120
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
         "failApiName" : "",
         "fail_continue" : false,
-        "function" : "VirFunction",
+        "function" : "TelnetReadUntilKey",
         "itemName" : "verify_cct",
         "limit_type" : "BOOL",
         "lower_limit" : "",
@@ -1136,13 +1193,14 @@
         "stopAllMutitack" : false,
         "stopLocalMutitack" : false,
         "test_name" : "verify_cct",
-        "time_out" : 2,
+        "time_out" : 150,
         "upper_limit" : "",
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "v_ubootidle" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "FixtureWait" : 20,
           "startKey" : "=",
@@ -1177,6 +1235,7 @@
       },
       "nodeproperty_mac" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "key" : "ethernetmac"
         },
@@ -1202,6 +1261,7 @@
       },
       "CheckTestConditions" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "pw" : "Foxconn168!!",
           "id" : "TE",
@@ -1229,6 +1289,7 @@
       },
       "sn_ok" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "mlbsn",
           "IP" : "192.168.1.1",
@@ -1260,17 +1321,23 @@
       },
       "mac_ok" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
-          "compare" : "ethernetmac",
+          "type" : "comport",
+          "baudrate" : 115200,
+          "comport" : 9,
           "IP" : "192.168.1.1",
-          "Startkey" : "mac=",
-          "Time" : 40,
-          "type" : "telnet",
+          "nonDHCP" : false,
           "ReadUntil" : "root@eero-test:/#",
-          "command" : "fw_printenv  mac"
+          "command" : "",
+          "Startkey" : "Address in environment is  ",
+          "Endkey" : "",
+          "Regex" : "",
+          "Time" : 20,
+          "compare" : "ethernetmac"
         },
         "check_spec" : true,
-        "debugCancellCheckSpec" : true,
+        "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
         "failApiName" : "",
         "fail_continue" : false,
@@ -1278,19 +1345,20 @@
         "itemName" : "mac_ok",
         "limit_type" : "BOOL",
         "lower_limit" : "",
-        "modeRun" : 3,
+        "modeRun" : 1,
         "multi" : false,
-        "retry" : 2,
+        "retry" : 1,
         "stopAllMutitack" : false,
         "stopLocalMutitack" : false,
         "test_name" : "mac_ok",
-        "time_out" : 60,
+        "time_out" : 30,
         "upper_limit" : "",
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "setenv_sn" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -1324,6 +1392,7 @@
       },
       "LED_W" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "checkLedModel" : "cat /sys/class/leds/W/device/name",
           "baudrate" : 115200,
@@ -1377,6 +1446,7 @@
       },
       "mac" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "key" : "ethernetmac"
         },
@@ -1402,6 +1472,7 @@
       },
       "button" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "startPushCmds" : "AT+RESET_PRESS%",
           "baudrate" : 115200,
@@ -1436,6 +1507,7 @@
       },
       "mydas" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "titleVer" : "3.0",
           "sendDetail" : false,
@@ -1464,6 +1536,7 @@
       },
       "disenable_network" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "cardname" : "Network",
           "setEnable" : false
@@ -1490,6 +1563,7 @@
       },
       "gen_node_debug" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "data_format" : [ "mlbsn", "ethernetmac", "pnname" ],
           "send_format_fail" : [ "sn", "pcname", "status" ],
@@ -1520,6 +1594,7 @@
       },
       "thermal_shutdown" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "FixtureWait" : 20,
           "EndCmds" : [ "AT+TSD_OUTHIGH%" ],
@@ -1555,6 +1630,7 @@
       },
       "ReleasePowerSwitchOutlet" : {
         "alwaysRun" : true,
+        "begin" : -1,
         "bonus" : {
           "password" : "1234",
           "Command" : [ "off" ],
@@ -1585,6 +1661,7 @@
       },
       "reboot_soft" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "times" : 3,
           "IP" : "192.168.1.1",
@@ -1614,22 +1691,40 @@
       },
       "resetCCT" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
-          "type" : "!comport",
+          "type" : "comport",
           "baudrate" : 115200,
           "comport" : 1,
           "IP" : "192.168.1.1",
           "nonDHCP" : false,
           "startPushCmds" : "AT+RESET_PRESS%",
           "endPushCmds" : "AT+RESET_RELEASE%",
-          "readUntil" : "ok",
+          "readUntil" : "OK",
           "spec" : "",
-          "time" : 15,
+          "time" : 20,
           "ledWaitTime" : 1,
+          "UseLocalLimits" : false,
           "getLedValueCmd" : "AT+LEDPARAMETER%",
           "apis" : {
-            "led_r_x" : "COR_X\\=?=\\d+(\\.\\d+)?",
-            "led_r_y" : "COR_Y\\=?=\\d+(\\.\\d+)?"
+            "led_reset_r_x" : {
+              "regex" : "COR_X\\=?=\\d+(\\.\\d+)?",
+              "upper_limit" : "0.733",
+              "lower_limit" : "0.683",
+              "limit_type" : "LIMIT"
+            },
+            "led_reset_r_y" : {
+              "regex" : "COR_Y\\=?=\\d+(\\.\\d+)?",
+              "upper_limit" : "0.320",
+              "lower_limit" : "0.270",
+              "limit_type" : "LIMIT"
+            },
+            "led_reset_r_lum" : {
+              "regex" : "LUM\\=?=\\d+(\\.\\d+)?",
+              "upper_limit" : "30000",
+              "lower_limit" : "90000",
+              "limit_type" : "LIMIT"
+            }
           }
         },
         "check_spec" : true,
@@ -1642,8 +1737,8 @@
         "limit_type" : "BOOL",
         "lower_limit" : "",
         "modeRun" : 3,
-        "multi" : false,
-        "retry" : 1,
+        "multi" : true,
+        "retry" : 0,
         "stopAllMutitack" : false,
         "stopLocalMutitack" : false,
         "test_name" : "resetCCT",
@@ -1654,6 +1749,7 @@
       },
       "VOLTAGE_TEST" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "FixtureWait" : 20,
           "FixtureBaudRate" : 115200,
@@ -1686,6 +1782,7 @@
       },
       "upAPI" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "LocalTxtName" : [ "mlbsn", "station_name", "mode", "{serial}" ],
           "followLimit" : true,
@@ -1719,6 +1816,7 @@
       },
       "CheckProduct" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "elems" : [ {
             "type" : "equal",
@@ -1764,34 +1862,37 @@
       },
       "ping_to_gg" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
+          "NetworkCardName" : "Network",
+          "DUTNetworkCardName" : "DUT",
           "IP" : "8.8.8.8",
-          "nonDHCP" : true,
-          "keepPing" : false,
-          "time_ping" : 10
+          "time" : 5,
+          "time_ping" : 120
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
         "debugCancellRun" : false,
         "failApiName" : "",
         "fail_continue" : false,
-        "function" : "Dutping",
+        "function" : "NetworkControlAndPing",
         "itemName" : "ping_to_gg",
         "limit_type" : "BOOL",
         "lower_limit" : "",
         "modeRun" : 3,
         "multi" : false,
-        "retry" : 1,
+        "retry" : 0,
         "stopAllMutitack" : false,
         "stopLocalMutitack" : false,
         "test_name" : "ping_to_gg",
-        "time_out" : 140,
+        "time_out" : 150,
         "upper_limit" : "",
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
       "eth1_speed_rx" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "startKey" : "Receive Test Rate = ",
           "stopAt" : "root@eero-test:/#",
@@ -1827,9 +1928,10 @@
       },
       "CheckTime" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "timezone" : "UTC",
-          "wedUrl" : "http://10.90.100.15:8000/auth/login//"
+          "wedUrl" : "http://10.90.10.15:8000/auth/login//"
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,
@@ -1853,6 +1955,7 @@
       },
       "UpLogFTP" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "User" : "oper",
           "Port" : 21,
@@ -1861,10 +1964,10 @@
           "limitErrorCode" : false,
           "LocalName" : [ "mlbsn", "sn", "position", "status", "mode", "finish_time" ],
           "followLimit" : false,
-          "FtpPrefixJson" : [ "data/Trieste", "json", "pnname", "station_type", "start_day", "station_name", "status" ],
+          "FtpPrefixJson" : [ "data","product", "json", "pnname", "station_type", "start_day", "station_name", "status" ],
           "TestKeys" : [ "upper_limit", "lower_limit", "status", "finish_time", "test_name", "error_code", "errorcode", "errorDes", "start_time", "test_value", "units", "cycle_time" ],
           "LocalPrefix" : [ "Log/TestLog" ],
-          "FtpPrefixTxt" : [ "data/Trieste", "Text", "pnname", "station_type", "start_day", "station_name", "status" ],
+          "FtpPrefixTxt" : [ "data","product", "Text", "pnname", "station_type", "start_day", "station_name", "status" ],
           "Password" : "mfg-oper",
           "BaseKeys" : [ "mo", "sn", "error_details", "status", "finish_time", "test_software_version", "start_time", "station_type", "error_code", "errorcode", "errorDes", "serial", "mode", "station_name", "position", "cycle_time", "cyctime_final" ]
         },
@@ -1890,6 +1993,7 @@
       },
       "phy_model" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "",
@@ -1923,6 +2027,7 @@
       },
       "prepare_eth1" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -1956,6 +2061,7 @@
       },
       "enable_network" : {
         "alwaysRun" : true,
+        "begin" : -1,
         "bonus" : {
           "cardname" : "Network",
           "setEnable" : true
@@ -1982,6 +2088,7 @@
       },
       "setenv_mac" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -2014,8 +2121,37 @@
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
+      "scan_ble" : {
+        "alwaysRun" : false,
+        "begin" : -1,
+        "bonus" : {
+          "serverIP" : "127.0.0.1",
+          "serverPort" : 8686,
+          "time" : 80
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "FindMacBLE",
+        "itemName" : "scan_ble",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 1,
+        "multi" : false,
+        "retry" : 0,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "scan_ble",
+        "time_out" : 90,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
       "setenv_eth0" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -2048,8 +2184,38 @@
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
+      "setup_network" : {
+        "alwaysRun" : false,
+        "begin" : -1,
+        "bonus" : {
+          "windowsTitle" : "SM A346E",
+          "app" : "java -jar AutoClickOnScreen.jar",
+          "dir" : "image",
+          "commands" : [ "show", "home.png-1-1000", "tasks.png-1-1000", "closeAllApp.png-1-1000-1", "home.png-1-1000", "openApp.png-1-10000", "startUp.png-1-5000", "start.png-1-2000", "next.png-3-2000", "next1.png|bm.png-1-70000", "next1.png|bm.png-1-2000-1", "wfName.png-1-20000", "input:AutoCCT", "wfPassword.png-1-2000", "input:12345678", "downKeyboard.png-1-1000-1", "next.png-1-2000", "finishSetup.png-1-20000", "exit.png-1-2000-1", "exit.png-1-2000-1", "cancel.png-1-2000-1", "tasks.png-1-1000", "closeAllApp.png-1-1000-1" ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "AutoClickOnScreen",
+        "itemName" : "setup_network",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 0,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "setup_network",
+        "time_out" : 2147483647,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : true
+      },
       "phy_status" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "",
@@ -2083,6 +2249,7 @@
       },
       "bzt_bootloader_version" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "",
@@ -2116,6 +2283,7 @@
       },
       "setenv_eth1" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -2150,6 +2318,7 @@
       },
       "MMC_READ_WRITE_SPEED_TEST" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -2184,6 +2353,7 @@
       },
       "nodeproperty_unit_part_number" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "key" : "pnname"
         },
@@ -2209,6 +2379,7 @@
       },
       "mmc_model" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "Regex" : "",
@@ -2242,6 +2413,7 @@
       },
       "wps_ok" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "password" : "1234",
           "Command" : [ "off", "on" ],
@@ -2272,6 +2444,7 @@
       },
       "fixture_close" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "FixtureWait" : 15,
           "FixtureBaudRate" : 115200,
@@ -2301,6 +2474,7 @@
       },
       "power_cycle" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "password" : "1234",
           "Command" : [ "off", "on" ],
@@ -2329,8 +2503,38 @@
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
+      "CheckCCT" : {
+        "alwaysRun" : false,
+        "begin" : -1,
+        "bonus" : {
+          "windowsTitle" : "SM A346E",
+          "app" : "java -jar AutoClickOnScreen.jar",
+          "dir" : "image",
+          "commands" : [ "show", "home.png-1-1000", "tasks.png-1-1000", "closeAllApp.png-1-1000-1", "home.png-1-1000", "openApp.png-1-10000-1", "basement.png-1-10000-1", "basement.png-1-2000-1", "option.png-1-5000-1", "remove.png-1-5000-1", "DeleteNetwork.png-1-5000-1", "DeleteNetwork1.png-1-5000-1", "tasks.png-1-1000", "closeAllApp.png-1-1000-1" ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "AutoClickOnScreen",
+        "itemName" : "CheckCCT",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 0,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "CheckCCT",
+        "time_out" : 2147483647,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
       "LED_OFF" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "checkLedModel" : "cat /sys/class/leds/W/device/name",
           "baudrate" : 115200,
@@ -2384,6 +2588,7 @@
       },
       "prepare_eth0" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -2417,6 +2622,7 @@
       },
       "usb_bside" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "FixtureWait" : 20,
           "DutWait" : 2,
@@ -2450,6 +2656,7 @@
       },
       "eth0_speed_rx" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -2482,6 +2689,7 @@
       },
       "dut_telnet" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "IP" : "192.168.1.1"
         },
@@ -2507,6 +2715,7 @@
       },
       "emmc_badblocks" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "baudrate" : 115200,
           "comport" : 1,
@@ -2538,8 +2747,38 @@
         "wait_local_multi_done" : false,
         "wait_multi_done" : false
       },
+      "remove_network" : {
+        "alwaysRun" : false,
+        "begin" : -1,
+        "bonus" : {
+          "windowsTitle" : "SM A346E",
+          "app" : "java -jar AutoClickOnScreen.jar",
+          "dir" : "image",
+          "commands" : [ "show", "home.png-1-1000", "tasks.png-1-1000", "closeAllApp.png-1-1000-1", "home.png-1-1000", "openApp.png-1-10000", "basement.png-1-10000-1", "basement.png-1-2000-1", "option.png-1-5000-1", "remove.png-1-5000-1", "DeleteNetwork.png-1-5000-1", "DeleteNetwork1.png-1-5000-1", "tasks.png-1-1000", "closeAllApp.png-1-1000-1" ]
+        },
+        "check_spec" : true,
+        "debugCancellCheckSpec" : false,
+        "debugCancellRun" : false,
+        "failApiName" : "",
+        "fail_continue" : false,
+        "function" : "AutoClickOnScreen",
+        "itemName" : "remove_network",
+        "limit_type" : "BOOL",
+        "lower_limit" : "",
+        "modeRun" : 3,
+        "multi" : false,
+        "retry" : 0,
+        "stopAllMutitack" : false,
+        "stopLocalMutitack" : false,
+        "test_name" : "remove_network",
+        "time_out" : 2147483647,
+        "upper_limit" : "",
+        "wait_local_multi_done" : false,
+        "wait_multi_done" : false
+      },
       "test_image_version" : {
         "alwaysRun" : false,
+        "begin" : -1,
         "bonus" : {
           "compare" : "",
           "IP" : "192.168.1.1",

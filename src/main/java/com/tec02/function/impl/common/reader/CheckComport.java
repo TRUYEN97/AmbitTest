@@ -37,10 +37,10 @@ public class CheckComport extends AbsFunction {
                     List.of("Started ", "Qorvo", "BLE"));
             String mac = this.dataCell.getString(MyConst.MODEL.MAC);
             int timeOut = this.config.getInteger("time", 70);
-//            addLog(PC, "time out: %s", timeOut);
-//            addLog(PC, "MAC: %s", mac);
-//            addLog(PC, "Not contain: %s, %s", notContains, failCount);
-//            addLog(PC, "Contain: %s", contains);
+            addLog(PC, "time out: %s", timeOut);
+            addLog(PC, "MAC: %s", mac);
+            addLog(PC, "Not contain: %s, %s", notContains, failCount);
+            addLog(PC, "Contain: %s", contains);
             StringBuilder builder = new StringBuilder();
             String line;
             new Timer(timeOut * 1000, (e) -> {
@@ -51,12 +51,12 @@ public class CheckComport extends AbsFunction {
             while (timeS.onTime()) {
                 line = dut.readLine();
                 line = line == null ? "" : line;
-                addLog(COMPORT, line);
+                addLog(COMPORT_LOGKEY, line);
                 builder.append(line).append("\r\n");
                 if (notContains != null && !notContains.isEmpty() && isContains(notContains, line)) {
                     count += 1;
                     if (count >= failCount) {
-//                        addLog(PC, "Responce is contain: %s, times: %s", notContains, count);
+                        addLog(PC, "Responce is contain: %s, times: %s", notContains, count);
                         setErrorCode("REBOOT", "REBOOT");
                         return false;
                     }
@@ -71,26 +71,26 @@ public class CheckComport extends AbsFunction {
             String desErrorcode = "";
             if (mac != null && !mac.isBlank()) {
                 if (!responce.contains(mac.toLowerCase())) {
-//                    addLog(PC, "Responce is not contain: %s", mac);
+                    addLog(PC, "Responce is not contain: %s", mac);
                     errorcode = "MAC.CHECK";
                     desErrorcode = "MAC_CHECK";
                     setErrorCode(errorcode, desErrorcode);
                     this.config.setFail_continue(false);
                     rs = false;
                 } else {
-//                    addLog(PC, "Responce is contain: %s", mac);
+                    addLog(PC, "Responce is contain: %s", mac);
                 }
             }
             if (contains != null && !contains.isEmpty()) {
                 if (!isContainsAll(contains, responce)) {
-//                    addLog(PC, "Responce is not contain: %s", contains);
+                    addLog(PC, "Responce is not contain: %s", contains);
                     if (errorcode.isBlank()) {
                         errorcode = "BLE.CHECK";
                         desErrorcode = "BLE_CHECK";
                     }
                     rs = false;
                 } else {
-//                    addLog(PC, "Responce is contain: %s", contains);
+                    addLog(PC, "Responce is contain: %s", contains);
                 }
             }
             if (!rs) {

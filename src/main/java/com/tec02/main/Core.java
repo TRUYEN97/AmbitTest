@@ -7,7 +7,6 @@ package com.tec02.main;
 import com.tec02.configuration.controller.ConfigurationManagement;
 import com.tec02.view.managerUI.UICellManagement;
 import com.tec02.view.managerUI.UICell;
-import java.io.File;
 import javax.swing.JOptionPane;
 
 /**
@@ -71,7 +70,7 @@ public class Core {
         }
         input = input.trim();
         index = index.trim();
-        if (this.cellUIManager.isIndexFree(index)) {
+        if ( this.cellUIManager.isIndexFree(index) && this.cellUIManager.isInputOk(input)) {
             UICell uICell = this.cellUIManager.getUICell(index);
             uICell.setInput(input);
         }

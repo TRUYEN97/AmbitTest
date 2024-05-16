@@ -9,7 +9,7 @@ import com.tec02.common.Common;
 import com.tec02.common.MyConst;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.function.baseFunction.FunctionConfig;
-import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
+import com.tec02.function.impl.AbsFucnUseTelnetOrCommportConnector;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 import java.util.List;

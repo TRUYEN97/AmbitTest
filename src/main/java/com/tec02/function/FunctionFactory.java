@@ -52,6 +52,7 @@ import com.tec02.function.impl.common.ValueWithSpecSubItem;
 import com.tec02.function.impl.common.controller.ResetButtonCCT;
 import com.tec02.function.impl.common.reader.GetMD5;
 import com.tec02.function.impl.common.reader.PhyItem;
+import com.tec02.function.impl.common.reader.ReadComport;
 import com.tec02.function.impl.mblt.SetENV;
 import com.tec02.function.impl.mblt.UsbsideCheckReboot;
 import com.tec02.function.impl.mblt.voltageTest.impl.ThermalShutdown;
@@ -160,6 +161,7 @@ public class FunctionFactory {
         addFunctionClass(NetworkControlAndPing.class);
         addFunctionClass(ValueWithSpecSubItem.class);
         addFunctionClass(GetMD5.class);
+        addFunctionClass(ReadComport.class);
     }
     
     @NonNull

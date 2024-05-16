@@ -287,6 +287,7 @@ public class DataCell {
         }
         this.wareHouse.put(MyConst.MODEL.CYCLE_TIME, String.valueOf(System.currentTimeMillis() - startTime));
         this.wareHouse.put(MyConst.MODEL.FINISH_TIME, timeBase.getSimpleDateTime());
+        this.wareHouse.put(MyConst.MODEL.FINISH_DAY, timeBase.getDate());
     }
 
     public void start(String input, String modeName, String modeAPI) {
@@ -294,8 +295,9 @@ public class DataCell {
         this.uICell.getDataCell().putData(MyConst.MODEL.MODE_NAME, modeName);
         this.uICell.getDataCell().putData(MyConst.MODEL.MODE, modeAPI);
         this.wareHouse.put(MyConst.MODEL.START_TIME, timeBase.getSimpleDateTime());
+        this.wareHouse.put(MyConst.MODEL.START_DAY, timeBase.getDate());
         this.wareHouse.put(MyConst.MODEL.ON_SFIS, "off");
-        this.startTime = System.currentTimeMillis();
+        this.startTime = System.currentTimeMillis(); //ms
     }
 
     public AbsFunction getFunction(String funcName) {

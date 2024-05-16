@@ -27,7 +27,7 @@ public class Absbase {
     protected final static String PC = "PC";
     protected final static String CONFIG = "CONFIG";
     protected final static String ERROR = "ERROR";
-    protected final static String COMPORT = "COMPORT";
+    protected final static String COMPORT_LOGKEY = "COMPORT";
     protected final static String CMD = "CMD";
     protected final ItemTestDto itemTestDto;
     protected final SettingDto settingDto;

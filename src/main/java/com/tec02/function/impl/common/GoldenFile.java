@@ -54,7 +54,7 @@ public class GoldenFile extends AbsFunction {
 
     }
 
-    private boolean putMacDHCP() {
+    private boolean putMacDHCP() throws Exception {
         String mac = this.dataCell.getString(MyConst.SFIS.MAC);
         int id = uICell.getId();
         addLog("PC", "MAC: %s", mac);

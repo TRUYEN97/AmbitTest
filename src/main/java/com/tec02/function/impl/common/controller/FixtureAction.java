@@ -6,7 +6,7 @@ package com.tec02.function.impl.common.controller;
 
 import com.tec02.communication.Communicate.Impl.Comport.ComPort;
 import com.tec02.function.baseFunction.FunctionConfig;
-import com.tec02.function.impl.common.AbsSendRetryCommand;
+import com.tec02.function.impl.AbsSendRetryCommand;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
 import java.util.List;
@@ -28,8 +28,8 @@ public class FixtureAction extends AbsSendRetryCommand {
                 return false;
             }
             List<String> commands = this.config.getJsonList("FixtureCmds");
-            List<String> keyWords = this.config.getJsonList("FixtureKeys");
-            int time = this.config.getInteger("FixtureWait", 1);
+            List<String> keyWords = this.config.getJsonList(FIXTURE_KEYS);
+            int time = this.config.getInteger(FIXTURE_WAIT, 1);
             int delay = this.config.getInteger("Delay", -1);
             boolean rs = sendCommand(comPort, commands, keyWords, time);
             if (rs && delay > 0) {

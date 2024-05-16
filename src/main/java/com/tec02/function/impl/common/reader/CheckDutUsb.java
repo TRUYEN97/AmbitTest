@@ -7,7 +7,7 @@ package com.tec02.function.impl.common.reader;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.AbsCommunicate;
 import com.tec02.function.baseFunction.FunctionConfig;
-import com.tec02.function.impl.common.AbsFucnUseTelnetOrCommportConnector;
+import com.tec02.function.impl.AbsFucnUseTelnetOrCommportConnector;
 import com.tec02.function.impl.common.ValueSubItem;
 import com.tec02.function.model.FunctionConstructorModel;
 import com.tec02.main.ErrorLog;
@@ -73,8 +73,7 @@ public class CheckDutUsb extends AbsFucnUseTelnetOrCommportConnector {
     }
 
     @Override
-    protected void createConfig(FunctionConfig config
-    ) {
+    protected void createConfig(FunctionConfig config) {
         config.setTime_out(10);
         config.setRetry(1);
         config.setFailApiName("usb_fw");

@@ -129,4 +129,15 @@ public class UICellManagement {
         return this.uiCells.size() > 1;
     }
 
+    public boolean isInputOk(String input) {
+        String cellInput;
+        for (UICell uICell : uiCells) {
+            cellInput = uICell.getCellTester().getInput();
+            if (cellInput!= null && cellInput.equalsIgnoreCase(input)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

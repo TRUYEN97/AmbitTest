@@ -206,7 +206,7 @@ public class SfisFunction extends AbsFunction {
         return value;
     }
 
-    private boolean putMacDHCP() {
+    private boolean putMacDHCP() throws Exception {
         String mac = this.dataCell.getString(MyConst.SFIS.MAC);
         String oldIP = DhcpData.getInstance().getIP(mac);
         if (mac == null || mac.isBlank()

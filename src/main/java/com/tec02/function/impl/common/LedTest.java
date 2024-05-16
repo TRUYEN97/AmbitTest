@@ -4,6 +4,7 @@
  */
 package com.tec02.function.impl.common;
 
+import com.tec02.function.impl.AbsFucnUseTelnetOrCommportConnector;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.tec02.Time.WaitTime.AbsTime;

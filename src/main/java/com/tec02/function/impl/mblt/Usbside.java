@@ -4,7 +4,7 @@
  */
 package com.tec02.function.impl.mblt;
 
-import com.tec02.function.impl.common.AbsSendRetryCommand;
+import com.tec02.function.impl.AbsSendRetryCommand;
 import com.tec02.Time.WaitTime.Class.TimeMs;
 import com.tec02.Time.WaitTime.Class.TimeS;
 import com.tec02.communication.Communicate.Impl.Comport.ComPort;

@@ -64,11 +64,35 @@ public class ItemFunctionFactory {
         return absFunction;
     }
 
+    /**
+     * 获得此项目的测试信息
+     *
+     * @param functionName 方法名字FunctionFactory.initFunction（）
+     * @param uICell 小窗口信息
+     * @param configName config里的名字
+     * @param limitName API里的名字
+     * @param begin 项目编号
+     * @param addToDataCell 添加到DataCell里后面转换log用
+     * @return
+     */
     public AbsFunction getFunction(String functionName, UICell uICell, String configName,
             String limitName, Integer begin, boolean addToDataCell) {
         return getFunction(functionName, uICell, configName, limitName, begin, addToDataCell, 1);
     }
 
+    /**
+     *
+     * 获得此项目的测试信息
+     *
+     * @param functionName 方法名字FunctionFactory.initFunction（）
+     * @param uICell 小窗口信息
+     * @param configName config里的名字
+     * @param limitName API里的名字
+     * @param begin 项目编号
+     * @param addToDataCell 添加到DataCell里后面转换log用
+     * @param step 每輪編號進階數
+     * @return
+     */
     public AbsFunction getFunction(String functionName, UICell uICell, String configName,
             String limitName, Integer begin, boolean addToDataCell, int step) {
         FunctionConstructorModel constructorModel = FunctionConstructorModel.builder()

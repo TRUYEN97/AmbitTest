@@ -59,7 +59,7 @@
         "coreGroup" : true,
         "failColor" : [ 170, 0, 200 ],
         "failedTo" : "",
-        "items" : [ "CheckTime", "gen_node", "mac_ok" ],
+        "items" : [ "CheckTime", "mac_ok" ],
         "loop" : 1,
         "modeRun" : 2,
         "passTo" : "pws",
@@ -1931,7 +1931,7 @@
         "begin" : -1,
         "bonus" : {
           "timezone" : "UTC",
-          "wedUrl" : "http://10.90.10.15:8000/auth/login//"
+          "wedUrl" : "http://10.90.100.15:8000/auth/login//"
         },
         "check_spec" : true,
         "debugCancellCheckSpec" : false,

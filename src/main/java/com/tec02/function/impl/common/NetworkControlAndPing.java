@@ -4,7 +4,6 @@
  */
 package com.tec02.function.impl.common;
 
-import com.tec02.communication.Communicate.Impl.Cmd.Cmd;
 import com.tec02.function.AbsFunction;
 import com.tec02.function.baseFunction.FunctionConfig;
 import com.tec02.function.model.FunctionConstructorModel;

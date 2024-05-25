@@ -53,7 +53,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
     protected boolean stop;
     private int functionType;
     private Thread thread;
-    private int statusCode;
+    private int statusCode;  //0等待,1 测试中，2测试结束
     private String message;
     private String spec;
     protected int retry;
@@ -67,8 +67,8 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         super(constructorModel);
         this.functionType = functionType;
         this.subItems = new ArrayList<>();
-        this.configurationManagement = ConfigurationManagement.getInstance();
-        this.functionManagement = ItemFunctionFactory.getInsatance();
+        this.configurationManagement = ConfigurationManagement.getInstance();  //配置档
+        this.functionManagement = ItemFunctionFactory.getInsatance();     //测试项目
         this.errorCode = new ItemErrorCode();
         constructorModel = checkModel(constructorModel);
         this.model = constructorModel.getModel();
@@ -92,230 +92,24 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         this.fileBaseFunction = new FileBaseFunction(constructorModel);
     }
 
-    public void setStopMultiTaskAction(Runnable stopMultiTaskAction) {
-        this.stopMultiTaskAction = stopMultiTaskAction;
-    }
-
-    protected void setErrorCode(String errorCode, String desErrorCode) {
-        ItemErrorCode itemErrorCode = new ItemErrorCode();
-        itemErrorCode.setErrorcode(errorCode);
-        itemErrorCode.setDesc_errorcode(desErrorCode);
-        itemErrorCode.setTooHighErrorcode("");
-        itemErrorCode.setDesc_tooHighErrorcode("");
-        itemErrorCode.setTooLowErrorcode("");
-        itemErrorCode.setDesc_tooLowErrorcode("");
-        setErrorCode(itemErrorCode);
-    }
-
-    public boolean isAllSubItemPass() {
-        boolean rs = true;
-        for (AbsFunction subItem : subItems) {
-            if (!subItem.isPass()) {
-                rs = false;
-            }
-        }
-        return rs;
-    }
-
     public AbsFunction(FunctionConstructorModel constructorModel) {
         this(constructorModel, SIMPLE_FUNCTION);
     }
 
-    public FunctionConstructorModel getConstructorModel() {
-        return FunctionConstructorModel.builder()
-                .model(model)
-                .uICell(uICell)
-                .config(config)
-                .logger(logger)
-                .build();
-    }
+    protected abstract boolean test();
 
-    @Override
-    public boolean isSubItem() {
-        return functionType == SUB_FUNCTION;
-    }
-
-    @Override
-    public boolean isElementFucntion() {
-        return functionType == ELEMENT_FUCTION;
-    }
-
-    private FunctionConstructorModel checkModel(FunctionConstructorModel constructorModel1) {
-        Model md = new Model();
-        FunctionConfig cf = getDefaultConfig();
-        if (constructorModel1 == null) {
-            constructorModel1 = FunctionConstructorModel.builder()
-                    .model(md)
-                    .config(cf)
-                    .configName(cf.getTest_name())
-                    .limitName(cf.getTest_name())
-                    .logger(new FunctionLogger(md))
-                    .build();
-        } else {
-            if (constructorModel1.getModel() == null) {
-                constructorModel1.setModel(md);
-            }
-            if (constructorModel1.getConfig() == null) {
-                constructorModel1.setConfig(cf);
-                String lm = constructorModel1.getLimitName();
-                if (lm != null && !lm.isBlank()) {
-                    cf.setTest_name(lm);
-                }
-            }
-            if (constructorModel1.getLogger() == null) {
-                constructorModel1.setLogger(new FunctionLogger(md));
-            }
-        }
-        MyObjectMapper.update(cf, md);
-        return constructorModel1;
-    }
-
-    protected <T extends AbsFunction> T createSubItem(Class<T> functionClass, String item) {
-        return (T) createSubItem(functionClass.getSimpleName(), item);
-    }
-
-    protected <T extends AbsFunction> T createSubItem(String functionClassName, String item) {
-        AbsFunction absFunction = this.functionManagement.getFunction(
-                functionClassName, FunctionConstructorModel.builder()
-                        .model(new Model())
-                        .uICell(uICell)
-                        .logger(logger)
-                        .configName(config.getItemName())
-                        .limitName(item)
-                        .begin(begin)
-                        .step(step)
-                        .build(), uICell, false);
-        absFunction.functionType = SUB_FUNCTION;
-        this.subItems.add(absFunction);
-        return (T) absFunction;
-    }
-
-    public final void updateConfigAndResetModel() {
-        FunctionConfig cf = this.configurationManagement.getFunctionConfig(configName, limitName);
-        if (cf != null) {
-            cf.setTest_name(limitName);
-            setConfig(cf);
-        }
-        ItemErrorCode err = this.configurationManagement.getErrorcode(limitName);
-        if (err != null) {
-            setErrorCode(err);
-        } else if (functionType != SYSTEM_FUNCTION
-                && this.configurationManagement.getSettingConfig().isShowMissingErrorcode()) {
-            JOptionPane.showMessageDialog(null, String.format("Missing error code: %s", limitName));
-        }
-    }
-
-    public void setConfig(FunctionConfig config) {
-        MyObjectMapper.copy(config, this.config);
-        MyObjectMapper.update(this.config, this.model);
-        this.model.reset();
-    }
-
-    protected <T extends AbsFunction> T createElementFunction(Class<T> functionClass) {
-        return (T) createElementFunction(functionClass.getSimpleName());
-    }
-
-    protected AbsFunction createElementFunction(String functionName) {
-        AbsFunction absFunction = this.functionManagement.getFunction(functionName,
-                getConstructorModel());
-        absFunction.functionType = ELEMENT_FUCTION;
-        return absFunction;
-    }
-
-    protected AbsBaseFunction getBaseFunction(Class<? extends AbsBaseFunction> functionClass) {
-        return getBaseFunction(functionClass.getSimpleName());
-    }
-
-    protected AbsBaseFunction getBaseFunction(String functionName) {
-        AbsBaseFunction absBaseFunction = this.functionManagement.getBaseFunction(functionName,
-                getConstructorModel());
-        return absBaseFunction;
-    }
-
-    @Override
-    public Long getRunTime() {
-        return this.model.getCycleTime();
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public Model getModel() {
-        return model;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("func: %s, item: %s",
-                getClass().getSimpleName(),
-                getConfig().getTest_name());
-    }
-
-    @Override
-    public String getFunctionName() {
-        return getClass().getSimpleName();
-    }
-
-    public void setCancel() {
-        this.model.setStatus(MyConst.MODEL.CANCELLED);
-    }
-
-    public boolean isCancelled() {
-        String status = this.model.getStatus();
-        return status != null && status.equalsIgnoreCase(MyConst.MODEL.CANCELLED);
-    }
-
-    @Override
-    public boolean isWaiting() {
-        return statusCode == 0;
-    }
-
-    @Override
-    public boolean isTesting() {
-        return statusCode == 1;
-    }
-
-    @Override
-    public boolean isDone() {
-        return statusCode == 2;
-    }
-
-    @Override
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public void setErrorCode(ItemErrorCode errorCode) {
-        MyObjectMapper.copy(errorCode, this.errorCode);
-    }
-
-    @Override
-    public FunctionConfig getConfig() {
-        return config;
-    }
-
-    public final FunctionConfig getDefaultConfig() {
-        FunctionConfig defaultConfig = new FunctionConfig(new ItemConfig());
-        createDefaultConfig(defaultConfig);
-        defaultConfig.setFunction(getClass().getSimpleName());
-        return defaultConfig;
-    }
+    protected abstract void createDefaultConfig(FunctionConfig config);
 
     @Override
     public void run() {
         runTest(config.getRetry() + 1);
     }
 
-    protected void clearSubItem() {
-        this.subItems.clear();
-    }
-
+    /**
+     * 项目测试try次数
+     *
+     * @param runtimes
+     */
     public void runTest(int runtimes) {
         int times = runtimes < 1 ? 1 : runtimes;
         ExecutorService threadPool = Executors.newSingleThreadExecutor();
@@ -325,7 +119,7 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
             for (retry = 0; retry < times && !stop; retry++) {
                 resultTest = false;
                 model.reset();
-                subItems.clear();
+                subItems.clear();//清空项目内容
                 model.setStatus(MyConst.MODEL.TESTING);
                 if (retry > 0) {
                     addLog("-------------------------------------------");
@@ -362,41 +156,6 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
             end();
             threadPool.shutdown();
         }
-    }
-    public static final String TESTING = "Testing";
-
-    public void stopMultitacking() {
-        stop = true;
-        if (stopMultiTaskAction != null) {
-            stopMultiTaskAction.run();
-        }
-    }
-
-    public void stopNow() {
-        this.stop = true;
-        stop();
-    }
-
-    private synchronized void stop() {
-        for (AbsFunction subFucn : subItems) {
-            subFucn.stopNow();
-        }
-        while (thread != null && thread.isAlive()) {
-            addLog(PC, "Try to stop testing!");
-            this.thread.stop();
-            try {
-                this.thread.join(500);
-            } catch (InterruptedException ex) {
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-            }
-        }
-    }
-
-    protected void setResult(Object value) {
-        this.model.setTest_value(String.valueOf(value));
     }
 
     private void end() {
@@ -448,21 +207,118 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         }
     }
 
-    protected void setFunctionSpec(Object spec) {
-        this.spec = String.valueOf(spec);
-        addLog(PC, "Function spec: %s", spec);
+    //////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public boolean isSubItem() {
+        return functionType == SUB_FUNCTION;
     }
 
-    public String getBaseItem() {
-        return Common.getBaseItem(model.getTest_name());
+    @Override
+    public boolean isElementFucntion() {
+        return functionType == ELEMENT_FUCTION;
     }
 
-    public Integer getOrderNumberItem() {
-        return Common.getOrderNumberItem(model.getTest_name());
+    public boolean isCancelled() {
+        String status = this.model.getStatus();
+        return status != null && status.equalsIgnoreCase(MyConst.MODEL.CANCELLED);
+    }
+
+    @Override
+    public boolean isWaiting() {
+        return statusCode == 0;
+    }
+
+    @Override
+    public boolean isTesting() {
+        return statusCode == 1;
+    }
+
+    @Override
+    public boolean isDone() {
+        return statusCode == 2;
     }
 
     protected boolean isDebugMode() {
         return dataCell.getAPImode().equalsIgnoreCase(MyConst.CONFIG.DEBUG);
+    }
+
+    @Override
+    public boolean isPass() {
+        String stt = model.getStatus();
+        return stt != null && !stt.equalsIgnoreCase(MyConst.MODEL.FAIL);
+    }
+
+    public boolean isAllSubItemPass() {
+        boolean rs = true;
+        for (AbsFunction subItem : subItems) {
+            if (!subItem.isPass()) {
+                rs = false;
+            }
+        }
+        return rs;
+    }
+
+    /////////////////////////////////////////////////////
+    
+    private FunctionConstructorModel checkModel(FunctionConstructorModel constructorModel1) {
+        Model md = new Model();
+        FunctionConfig cf = getDefaultConfig();
+        if (constructorModel1 == null) {
+            constructorModel1 = FunctionConstructorModel.builder()
+                    .model(md)
+                    .config(cf)
+                    .configName(cf.getTest_name())
+                    .limitName(cf.getTest_name())
+                    .logger(new FunctionLogger(md))
+                    .build();
+        } else {
+            if (constructorModel1.getModel() == null) {
+                constructorModel1.setModel(md);
+            }
+            if (constructorModel1.getConfig() == null) {
+                constructorModel1.setConfig(cf);
+                String lm = constructorModel1.getLimitName();
+                if (lm != null && !lm.isBlank()) {
+                    cf.setTest_name(lm);
+                }
+            }
+            if (constructorModel1.getLogger() == null) {
+                constructorModel1.setLogger(new FunctionLogger(md));
+            }
+        }
+        MyObjectMapper.update(cf, md);
+        return constructorModel1;
+    }
+
+    protected <T extends AbsFunction> T createElementFunction(Class<T> functionClass) {
+        return (T) createElementFunction(functionClass.getSimpleName());
+    }
+
+    protected <T extends AbsFunction> T createSubItem(Class<T> functionClass, String item) {
+        return (T) createSubItem(functionClass.getSimpleName(), item);
+    }
+
+    protected <T extends AbsFunction> T createSubItem(String functionClassName, String item) {
+        AbsFunction absFunction = this.functionManagement.getFunction(
+                functionClassName, FunctionConstructorModel.builder()
+                        .model(new Model())
+                        .uICell(uICell)
+                        .logger(logger)
+                        .configName(config.getItemName())
+                        .limitName(item)
+                        .begin(begin)
+                        .step(step)
+                        .build(), uICell, false);
+        absFunction.functionType = SUB_FUNCTION;
+        this.subItems.add(absFunction);
+        return (T) absFunction;
+    }
+
+    protected AbsFunction createElementFunction(String functionName) {
+        AbsFunction absFunction = this.functionManagement.getFunction(functionName,
+                getConstructorModel());
+        absFunction.functionType = ELEMENT_FUCTION;
+        return absFunction;
     }
 
     public void checkResult() {
@@ -493,40 +349,6 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
         this.logger.addLog("***************************************************");
     }
 
-    protected abstract boolean test();
-
-    protected abstract void createDefaultConfig(FunctionConfig config);
-
-    @Override
-    public boolean isPass() {
-        String stt = model.getStatus();
-        return stt != null && !stt.equalsIgnoreCase(MyConst.MODEL.FAIL);
-    }
-
-    public JSONObject getData(List<String> testKeys, boolean useLimitErrorCode) {
-        try {
-            JSONObject rs = new JSONObject();
-            JSONObject data = JSONObject.parseObject(MyObjectMapper.writeValueAsString(model));
-            Object value;
-            for (String testKey : testKeys) {
-                value = data.get(testKey);
-                if (value == null || value.toString().isBlank()) {
-                    if (testKey.equals(MyConst.MODEL.ERROR_CODE)) {
-                        value = data.get(MyConst.MODEL.ERRORCODE);
-                    }else{
-                        value = "";
-                    }
-                }
-                rs.put(testKey, value);
-            }
-            return rs;
-        } catch (JsonProcessingException ex) {
-            ex.printStackTrace();
-            addLog(ERROR, ex.getLocalizedMessage());
-            return null;
-        }
-    }
-
     public final boolean updateLimit() {
         ItemLimit itemLimit = this.configurationManagement.getItemLimit(limitName);
         boolean diff = false;
@@ -550,6 +372,196 @@ public abstract class AbsFunction extends Absbase implements Runnable, IFunction
             }
         }
         return diff;
+    }
+
+    public final void updateConfigAndResetModel() {
+        FunctionConfig cf = this.configurationManagement.getFunctionConfig(configName, limitName);
+        if (cf != null) {
+            cf.setTest_name(limitName);
+            setConfig(cf);
+        }
+        ItemErrorCode err = this.configurationManagement.getErrorcode(limitName);
+        if (err != null) {
+            setErrorCode(err);
+        } else if (functionType != SYSTEM_FUNCTION
+                && this.configurationManagement.getSettingConfig().isShowMissingErrorcode()) {
+            JOptionPane.showMessageDialog(null, String.format("Missing error code: %s", limitName));
+        }
+    }
+
+    ////////////////////////////////////////////////////
+    ///////////////// getter ////////////////////////////
+    protected AbsBaseFunction getBaseFunction(Class<? extends AbsBaseFunction> functionClass) {
+        return getBaseFunction(functionClass.getSimpleName());
+    }
+
+    protected AbsBaseFunction getBaseFunction(String functionName) {
+        AbsBaseFunction absBaseFunction = this.functionManagement.getBaseFunction(functionName,
+                getConstructorModel());
+        return absBaseFunction;
+    }
+
+    public FunctionConstructorModel getConstructorModel() {
+        return FunctionConstructorModel.builder()
+                .model(model)
+                .uICell(uICell)
+                .config(config)
+                .logger(logger)
+                .build();
+    }
+
+    @Override
+    public Long getRunTime() {
+        return this.model.getCycleTime();
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public Model getModel() {
+        return model;
+    }
+
+    @Override
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    @Override
+    public FunctionConfig getConfig() {
+        return config;
+    }
+
+    public final FunctionConfig getDefaultConfig() {
+        FunctionConfig defaultConfig = new FunctionConfig(new ItemConfig());
+        createDefaultConfig(defaultConfig);
+        defaultConfig.setFunction(getClass().getSimpleName());
+        return defaultConfig;
+    }
+
+    @Override
+    public String getFunctionName() {
+        return getClass().getSimpleName();
+    }
+
+    public String getBaseItem() {
+        return Common.getBaseItem(model.getTest_name());
+    }
+
+    public Integer getOrderNumberItem() {
+        return Common.getOrderNumberItem(model.getTest_name());
+    }
+
+    public JSONObject getData(List<String> testKeys, boolean useLimitErrorCode) {
+        try {
+            JSONObject rs = new JSONObject();
+            JSONObject data = JSONObject.parseObject(MyObjectMapper.writeValueAsString(model));
+            Object value;
+            for (String testKey : testKeys) {
+                value = data.get(testKey);
+                if (value == null || value.toString().isBlank()) {
+                    if (testKey.equals(MyConst.MODEL.ERROR_CODE)) {
+                        value = data.get(MyConst.MODEL.ERRORCODE);
+                    } else {
+                        value = "";
+                    }
+                }
+                rs.put(testKey, value);
+            }
+            return rs;
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace();
+            addLog(ERROR, ex.getLocalizedMessage());
+            return null;
+        }
+    }
+
+    ////////////////////////////////////////////////////
+    ///////////////// setter ////////////////////////////
+    public void setStopMultiTaskAction(Runnable stopMultiTaskAction) {
+        this.stopMultiTaskAction = stopMultiTaskAction;
+    }
+
+    public void setConfig(FunctionConfig config) {
+        MyObjectMapper.copy(config, this.config);
+        MyObjectMapper.update(this.config, this.model);
+        this.model.reset();
+    }
+
+    protected void setErrorCode(String errorCode, String desErrorCode) {
+        ItemErrorCode itemErrorCode = new ItemErrorCode();
+        itemErrorCode.setErrorcode(errorCode);
+        itemErrorCode.setDesc_errorcode(desErrorCode);
+        itemErrorCode.setTooHighErrorcode("");
+        itemErrorCode.setDesc_tooHighErrorcode("");
+        itemErrorCode.setTooLowErrorcode("");
+        itemErrorCode.setDesc_tooLowErrorcode("");
+        setErrorCode(itemErrorCode);
+    }
+
+    protected void setFunctionSpec(Object spec) {
+        this.spec = String.valueOf(spec);
+        addLog(PC, "Function spec: %s", spec);
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    protected void setResult(Object value) {
+        this.model.setTest_value(String.valueOf(value));
+    }
+
+    public void setCancel() {
+        this.model.setStatus(MyConst.MODEL.CANCELLED);
+    }
+
+    public void setErrorCode(ItemErrorCode errorCode) {
+        MyObjectMapper.copy(errorCode, this.errorCode);
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    protected void clearSubItem() {
+        this.subItems.clear();
+    }
+
+    public void stopMultitacking() {
+        stop = true;
+        if (stopMultiTaskAction != null) {
+            stopMultiTaskAction.run();
+        }
+    }
+
+    public void stopNow() {
+        this.stop = true;
+        stop();
+    }
+
+    private synchronized void stop() {
+        for (AbsFunction subFucn : subItems) {
+            subFucn.stopNow();
+        }
+        while (thread != null && thread.isAlive()) {
+            addLog(PC, "Try to stop testing!");
+            this.thread.stop();
+            try {
+                this.thread.join(500);
+            } catch (InterruptedException ex) {
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("func: %s, item: %s",
+                getClass().getSimpleName(),
+                getConfig().getTest_name());
     }
 
 }

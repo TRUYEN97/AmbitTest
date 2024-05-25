@@ -93,19 +93,24 @@ public class BaseFunction extends AbsBaseFunction {
     }
 
     public String getIp() throws Exception {
-        if (this.dhcpDto.isOn() && !config.get(NON_DHCP, false)) {
-            String mac = this.dataCell.get(MyConst.MODEL.MAC);
+        if (this.uICell.getCore().isMultiUICell() && !config.get(NON_DHCP, false)) {
             String ip = null;
-            if (mac == null) {
-                addLog("It's DHCP mode but MAC is null!");
+            if (this.dhcpDto.isOn()) {
+                String mac = this.dataCell.get(MyConst.MODEL.MAC);
+                if (mac == null) {
+                    addLog("It's DHCP mode but MAC is null!");
+                } else {
+                    addLog("Setting", "MAC length = %s", DhcpData.getInstance().getMACLength());
+                    ip = DhcpData.getInstance().getIP(mac);
+                    addLog("PC", "Get IP from the DHCP: \"%s\" - \"%s\"", mac, ip);
+                }
             } else {
-                addLog("PC", "Get IP from the DHCP with MAC is \"%s\"", mac);
-                addLog("Setting", "MAC length = %s", DhcpData.getInstance().getMACLength());
-                ip = DhcpData.getInstance().getIP(mac);
+                ip = dataCell.getString("ip");  //sfis
+                addLog("PC", "Get IP from CellModel: %s", ip);
             }
             if (ip == null) {
-                addLog("PC", "Get IP with cell_id: %s", uICell.getId());
-                ip = String.format("%s.%s", DhcpData.getInstance().getNetIP(), uICell.getId());
+                ip = String.format("%s.%s", DhcpData.getInstance().getNetIP(), uICell.getId());//获取固定IP uICell.getId()
+                addLog("PC", "Get IP with cell_id: %s", ip);
             }
             return ip;
         }

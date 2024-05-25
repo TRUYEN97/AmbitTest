@@ -205,6 +205,7 @@ public class FunctionFactory {
             return null;
         }
         try {
+           //new 測試項目 
             return this.functions.get(functionName.toLowerCase())
                     .getConstructor(FunctionConstructorModel.class)
                     .newInstance(constructorModdel);

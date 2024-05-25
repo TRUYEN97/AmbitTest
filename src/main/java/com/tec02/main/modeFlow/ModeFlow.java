@@ -70,9 +70,9 @@ public class ModeFlow {
         if (itemGroupDto == null) {
             return null;
         }
-        Set<String> hasGroupsScan = new HashSet<>();
-        hasGroupsScan.add(this.currGroupName);
-        return scanItemIn(itemGroupDto, hasGroupsScan);
+        Set<String> groupsScanned = new HashSet<>();
+        groupsScanned.add(this.currGroupName);
+        return scanItemIn(itemGroupDto, groupsScanned);
     }
 
     public List<ItemConfig> getPassToItems() {
@@ -85,7 +85,12 @@ public class ModeFlow {
         }
         return itemConfigs;
     }
-
+/**
+ * Lấy ra tất item có trog nhóm item, bao gồm cả các nhóm con bên trong. Cuối cùng là danh sách tất cả item có trong nhóm hiện tại.
+ * @param itemGroupDto nhóm hiện tại
+ * @param hasGroupsScan danh sách tất cả những nhóm đã được duyệt qua.
+ * @return 
+ */
     private List<ItemConfig> scanItemIn(ItemGroupDto itemGroupDto, Set<String> hasGroupsScan) {
         List<ItemConfig> itemConfigs = getItemConfigs(itemGroupDto, hasGroupsScan);
         List<ItemConfig> result = new ArrayList<>();

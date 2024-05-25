@@ -29,6 +29,10 @@ public class AnalysisResult {
         this.compareValue = new CompareValue();
     }
 
+    /**
+     * 测试结果判断
+     * @param status  内部spec结果
+     */
     public void checkResult(boolean status) {
         String stt = this.model.getStatus();
         if (stt != null && stt.equalsIgnoreCase(MyConst.MODEL.CANCELLED)) {
@@ -45,6 +49,10 @@ public class AnalysisResult {
         }
     }
 
+    /**
+     * 判断limit  Lower/Upper
+     * @param StringResult 
+     */
     private void checkResultWithLimits(String StringResult) {
         if (StringResult == null || StringResult.isBlank()) {
             setSimpleErrorcode();
@@ -52,7 +60,7 @@ public class AnalysisResult {
         }
         String ll = config.getLower_limit();
         String up = config.getUpper_limit();
-        switch (config.getLimit_type()) {
+        switch (config.getLimit_type()) {  //api Limit_type
             case MyConst.CONFIG.MATCH -> {
                 if (!this.compareValue.checkMatchType(StringResult, ll, up)) {
                     setSimpleErrorcode();

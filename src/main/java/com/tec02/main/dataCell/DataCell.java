@@ -122,6 +122,11 @@ public class DataCell {
         return itemName;
     }
 
+    /**
+     * 測試結果添加到這裡
+     * @param absFunction  項目
+     * @param step        項目編號
+     */
     public void addItemFunction(AbsFunction absFunction, int step) {
         if (absFunction == null) {
             return;
@@ -244,6 +249,11 @@ public class DataCell {
         return failedFunctions;
     }
 
+    /**
+     * 获取测试项目参数
+     * @param key  wareHouse的参数名称
+     * @return 
+     */
     public String getString(String key) {
         if (key == null) {
             return null;
@@ -267,6 +277,10 @@ public class DataCell {
         return this.wareHouse.getLong(MyConst.MODEL.CYCLE_TIME);
     }
 
+    /**
+     * 获取第一个fail的Tiem
+     * @return 
+     */
     public AbsFunction getFirtFailItem() {
         if (failedFunctions.isEmpty()) {
             return null;

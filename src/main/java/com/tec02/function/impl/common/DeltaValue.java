@@ -52,8 +52,8 @@ public class DeltaValue extends AbsFunction{
     @Override
     protected void createDefaultConfig(FunctionConfig config) {
         config.setTime_out(100);
-        config.put("item", "");
-        config.put("item1", "");
+        config.put("item", "temp_cpu_0");
+        config.put("item1", "temp_cpu_4");
     }
     
 }
